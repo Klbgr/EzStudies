@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">EzStudies</string>
+    <string name="welcome">Welcome to EzStudies</string>
 </resources>
