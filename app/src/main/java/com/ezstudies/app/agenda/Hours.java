@@ -13,36 +13,20 @@ public class Hours {
         this.endMinute = endMinute;
     }
 
-    public int getStartHour() {
-        return startHour;
+    public String getStartHour() {
+        return String.format("%02d", startHour);
     }
 
-    public void setStartHour(int startHour) {
-        this.startHour = startHour;
+    public String getStartMinute() {
+        return String.format("%02d", startMinute);
     }
 
-    public int getStartMinute() {
-        return startMinute;
+    public String getEndHour() {
+        return String.format("%02d", endHour);
     }
 
-    public void setStartMinute(int startMinute) {
-        this.startMinute = startMinute;
-    }
-
-    public int getEndHour() {
-        return endHour;
-    }
-
-    public void setEndHour(int endHour) {
-        this.endHour = endHour;
-    }
-
-    public int getEndMinute() {
-        return endMinute;
-    }
-
-    public void setEndMinute(int endMinute) {
-        this.endMinute = endMinute;
+    public String getEndMinute() {
+        return String.format("%02d", endMinute);
     }
 
     @Override

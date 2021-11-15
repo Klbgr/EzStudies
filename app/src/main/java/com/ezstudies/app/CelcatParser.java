@@ -17,6 +17,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -36,6 +39,7 @@ public class CelcatParser extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         parse();
+        saveICS();
     }
 
     public void initWebview() {
@@ -113,14 +117,14 @@ public class CelcatParser extends AppCompatActivity {
                 if(teacher.contains("<br>")){
                     String[] teacherList = teacher.split("<br>");
                     for (String s : teacherList) {
-                        teachers.add(s);
+                        teachers.add(s.replace("\n", ""));
                     }
                 }
                 else{
-                    teachers.add(teacher);
+                    teachers.add(teacher.replace("\n", ""));
                 }
 
-                Course c = new Course(new Hours(startHour, startMinute, endHour, endMinute), type, title, place, teachers);
+                Course c = new Course(new Hours(startHour, startMinute, endHour, endMinute), type.replace("\n", ""), title.replace("\n", ""), place.replace("\n", ""), teachers);
                 day.addCourse(c);
                 Log.d("course", c.toString());
             }
@@ -129,8 +133,41 @@ public class CelcatParser extends AppCompatActivity {
         this.week = week;
     }
 
-    public Week getWeek(){
-        return week;
+    public void saveICS(){
+        String ics = "BEGIN:VCALENDAR\n" +
+                "VERSION:2.0\n" +
+                "CALSCALE:GREGORIAN\n";
+        Hours hours;
+        Date date;
+        for(Day d : week.getDays()){
+            for(Course c : d.getCourses()){
+                hours = c.getHours();
+                date = d.getDate();
+                ics += "BEGIN:VEVENT\n" +
+                "DTSTART:" + date.getYear() + date.getMonth() + date.getDay() + "T" + hours.getStartHour() + hours.getStartMinute() + "00Z\n" +
+                "DTEND:" + date.getYear() + date.getMonth() + date.getDay() + "T" + hours.getEndHour() + hours.getEndMinute() + "00Z\n" +
+                "DESCRIPTION:" + c.getTeachers() + "\n" +
+                "LOCATION:" + c.getPlace() + "\n" +
+                "SEQUENCE:0\n" + //c quoi ca
+                "STATUS:CONFIRMED\n" +
+                "SUMMARY:" + c.getType() + " - " + c.getTitle() + "\n" +
+                "END:VEVENT\n";
+            }
+        }
+        ics += "END:VCALENDAR";
+        Log.d("ics", ics);
+        /*
+        try{
+            File file = new File("celcat.ics");
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(ics);
+            fileWriter.close();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+         */
     }
 }
 

@@ -21,32 +21,16 @@ public class Course {
         return hours;
     }
 
-    public void setHours(Hours hours) {
-        this.hours = hours;
-    }
-
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getTitle() {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String getPlace() {
         return place;
-    }
-
-    public void setPlace(String place) {
-        this.place = place;
     }
 
     public ArrayList<String> getTeachers() {
