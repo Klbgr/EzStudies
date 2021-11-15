@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">EzStudies</string>
-    <string name="welcome">Welcome to EzStudies</string>
+    <string name="welcome">Welcome to EzStudies !\nEzStudies is an app made by students for students.\nThe main idea of this app is to ease students’ life.</string>
+    <string name="enter">Enter</string>
+    <string name="agenda">Agenda</string>
+    <string name="homework">Homework</string>
+    <string name="settings">Settings</string>
 </resources>
