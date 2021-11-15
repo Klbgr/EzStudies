@@ -102,29 +102,16 @@ public class CelcatParser extends AppCompatActivity {
 
                 string = string.substring(string.indexOf("<br>") + 5);
 
-                String place = string.substring(0, string.indexOf("<br>") - 1);
+                string = string.replace(" <br> ", "").replace(" <br>", "");
 
-                string = string.substring(string.indexOf("<br>") + 5);
-
-                String teacher = string;
+                string = string.substring(0, string.length()-1);
 
                 int startHour = Integer.parseInt(start.split(":")[0]);
                 int startMinute = Integer.parseInt(start.split(":")[1]);
                 int endHour = Integer.parseInt(end.split(":")[0]);
                 int endMinute = Integer.parseInt(end.split(":")[1]);
 
-                ArrayList<String> teachers= new ArrayList<>();
-                if(teacher.contains("<br>")){
-                    String[] teacherList = teacher.split("<br>");
-                    for (String s : teacherList) {
-                        teachers.add(s.replace("\n", ""));
-                    }
-                }
-                else{
-                    teachers.add(teacher.replace("\n", ""));
-                }
-
-                Course c = new Course(new Hours(startHour, startMinute, endHour, endMinute), type.replace("\n", ""), title.replace("\n", ""), place.replace("\n", ""), teachers);
+                Course c = new Course(new Hours(startHour, startMinute, endHour, endMinute), type.replace(" ", "").replace("\n", ""), title.replace("\n", ""), string.replace("\n", "\\n"));
                 day.addCourse(c);
                 Log.d("course", c.toString());
             }
@@ -146,8 +133,7 @@ public class CelcatParser extends AppCompatActivity {
                 ics += "BEGIN:VEVENT\n" +
                 "DTSTART:" + date.getYear() + date.getMonth() + date.getDay() + "T" + hours.getStartHour() + hours.getStartMinute() + "00Z\n" +
                 "DTEND:" + date.getYear() + date.getMonth() + date.getDay() + "T" + hours.getEndHour() + hours.getEndMinute() + "00Z\n" +
-                "DESCRIPTION:" + c.getTeachers() + "\n" +
-                "LOCATION:" + c.getPlace() + "\n" +
+                "DESCRIPTION:" + c.getDescription() + "\n" +
                 "SEQUENCE:0\n" + //c quoi ca
                 "STATUS:CONFIRMED\n" +
                 "SUMMARY:" + c.getType() + " - " + c.getTitle() + "\n" +
