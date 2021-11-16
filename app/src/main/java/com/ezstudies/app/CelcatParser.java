@@ -1,10 +1,17 @@
 package com.ezstudies.app;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.webkit.WebView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.ezstudies.app.agenda.Course;
 import com.ezstudies.app.agenda.Date;
@@ -27,6 +34,7 @@ public class CelcatParser extends AppCompatActivity {
     private WebView webview;
     private JavaScriptInterface jsi;
     private Week week;
+    private String ics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +47,7 @@ public class CelcatParser extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         parse();
+        buildICS();
         saveICS();
     }
 
@@ -120,8 +129,8 @@ public class CelcatParser extends AppCompatActivity {
         this.week = week;
     }
 
-    public void saveICS(){
-        String ics = "BEGIN:VCALENDAR\n" +
+    public void buildICS(){
+        ics = "BEGIN:VCALENDAR\n" +
                 "VERSION:2.0\n" +
                 "CALSCALE:GREGORIAN\n";
         Hours hours;
@@ -142,18 +151,19 @@ public class CelcatParser extends AppCompatActivity {
         }
         ics += "END:VCALENDAR";
         Log.d("ics", ics);
-        /*
+    }
+
+    public void saveICS(){
         try{
-            File file = new File("celcat.ics");
-            FileWriter fileWriter = new FileWriter(file);
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/celcat.ics");
+            FileWriter fileWriter = new FileWriter(file, false);
             fileWriter.write(ics);
             fileWriter.close();
+            Toast.makeText(this, R.string.ics, Toast.LENGTH_SHORT).show();
         }
         catch (IOException e) {
             e.printStackTrace();
         }
-
-         */
     }
 }
 
