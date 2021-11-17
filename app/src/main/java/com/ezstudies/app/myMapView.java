@@ -5,6 +5,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 
 import com.ezstudies.app.R;
 import com.google.android.gms.maps.GoogleMap;
@@ -12,11 +14,14 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 // Implement OnMapReadyCallback.
 public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
     private MapView mapView;
+    private GoogleMap googleMap;
+    private Marker marker;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +33,13 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
+        this.googleMap = googleMap;
+        googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(@NonNull LatLng latLng) {
+                setMarker("salut", latLng);
+            }
+        });
 
     }
 
@@ -71,5 +83,18 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
     public void onLowMemory() {
         super.onLowMemory();
         mapView.onLowMemory();
+    }
+
+    public void setMarker(String text, LatLng latLng) {
+        MarkerOptions markerOptions = new MarkerOptions();
+        markerOptions.title(text);
+        markerOptions.position(latLng);
+        if (marker != null)
+            marker.remove();
+        marker = googleMap.addMarker(markerOptions);
+    }
+
+    public LatLng getPosition(){
+        return marker.getPosition();
     }
 }
