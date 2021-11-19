@@ -1,36 +1,41 @@
 package com.ezstudies.app;
 
+import android.Manifest;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import android.Manifest;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Toast;
-
-import com.ezstudies.app.R;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-// Implement OnMapReadyCallback.
+import java.io.IOException;
+import java.util.List;
+import java.util.Locale;
+
 public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
+    private Intent intent;
+    private BroadcastReceiver broadcastReceiver;
     public static final int PERMISSION_REQUEST_CODE = 101;
     private MapView mapView;
     private GoogleMap googleMap;
@@ -50,10 +55,10 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
         googleMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
             @Override
             public void onMapClick(@NonNull LatLng latLng) {
-                setMarker("salut", latLng);
+                setMarker(latLng, false);
             }
         });
-
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(46.227638, 2.213749), 6)); //France
     }
 
     @Override
@@ -84,6 +89,7 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
     protected void onDestroy() {
         super.onDestroy();
         mapView.onDestroy();
+
     }
 
     @Override
@@ -98,22 +104,43 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
         mapView.onLowMemory();
     }
 
-    public void setMarker(String text, LatLng latLng) {
+    public void setMarker(LatLng latLng, boolean zoom) {
         MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.title(text);
+        String label = null;
+        try {
+            label = new Geocoder(this, Locale.getDefault()).getFromLocation(latLng.latitude, latLng.longitude, 1).get(0).getAddressLine(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        markerOptions.title(label);
         markerOptions.position(latLng);
         if (marker != null)
             marker.remove();
         marker = googleMap.addMarker(markerOptions);
+        if(zoom)
+            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
     }
 
     public void getLocation(){
-        Intent intent = new Intent(this, GpsService.class);
+        intent = new Intent(this, GpsService.class);
         startService(intent);
-        BroadcastReceiver broadcastReceiver = new broadcastReceiver();
-        registerReceiver(broadcastReceiver, new IntentFilter("gps"));
-        //stopService(intent);
-        //unregisterReceiver(broadcastReceiver);
+        broadcastReceiver = new broadcastReceiver();
+        registerReceiver(broadcastReceiver, new IntentFilter("GPS"));
+    }
+
+    public void searchLocation(View view){
+        EditText editText = findViewById(R.id.mymapview_input);
+        String address = editText.getText().toString();
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            List<Address> coords = geocoder.getFromLocationName(address, 1);
+            if(coords.isEmpty())
+                Toast.makeText(this, R.string.address_not_found, Toast.LENGTH_SHORT).show();
+            else
+                setMarker(new LatLng(coords.get(0).getLatitude(), coords.get(0).getLongitude()), true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void locate(View view){
@@ -125,9 +152,21 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
         }
     }
 
-    public LatLng getPosition(){
-        return marker.getPosition();
+    public void ok(View view){
+        if(marker != null){
+            Double longitude = marker.getPosition().longitude;
+            Double latitude = marker.getPosition().latitude;
+            SharedPreferences sharedPreferences = this.getSharedPreferences("location", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("longitude", String.valueOf(longitude));
+            editor.putString("latitude", String.valueOf(latitude));
+            editor.commit();
+            finish();
+        }
+        else
+            Toast.makeText(this, R.string.please_select_location, Toast.LENGTH_SHORT).show();
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -150,8 +189,9 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
         public void onReceive(Context context, Intent intent) {
             double longitude = intent.getDoubleExtra("longitude", -1);
             double latitude = intent.getDoubleExtra("latitude", -1);
-            setMarker(null, new LatLng(longitude, latitude));
-            Log.d("myloc", longitude + " " + latitude);
+            setMarker(new LatLng(latitude, longitude), true);
+            Log.d("myloc", latitude + " " + longitude);
+            unregisterReceiver(broadcastReceiver);
         }
     }
 }

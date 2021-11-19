@@ -1,7 +1,5 @@
 package com.ezstudies.app.agenda;
 
-import java.util.ArrayList;
-
 public class Course {
     private Hours hours;
     private String type;

@@ -30,7 +30,7 @@ public class GpsService extends Service {
 
         @Override
         public void onLocationChanged(@NonNull Location location) {
-            Intent intent = new Intent("gps");
+            Intent intent = new Intent("GPS");
             intent.putExtra("latitude", location.getLatitude());
             intent.putExtra("longitude", location.getLongitude());
             sendBroadcast(intent);
