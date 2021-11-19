@@ -7,4 +7,7 @@
     <string name="settings">Settings</string>
     <string name="celcat">Celcat</string>
     <string name="ics">Saved /Download/celcat.ics</string>
+    <string name="perm_granted">Permission granted</string>
+    <string name="perm_denied">Permission denied</string>
+    <string name="location">Location</string>
 </resources>
