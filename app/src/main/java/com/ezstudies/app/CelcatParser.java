@@ -115,7 +115,9 @@ public class CelcatParser extends AppCompatActivity {
                 int endHour = Integer.parseInt(end.split(":")[0]);
                 int endMinute = Integer.parseInt(end.split(":")[1]);
 
-                Course c = new Course(new Hours(startHour, startMinute, endHour, endMinute), type.replace(" ", "").replace("\n", ""), title.replace("\n", ""), string.replace("\n", "\\n"));
+                title = type.replace(" ", "").replace("\n", "") + " - " + title.replace("\n", "");
+
+                Course c = new Course(new Hours(startHour, startMinute, endHour, endMinute), title.replace("\n", ""), string.replace("\n", "\\n"));
                 day.addCourse(c);
                 Log.d("course", c.toString());
             }
@@ -140,7 +142,7 @@ public class CelcatParser extends AppCompatActivity {
                 "DESCRIPTION:" + c.getDescription() + "\n" +
                 "SEQUENCE:0\n" + //c quoi ca
                 "STATUS:CONFIRMED\n" +
-                "SUMMARY:" + c.getType() + " - " + c.getTitle() + "\n" +
+                "SUMMARY:" + c.getTitle() + "\n" +
                 "END:VEVENT\n";
             }
         }

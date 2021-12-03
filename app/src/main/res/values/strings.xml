@@ -15,4 +15,5 @@
     <string name="ok">Ok</string>
     <string name="please_select_location">Please select a location</string>
     <string name="open_map">Open map</string>
+    <string name="import_ics">Import from ICS file</string>
 </resources>
