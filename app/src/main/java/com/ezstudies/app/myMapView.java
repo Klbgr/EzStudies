@@ -40,6 +40,8 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
     private MapView mapView;
     private GoogleMap googleMap;
     private Marker marker;
+    private String type;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +49,8 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
         mapView = findViewById(R.id.mymapview_map);
         mapView.getMapAsync(this);
         mapView.onCreate(savedInstanceState);
+
+        type = getIntent().getStringExtra("type");
     }
 
     @Override
@@ -156,7 +160,7 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
         if(marker != null){
             Double longitude = marker.getPosition().longitude;
             Double latitude = marker.getPosition().latitude;
-            SharedPreferences sharedPreferences = this.getSharedPreferences("location", Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getSharedPreferences(type, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString("longitude", String.valueOf(longitude));
             editor.putString("latitude", String.valueOf(latitude));

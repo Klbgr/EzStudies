@@ -16,4 +16,13 @@
     <string name="please_select_location">Please select a location</string>
     <string name="open_map">Open map</string>
     <string name="import_ics">Import from ICS file</string>
+    <string name="set_home_address">Set your address</string>
+    <string name="set_school_address">Set your school\'s address</string>
+    <string name="empty">Empty</string>
+    <string name="prep_time">Preparation time</string>
+    <string name="about">About us</string>
+    <string name="about_text">We are students etc, we sometimes code things that works but most of the time it crashes\nmaybe some links to our github or social media</string>
+    <string name="minutes">minutes</string>
+    <string name="cancel">Cancel</string>
+    <string name="invalid_input">Invalid input</string>
 </resources>
