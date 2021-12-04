@@ -160,10 +160,10 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
         if(marker != null){
             Double longitude = marker.getPosition().longitude;
             Double latitude = marker.getPosition().latitude;
-            SharedPreferences sharedPreferences = getSharedPreferences(type, Context.MODE_PRIVATE);
+            SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("longitude", String.valueOf(longitude));
-            editor.putString("latitude", String.valueOf(latitude));
+            editor.putString(type + "_longitude", String.valueOf(longitude));
+            editor.putString(type + "_latitude", String.valueOf(latitude));
             editor.commit();
             finish();
         }
