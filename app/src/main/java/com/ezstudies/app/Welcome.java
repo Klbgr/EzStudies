@@ -10,12 +10,11 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class Welcome extends AppCompatActivity {
-    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        sharedPreferences = this.getSharedPreferences("firstTime", Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
         Boolean firstTime = sharedPreferences.getBoolean("firstTime", true);
 
         if(firstTime){
@@ -28,7 +27,7 @@ public class Welcome extends AppCompatActivity {
     }
 
     public void enter(View view){
-        SharedPreferences.Editor editor = sharedPreferences.edit();
+        SharedPreferences.Editor editor = getSharedPreferences("prefs", Context.MODE_PRIVATE).edit();
         editor.putBoolean("firstTime", false);
         editor.commit();
         finish();
