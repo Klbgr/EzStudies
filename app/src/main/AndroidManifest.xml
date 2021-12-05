@@ -40,8 +40,7 @@
         <activity android:name=".Settings" >
         </activity>
         <activity
-            android:name=".CelcatParser"
-            android:screenOrientation="sensorLandscape" >
+            android:name=".CelcatParser" >
         </activity>
         <activity android:name=".myMapView" >
         </activity>
