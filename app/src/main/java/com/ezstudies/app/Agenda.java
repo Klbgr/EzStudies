@@ -2,9 +2,13 @@ package com.ezstudies.app;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.webkit.CookieManager;
+import android.webkit.WebView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -12,22 +16,100 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.ezstudies.app.agenda.Date;
+import com.ezstudies.app.agenda.Day;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Agenda extends AppCompatActivity {
+    private JavaScriptInterface jsi;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.agenda_layout);
     }
 
-    public void celcat(View view){
-        startActivity(new Intent(this, CelcatParser.class));
+    public void celcat(View view) throws InterruptedException {
+        SharedPreferences sharedPreferences = this.getSharedPreferences("prefs", MODE_PRIVATE);
+        String name = sharedPreferences.getString("name", null);
+        String password = sharedPreferences.getString("password", null);
+        Login login = new Login(name, password);
+        login.start();
+        login.join();
+
+        if(!login.isSuccess()){
+            Toast.makeText(this, getString(R.string.login_fail_network), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String url = login.getUrl();
+        WebView webview = new WebView(this);
+        webview.setWebViewClient(new myWebView(this));
+        webview.getSettings().setJavaScriptEnabled(true);
+        webview.getSettings().setLoadWithOverviewMode(true);
+        jsi = new JavaScriptInterface();
+        webview.addJavascriptInterface(jsi, "HTMLOUT");
+        HashMap<String, String> cookies = (HashMap<String, String>) login.getCookies();
+        for(Map.Entry<String, String> pair: cookies.entrySet()){
+            String cookie = pair.getKey() + "=" + pair.getValue() + "; path=/";
+            CookieManager.getInstance().setCookie(url, cookie);
+        }
+        webview.loadUrl(url);
+    }
+
+    public void parseCelcat(){
+        Database database = new Database(this);
+        database.clear();
+
+        String source = jsi.getSource();
+        Document document = Jsoup.parse(source, "UTF-8");
+        Elements days = document.getElementsByClass("fc-list-heading");
+        for (Element e : days) { //days
+            String date = e.attr("data-date");
+            String dateElements[] = date.split("-");
+            while(e.nextElementSibling() != null && e.nextElementSibling().className().equals("fc-list-item")){
+                e = e.nextElementSibling();
+                Element eHours = e.getElementsByClass("fc-list-item-time fc-widget-content").get(0);
+                String hour = eHours.text();
+                String startHour = hour.substring(0, hour.indexOf(" - "));
+                String endHour = hour.substring(hour.indexOf(" - ")+3);
+                String startHourSplit[] = startHour.split(":");
+                String endHourSplit[] = endHour.split(":");
+                int startingHour = Integer.parseInt(startHourSplit[0]);
+                int startingMinute = Integer.parseInt(startHourSplit[1]);
+                int endingHour = Integer.parseInt(endHourSplit[0]);
+                int endingMinute = Integer.parseInt(endHourSplit[1]);
+                Element eCourse = e.getElementsByClass("fc-list-item-title fc-widget-content").get(0);
+                String course = eCourse.toString();
+                course = course.substring(course.indexOf("</a>")+4, course.indexOf("</td>"));
+                String courseInfo[] = course.split(" <br> ");
+                String title = courseInfo[0] + " - " + courseInfo[1];
+                String description = "";
+                for(int i = 2 ; i<courseInfo.length ; i++){
+                    description += courseInfo[i] + " | ";
+                }
+                description = description.substring(0, description.length()-3);
+                String newDate = dateElements[2] + "-" + dateElements[1] + "-" + dateElements[0];
+                database.add(newDate, title, startingHour + ":" + startingMinute, endingHour + ":" + endingMinute, description);
+            }
+        }
+        Log.d("db", database.toString());
+        database.close();
+
+        Toast.makeText(this, getString(R.string.celcat_success), Toast.LENGTH_SHORT).show();
     }
 
     public void importICS(View view){
@@ -43,6 +125,7 @@ public class Agenda extends AppCompatActivity {
         try {
             BufferedReader bufferedReader = new BufferedReader(new StringReader(content));
             String line;
+            String date = null;
             String title = null;
             String startingAt = null;
             String endingAt = null;
@@ -53,6 +136,7 @@ public class Agenda extends AppCompatActivity {
                 switch (list[0]){
                     case "BEGIN": //start
                         if(list[1].equals("VEVENT")) {
+                            date = null;
                             title = null;
                             startingAt = null;
                             endingAt = null;
@@ -60,10 +144,11 @@ public class Agenda extends AppCompatActivity {
                         }
                         break;
                     case "DTSTART": //start time
-                        startingAt = list[1];
+                        startingAt = list[1].substring(9, 11) + ":" + list[1].substring(11, 13);
+                        date = list[1].substring(6, 8) + "-" + list[1].substring(4, 6) + "-" + list[1].substring(0, 4);
                         break;
                     case "DTEND": //end time
-                        endingAt = list[1];
+                        endingAt = list[1].substring(9, 11) + ":" + list[1].substring(11, 13);
                         break;
                     case "DESCRIPTION": //description
                         description = list[1];
@@ -73,7 +158,7 @@ public class Agenda extends AppCompatActivity {
                         break;
                     case "END": //end
                         if(list[1].equals("VEVENT")) {
-                            database.add(title, startingAt, endingAt, description);
+                            database.add(date, title, startingAt, endingAt, description);
                         }
                         break;
                 }

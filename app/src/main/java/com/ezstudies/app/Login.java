@@ -1,7 +1,6 @@
 package com.ezstudies.app;
 
-import android.content.Context;
-import android.widget.Toast;
+import android.util.Log;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -9,31 +8,21 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.FormElement;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Map;
 
-public class Login implements Runnable{
+public class Login extends Thread {
 
-    private final String login_url;
-    private final String user_agent;
+    private final String login_url = Welcome.LOGIN_FORM_URL;
+    private final String user_agent = Welcome.USER_AGENT;
     private final String name;
     private final String password;
-
-    public String getResponseUrl() {
-        return responseUrl;
-    }
-
-    public Map<String, String> getCookies() {
-        return cookies;
-    }
-
+    private Boolean success = false;
+    private String url;
     private String responseUrl = null;
     private Map<String, String> cookies;
 
-    public Login(String url, String agent, String name, String password){
-        login_url = url;
+    public Login(String name, String password){
         this.name = name;
-        user_agent = agent;
         this.password = password;
     }
 
@@ -59,5 +48,34 @@ public class Login implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        if(responseUrl != null && !responseUrl.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
+            success = true;
+            Log.d("cookie", cookies.toString());
+            url = responseUrl.replace("Unknown", "List");
+            url = url.replace("month", "listWeek");
+            Log.d("url replace", url);
+        }
+        else{
+            success = false;
+            Log.d("erreur", "erreur de connexion ! ");
+        }
+
+    }
+
+    public String getResponseUrl() {
+        return responseUrl;
+    }
+
+    public Map<String, String> getCookies() {
+        return cookies;
+    }
+
+    public Boolean isSuccess(){
+        return success;
+    }
+
+    public String getUrl(){
+        return url;
     }
 }

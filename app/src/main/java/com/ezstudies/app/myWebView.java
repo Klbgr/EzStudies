@@ -1,13 +1,17 @@
 package com.ezstudies.app;
 
 import android.os.Handler;
-import android.text.BoringLayout;
 import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class Webview extends WebViewClient {
-    Boolean parsing = false;
+public class myWebView extends WebViewClient {
+    private Agenda agenda;
+    private Boolean parsing = false;
+
+    public myWebView(Agenda agenda){
+        this.agenda = agenda;
+    }
     public void onPageFinished(WebView view, String url) {
         Log.d("url", url);
         view.loadUrl("javascript:HTMLOUT.processHTML(document.documentElement.outerHTML);");
@@ -17,12 +21,9 @@ public class Webview extends WebViewClient {
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 public void run() {
-                    // yourMethod();
-                    CelcatParser.parse();
+                    agenda.parseCelcat();
                 }
             }, 10000);
-            //CelcatParser.buildICS();
-            //CelcatParser.saveICS();
         }
     }
 }

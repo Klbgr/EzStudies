@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 
 public class Database extends SQLiteOpenHelper {
     private final String table = "agenda";
+    private final String col0 = "date";
     private final String col1 = "title";
     private final String col2 = "startingAt";
     private final String col3 = "endingAt";
@@ -21,7 +22,7 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String request = "CREATE TABLE "+table+"("+col1+" TEXT, "+col2+" TEXT, "+col3+" TEXT, "+col4 +" TEXT);";
+        String request = "CREATE TABLE "+table+"("+col0+" TEXT, "+col1+" TEXT, "+col2+" TEXT, "+col3+" TEXT, "+col4 +" TEXT);";
         sqLiteDatabase.execSQL(request);
     }
 
@@ -31,10 +32,11 @@ public class Database extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
-    public void add(String title, String startingAt, String endingAt, String description){
+    public void add(String date, String title, String startingAt, String endingAt, String description){
         ContentValues contentValues;
         SQLiteDatabase db =this.getWritableDatabase();
         contentValues = new ContentValues();
+        contentValues.put(col0, date);
         contentValues.put(col1, title);
         contentValues.put(col2, startingAt);
         contentValues.put(col3, endingAt);
@@ -55,7 +57,7 @@ public class Database extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(selectQuery, null);
         String out = "";
         while (cursor.moveToNext()){
-            out += cursor.getString(0) + "\t" + cursor.getString(1) + "\t" + cursor.getString(2) + "\t" + cursor.getString(3) + "\n";
+            out += cursor.getString(0) + "\t" + cursor.getString(1) + "\t" + cursor.getString(2) + "\t" + cursor.getString(3) + "\t" + cursor.getString(4) + "\n";
         }
         cursor.close();
         db.close();
