@@ -5,6 +5,8 @@ import android.util.Log;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.ezstudies.app.activities.Agenda;
+
 public class myWebView extends WebViewClient {
     private Agenda agenda;
     private Boolean parsing = false;

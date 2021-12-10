@@ -1,4 +1,4 @@
-package com.ezstudies.app;
+package com.ezstudies.app.activities;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -16,8 +16,11 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.ezstudies.app.agenda.Date;
-import com.ezstudies.app.agenda.Day;
+import com.ezstudies.app.Database;
+import com.ezstudies.app.JavaScriptInterface;
+import com.ezstudies.app.Login;
+import com.ezstudies.app.R;
+import com.ezstudies.app.myWebView;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -30,7 +33,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 

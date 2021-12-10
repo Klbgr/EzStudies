@@ -1,4 +1,4 @@
-package com.ezstudies.app;
+package com.ezstudies.app.activities;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -19,6 +19,9 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.ezstudies.app.R;
+import com.ezstudies.app.myMapView;
 
 import java.io.IOException;
 import java.util.Locale;

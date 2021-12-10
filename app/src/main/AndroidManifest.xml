@@ -23,7 +23,7 @@
         <uses-library android:name="com.google.android.maps" />
 
         <activity
-            android:name=".Welcome"
+            android:name=".activities.Welcome"
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -31,16 +31,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Overview" >
+        <activity android:name=".activities.Overview" >
         </activity>
-        <activity android:name=".Agenda" >
+        <activity android:name=".activities.Agenda" >
         </activity>
-        <activity android:name=".Homework" >
+        <activity android:name=".activities.Homework" >
         </activity>
-        <activity android:name=".Settings" >
-        </activity>
-        <activity
-            android:name=".CelcatParser" >
+        <activity android:name=".activities.Settings" >
         </activity>
         <activity android:name=".myMapView" >
         </activity>

@@ -2,6 +2,8 @@ package com.ezstudies.app;
 
 import android.util.Log;
 
+import com.ezstudies.app.activities.Welcome;
+
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;

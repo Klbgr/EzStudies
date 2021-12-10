@@ -30,6 +30,7 @@
     <string name="login_fail_credentials">Wrong credentials</string>
     <string name="login_fail_network">Failed, please retry</string>
     <string name="celcat_success">Imported agenda from Celcat</string>
+    <string name="duration">Estimated duration :</string>
 
     <string-array name="travel_array">
         <item>Driving</item>
