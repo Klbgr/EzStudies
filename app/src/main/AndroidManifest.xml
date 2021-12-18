@@ -31,15 +31,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.Overview" >
+        <activity android:name=".activities.Overview"
+            android:label="@string/overview" >
         </activity>
-        <activity android:name=".activities.Agenda" >
+        <activity android:name=".activities.Agenda"
+            android:label="@string/agenda" >
         </activity>
-        <activity android:name=".activities.Homework" >
+        <activity android:name=".activities.Homework"
+            android:label="@string/homework" >
         </activity>
-        <activity android:name=".activities.Settings" >
+        <activity android:name=".activities.Settings"
+            android:label="@string/settings" >
         </activity>
-        <activity android:name=".myMapView" >
+        <activity android:name=".myMapView"
+            android:label="@string/map" >
         </activity>
 
         <service android:name=".GpsService" />

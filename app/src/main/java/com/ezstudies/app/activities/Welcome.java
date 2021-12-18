@@ -140,6 +140,8 @@ public class Welcome extends FragmentActivity {
 
         Boolean conditions = condition1 && condition2;
         if(conditions){
+            editor.putBoolean("first_time", false);
+            editor.apply();
             finish();
             startActivity(new Intent(this, Overview.class));
         }
