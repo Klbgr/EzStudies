@@ -164,7 +164,7 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putString(type + "_longitude", String.valueOf(longitude));
             editor.putString(type + "_latitude", String.valueOf(latitude));
-            editor.commit();
+            editor.apply();
             finish();
         }
         else

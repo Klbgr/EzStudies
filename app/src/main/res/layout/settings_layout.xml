@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -24,13 +23,13 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/settings.click0"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
                     android:minHeight="48dp"
-                    android:onClick="openSpinner"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -58,7 +57,7 @@
                             android:textStyle="bold" />
 
                         <Spinner
-                            android:id="@+id/spinner"
+                            android:id="@+id/settings.spinner"
                             android:layout_width="match_parent"
                             android:layout_height="48dp" />
 
@@ -73,19 +72,19 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/group1"
+                android:id="@+id/settings.group1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/settings.click1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
                     android:minHeight="48dp"
-                    android:onClick="home"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -129,19 +128,19 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/group2"
+                android:id="@+id/settings.group2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/settings.click2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
                     android:minHeight="48dp"
-                    android:onClick="school"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -185,19 +184,19 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/group3"
+                android:id="@+id/settings.group3"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/settings.click3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
                     android:minHeight="48dp"
-                    android:onClick="travel_time"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -245,13 +244,13 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/settings.click4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
                     android:clickable="true"
                     android:focusable="true"
                     android:minHeight="48dp"
-                    android:onClick="prep_time"
                     android:orientation="horizontal">
 
                     <ImageView
@@ -294,6 +293,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/settings.click5"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackground"

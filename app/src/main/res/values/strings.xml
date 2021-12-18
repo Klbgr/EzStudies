@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">EzStudies</string>
-    <string name="welcome">Welcome to EzStudies !\nEzStudies is an app made by students for students.\nThe main idea of this app is to ease students’ life.</string>
+    <string name="welcome1">Welcome to EzStudies !\nEzStudies is an app made by students for students.\nThe main idea of this app is to ease students’ life.</string>
+    <string name="welcome2">Setup</string>
+    <string name="welcome3">Login</string>
     <string name="agenda">Agenda</string>
     <string name="homework">Homework</string>
     <string name="settings">Settings</string>
@@ -30,7 +32,11 @@
     <string name="login_fail_credentials">Wrong credentials</string>
     <string name="login_fail_network">Failed, please retry</string>
     <string name="celcat_success">Imported agenda from Celcat</string>
-    <string name="duration">Estimated duration :</string>
+    <string name="duration">Estimated duration</string>
+    <string name="enter">Enter</string>
+    <string name="finish_setup">Please finish setup first</string>
+    <string name="mode_ics">Use ICS files</string>
+    <string name="mode_celcat">Use Celcat</string>
 
     <string-array name="travel_array">
         <item>Driving</item>
