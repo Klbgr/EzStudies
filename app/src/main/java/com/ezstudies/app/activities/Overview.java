@@ -3,9 +3,12 @@ package com.ezstudies.app.activities;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -21,21 +24,31 @@ public class Overview extends AppCompatActivity {
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.overview_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.overview_agenda:
+                startActivity(new Intent(this, Agenda.class));
+                break;
+            case R.id.overview_homework:
+                startActivity(new Intent(this, Homework.class));
+                break;
+            case R.id.overview_settings:
+                startActivity(new Intent(this, Settings.class));
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         route();
-    }
-
-    public void agenda(View view){
-        startActivity(new Intent(this, Agenda.class));
-    }
-
-    public void homework(View view){
-        startActivity(new Intent(this, Homework.class));
-    }
-
-    public void settings(View view){
-        startActivity(new Intent(this, Settings.class));
     }
 
     public void route(){

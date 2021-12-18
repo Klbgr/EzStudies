@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/overview.agenda"
+        android:title="@string/agenda" />
+    <item
+        android:id="@+id/overview.homework"
+        android:title="@string/homework" />
+    <item
+        android:id="@+id/overview.settings"
+        android:title="@string/settings" />
+</menu>

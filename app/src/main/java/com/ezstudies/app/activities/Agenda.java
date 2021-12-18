@@ -55,7 +55,7 @@ public class Agenda extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
+        getMenuInflater().inflate(R.menu.agenda_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
