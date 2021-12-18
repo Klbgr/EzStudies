@@ -64,4 +64,27 @@ public class Database extends SQLiteOpenHelper {
         return out;
     }
 
+    public String toICS(){
+        String selectQuery = "SELECT * FROM " + table;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        String ics = "BEGIN:VCALENDAR\n" +
+                "VERSION:2.0\n" +
+                "CALSCALE:GREGORIAN\n";
+        while (cursor.moveToNext()){
+            String date[] = cursor.getString(0).split("-");
+            String start[] = cursor.getString(2).split(":");
+            String end[] = cursor.getString(3).split(":");
+            ics += "BEGIN:VEVENT\n" +
+                    "DTSTART:" + date[2] + date[1] + date[0] + "T" + start[0] + start[1] + "00Z\n" +
+                    "DTEND:" + date[2] + date[1] + date[0] + "T" + end[0] + end[1] + "00Z\n" +
+                    "DESCRIPTION:" + cursor.getString(4) + "\n" +
+                    "SUMMARY:" + cursor.getString(1) + "\n" +
+                    "END:VEVENT\n";
+        }
+        ics += "END:VCALENDAR";
+        cursor.close();
+        db.close();
+        return ics;
+    }
 }

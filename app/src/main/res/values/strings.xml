@@ -39,6 +39,8 @@
     <string name="finish_setup">Please finish setup first</string>
     <string name="mode_ics">Use ICS files</string>
     <string name="mode_celcat">Use Celcat</string>
+    <string name="export_ics">Export to ICS file</string>
+    <string name="export_success">Saved /Download/</string>
 
     <string-array name="travel_array">
         <item>Driving</item>

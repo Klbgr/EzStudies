@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.WebView;
@@ -14,6 +17,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ezstudies.app.Database;
@@ -28,11 +32,14 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +49,18 @@ public class Agenda extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.agenda_layout);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        exportICS();
+        return super.onOptionsItemSelected(item);
     }
 
     public void celcat(View view) throws InterruptedException {
@@ -199,4 +218,23 @@ public class Agenda extends AppCompatActivity {
                     }
                 }
             });
+
+    public void exportICS() {
+        Database database = new Database(this);
+        String ics = database.toICS();
+        database.close();
+        try{
+            Calendar now = Calendar.getInstance();
+            String date = now.get(Calendar.DAY_OF_MONTH) + "" + (now.get(Calendar.MONTH)+1) + "" + now.get(Calendar.YEAR) + "" + now.get(Calendar.HOUR_OF_DAY) + "" + now.get(Calendar.MINUTE) + "" + now.get(Calendar.SECOND);
+            String name = "celcat_" + date + ".ics";
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + name);
+            FileWriter fileWriter = new FileWriter(file, false);
+            fileWriter.write(ics);
+            fileWriter.close();
+            Toast.makeText(this, getString(R.string.export_success) + name, Toast.LENGTH_SHORT).show();
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
