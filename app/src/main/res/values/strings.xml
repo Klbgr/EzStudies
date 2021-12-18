@@ -7,7 +7,7 @@
     <string name="map">Map</string>
     <string name="welcome1">Welcome to EzStudies !\nEzStudies is an app made by students for students.\nThe main idea of this app is to ease students’ life.</string>
     <string name="welcome2">Setup</string>
-    <string name="welcome3">Login</string>
+    <string name="welcome3">Enter</string>
     <string name="perm_granted">Permission granted</string>
     <string name="perm_denied">Permission denied</string>
     <string name="search">Search</string>
@@ -20,9 +20,10 @@
     <string name="prep_time">Preparation time</string>
     <string name="about">About us</string>
     <string name="about_text">We are students etc, we sometimes code things that works but most of the time it crashes\nmaybe some links to our github or social media</string>
-    <string name="minutes">minutes</string>
+    <string name="minutes">%1$d minutes</string>
     <string name="cancel">Cancel</string>
     <string name="invalid_input">Invalid input</string>
+    <string name="import_mode">Import mode</string>
     <string name="travel_mode">Travel mode</string>
     <string name="travel_time">Travel time</string>
     <string name="name_hint">login cyu</string>
@@ -33,18 +34,24 @@
     <string name="login_fail_network">Failed, please retry</string>
     <string name="celcat_success">Imported agenda from Celcat</string>
     <string name="ics_success">Imported agenda from ICS file</string>
-    <string name="duration">Estimated duration</string>
+    <string name="duration">Estimated duration : %1$ds</string>
     <string name="enter">Enter</string>
     <string name="finish_setup">Please finish setup first</string>
-    <string name="mode_ics">Use ICS files</string>
-    <string name="mode_celcat">Use Celcat</string>
     <string name="export_ics">Export to ICS file</string>
     <string name="export_success">Saved /Download/</string>
+    <string name="connect_celcat">Connect to Celcat</string>
+    <string name="connected_as">Connected as %1$s</string>
+    <string name="not_connected">Not connected</string>
+    <string name="invalid_settings">Invalid settings</string>
 
     <string-array name="travel_array">
         <item>Driving</item>
         <item>Walking</item>
         <item>Transit</item>
+    </string-array>
+    <string-array name="agenda_array">
+        <item>From Celcat</item>
+        <item>From ICS file</item>
     </string-array>
 
     <dimen name="settings_spacing">16dp</dimen>

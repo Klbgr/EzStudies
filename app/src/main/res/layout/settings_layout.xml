@@ -53,11 +53,120 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:text="@string/import_mode"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/settings.agenda_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/settings_spacing" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/settings.group0"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/settings.click1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:minHeight="48dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0"
+                        app:srcCompat="@android:drawable/ic_menu_manage" />
+
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right|center_vertical"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/connect_celcat"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/settings.status"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:textStyle="italic" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/settings_spacing" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/settings.click2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:minHeight="48dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0"
+                        app:srcCompat="@android:drawable/ic_menu_preferences" />
+
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:text="@string/travel_mode"
                             android:textStyle="bold" />
 
                         <Spinner
-                            android:id="@+id/settings.spinner"
+                            android:id="@+id/settings.travel_spinner"
                             android:layout_width="match_parent"
                             android:layout_height="48dp" />
 
@@ -78,7 +187,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/settings.click1"
+                    android:id="@+id/settings.click3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
@@ -92,7 +201,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="0"
-                        app:srcCompat="@android:drawable/ic_menu_mylocation" />
+                        app:srcCompat="@android:drawable/ic_menu_myplaces" />
 
                     <Space
                         android:layout_width="@dimen/logo_spacing"
@@ -134,7 +243,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/settings.click2"
+                    android:id="@+id/settings.click4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
@@ -190,7 +299,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/settings.click3"
+                    android:id="@+id/settings.click5"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
@@ -244,7 +353,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/settings.click4"
+                    android:id="@+id/settings.click6"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
@@ -293,7 +402,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/settings.click5"
+                android:id="@+id/settings.click7"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackground"

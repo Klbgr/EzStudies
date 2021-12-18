@@ -1,36 +1,21 @@
 package com.ezstudies.app.activities;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.ezstudies.app.Database;
 import com.ezstudies.app.Login;
 import com.ezstudies.app.R;
 import com.ezstudies.app.WelcomeFragment;
-
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.StringReader;
 
 public class Welcome extends FragmentActivity {
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36";
@@ -60,12 +45,10 @@ public class Welcome extends FragmentActivity {
         }
     }
 
-    public void login (View view) {
+    public void login () {
         try{
-            EditText eName = findViewById(R.id.welcome_name);
-            EditText ePassword = findViewById(R.id.welcome_password);
-            String name = eName.getText().toString();
-            String password = ePassword.getText().toString();
+            String name = "yo";
+            String password = name;
 
             Login login = new Login(name, password);
             login.start();
@@ -99,10 +82,10 @@ public class Welcome extends FragmentActivity {
     }
 
     public void enter(View view){
-        int mode = sharedPreferences.getInt("travel_mode", -1);
         Boolean condition1 = false;
         Boolean condition2 = false;
         int prep_time;
+        int mode = sharedPreferences.getInt("travel_mode", -1);
         switch (mode){
             case 0: //driving
             case 1: //walking
@@ -142,7 +125,6 @@ public class Welcome extends FragmentActivity {
             case -1:
                 break;
         }
-        Log.d("conditions", condition1 + " " + condition2);
 
         Boolean conditions = condition1 && condition2;
         if(conditions){
@@ -171,9 +153,6 @@ public class Welcome extends FragmentActivity {
                 case 1:
                     page =  new WelcomeFragment(2);
                     break;
-                case 2:
-                    page =  new WelcomeFragment(3);
-                    break;
                 default:
                     break;
             }
@@ -182,7 +161,7 @@ public class Welcome extends FragmentActivity {
 
         @Override
         public int getItemCount() {
-            return 3;
+            return 2;
         }
     }
 }

@@ -1,7 +1,6 @@
 package com.ezstudies.app;
 
 import android.app.AlertDialog;
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -9,17 +8,13 @@ import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +29,8 @@ public class WelcomeFragment extends Fragment {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private View view;
-    private Spinner spinner;
+    private Spinner travel_spinner;
+    private Spinner agenda_spinner;
 
     public WelcomeFragment(int page){
         this.page = page;
@@ -52,19 +48,42 @@ public class WelcomeFragment extends Fragment {
                 sharedPreferences = getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE);
                 editor = sharedPreferences.edit();
 
-                spinner = view.findViewById(R.id.settings_spinner);
-                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getActivity(), R.array.travel_array, android.R.layout.simple_spinner_item);
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                spinner.setAdapter(adapter);
-
+                LinearLayout group0 = view.findViewById(R.id.settings_group0);
                 LinearLayout group1 = view.findViewById(R.id.settings_group1);
                 LinearLayout group2 = view.findViewById(R.id.settings_group2);
                 LinearLayout group3 = view.findViewById(R.id.settings_group3);
-                LinearLayout group5 = view.findViewById(R.id.settings_click5);
-
+                LinearLayout group5 = view.findViewById(R.id.settings_click7);
                 group5.setVisibility(View.GONE);
 
-                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                agenda_spinner = view.findViewById(R.id.settings_agenda_spinner);
+                ArrayAdapter<CharSequence> agenda_spinner_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.agenda_array, android.R.layout.simple_spinner_item);
+                agenda_spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                agenda_spinner.setAdapter(agenda_spinner_adapter);
+                agenda_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        editor.putInt("import_mode", position);
+                        editor.apply();
+
+                        switch (position){
+                            case 0:
+                                group0.setVisibility(View.VISIBLE);
+                                break;
+                            case 1:
+                                group0.setVisibility(View.GONE);
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {}
+                });
+
+                travel_spinner = view.findViewById(R.id.settings_travel_spinner);
+                ArrayAdapter<CharSequence> travel_spinner_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.travel_array, android.R.layout.simple_spinner_item);
+                travel_spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                travel_spinner.setAdapter(travel_spinner_adapter);
+                travel_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         editor.putInt("travel_mode", position);
@@ -90,36 +109,6 @@ public class WelcomeFragment extends Fragment {
                 });
 
                 setOnClickListeners();
-                loadPrefs();
-
-                break;
-            case 3:
-                view = inflater.inflate(R.layout.welcome_page3, container, false);
-
-                sharedPreferences = getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE);
-                editor = sharedPreferences.edit();
-
-                RadioGroup radioGroup = view.findViewById(R.id.welcome_radios);
-                radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(RadioGroup group, int checkedId) {
-                        LinearLayout linearLayout = view.findViewById(R.id.welcome_celcat);
-                        switch (group.getCheckedRadioButtonId()){
-                            case R.id.welcome_radio1: //celcat
-                                linearLayout.setVisibility(View.VISIBLE);
-                                editor.putInt("import_mode", 0);
-                                editor.apply();
-                                break;
-                            case R.id.welcome_radio2: //ics
-                                linearLayout.setVisibility(View.INVISIBLE);
-                                editor.putInt("import_mode", 1);
-                                editor.apply();
-                                break;
-                        }
-                    }
-                });
-                RadioButton radioButton1 = view.findViewById(R.id.welcome_radio1);
-                radioButton1.setChecked(true);
                 break;
             default:
                 break;
@@ -166,12 +155,12 @@ public class WelcomeFragment extends Fragment {
         TextView textView = view.findViewById(R.id.settings_prep_time);
         String prep_time;
         if(ptime != -1){
-            prep_time = ptime + " " + getString(R.string.minutes);
+            prep_time = getString(R.string.minutes, ptime);
         }
         else{
             editor.putInt("prep_time", 30);
             editor.apply();
-            prep_time = 30 + " " + getString(R.string.minutes);
+            prep_time = getString(R.string.minutes, 30);
         }
         textView.setText(prep_time);
 
@@ -179,17 +168,32 @@ public class WelcomeFragment extends Fragment {
         textView = view.findViewById(R.id.settings_travel_time);
         String travel_time;
         if(ttime != -1){
-            travel_time = ttime + " " + getString(R.string.minutes);
+            travel_time = getString(R.string.minutes, ttime);
         }
         else{
             editor.putInt("travel_time", 30);
             editor.apply();
-            travel_time = 30 + " " + getString(R.string.minutes);
+            travel_time = getString(R.string.minutes, 30);
         }
         textView.setText(travel_time);
 
         int travel_mode = sharedPreferences.getInt("travel_mode", 0);
-        spinner.setSelection(travel_mode);
+        travel_spinner.setSelection(travel_mode);
+
+        int import_mode = sharedPreferences.getInt("import_mode", 0);
+        agenda_spinner.setSelection(import_mode);
+
+        boolean connected = sharedPreferences.getBoolean("connected", false);
+        textView = view.findViewById(R.id.settings_status);
+        String text;
+        if(connected){
+            String name = sharedPreferences.getString("name", null);
+            text = getString(R.string.connected_as, name);
+        }
+        else{
+            text = getString(R.string.not_connected);
+        }
+        textView.setText(text);
     }
 
     public void setOnClickListeners(){
@@ -197,12 +201,89 @@ public class WelcomeFragment extends Fragment {
         click0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                spinner.performClick();
+                agenda_spinner.performClick();
             }
         });
 
         LinearLayout click1 = view.findViewById(R.id.settings_click1);
         click1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setTitle(getString(R.string.connect_celcat));
+
+                LinearLayout linearLayout = new LinearLayout(getContext());
+                linearLayout.setOrientation(LinearLayout.VERTICAL);
+
+                EditText name = new EditText(getContext());
+                name.setHint(R.string.name_hint);
+                linearLayout.addView(name);
+
+                EditText password = new EditText(getContext());
+                password.setHint(R.string.password_hint);
+                password.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                linearLayout.addView(password);
+
+                builder.setView(linearLayout);
+
+                builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        try{
+                            String nameText = name.getText().toString();
+                            String passwordText = password.getText().toString();
+                            Login login = new Login(nameText, passwordText);
+                            login.start();
+                            login.join();
+
+                            if(login.isSuccess()) {
+                                editor.putString("name", nameText);
+                                editor.putString("password", passwordText);
+                                editor.putBoolean("connected", true);
+                                editor.apply();
+
+                                Toast.makeText(getActivity(), getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
+
+                                TextView textView = view.findViewById(R.id.settings_status);
+                                textView.setText(getString(R.string.connected_as, nameText));
+                            }
+                            else{
+                                String response = login.getResponseUrl();
+                                String text;
+                                if (response.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
+                                    text = getString(R.string.login_fail_credentials);
+                                }
+                                else {
+                                    text = getString(R.string.login_fail_network);
+                                }
+                                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+            }
+        });
+
+        LinearLayout click2 = view.findViewById(R.id.settings_click2);
+        click2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                travel_spinner.performClick();
+            }
+        });
+
+        LinearLayout click3 = view.findViewById(R.id.settings_click3);
+        click3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(WelcomeFragment.this.getActivity(), myMapView.class);
@@ -211,8 +292,8 @@ public class WelcomeFragment extends Fragment {
             }
         });
 
-        LinearLayout click2 = view.findViewById(R.id.settings_click2);
-        click2.setOnClickListener(new View.OnClickListener() {
+        LinearLayout click4 = view.findViewById(R.id.settings_click4);
+        click4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(WelcomeFragment.this.getActivity(), myMapView.class);
@@ -221,8 +302,8 @@ public class WelcomeFragment extends Fragment {
             }
         });
 
-        LinearLayout click3 = view.findViewById(R.id.settings_click3);
-        click3.setOnClickListener(new View.OnClickListener() {
+        LinearLayout click5 = view.findViewById(R.id.settings_click5);
+        click5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(WelcomeFragment.this.getActivity());
@@ -243,7 +324,7 @@ public class WelcomeFragment extends Fragment {
                             textView.setText(time + " " + getString(R.string.minutes));
                         }
                         catch (NumberFormatException e){
-                            Toast.makeText(WelcomeFragment.this.getActivity(), R.string.invalid_input, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), R.string.invalid_input, Toast.LENGTH_SHORT).show();
                         }
 
                     }
@@ -259,8 +340,8 @@ public class WelcomeFragment extends Fragment {
             }
         });
 
-        LinearLayout click4 = view.findViewById(R.id.settings_click4);
-        click4.setOnClickListener(new View.OnClickListener() {
+        LinearLayout click6 = view.findViewById(R.id.settings_click6);
+        click6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(WelcomeFragment.this.getActivity());

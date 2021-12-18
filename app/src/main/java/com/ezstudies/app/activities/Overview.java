@@ -57,7 +57,7 @@ public class Overview extends AppCompatActivity {
                 duration = sharedPreferences.getInt("travel_time", -1)*60;
             }
             TextView textView = findViewById(R.id.overview_duration);
-            textView.setText(getString(R.string.duration) + " : " + duration + "s");
+            textView.setText(getString(R.string.duration, duration));
 
         } catch (InterruptedException e) {
             e.printStackTrace();

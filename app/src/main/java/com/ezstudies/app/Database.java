@@ -76,8 +76,8 @@ public class Database extends SQLiteOpenHelper {
             String start[] = cursor.getString(2).split(":");
             String end[] = cursor.getString(3).split(":");
             ics += "BEGIN:VEVENT\n" +
-                    "DTSTART:" + date[2] + date[1] + date[0] + "T" + start[0] + start[1] + "00Z\n" +
-                    "DTEND:" + date[2] + date[1] + date[0] + "T" + end[0] + end[1] + "00Z\n" +
+                    "DTSTART:" + date[2] + format(date[1], 2) + format(date[0], 2) + "T" + format(start[0], 2) + format(date[1], 2) + "00Z\n" +
+                    "DTEND:" + date[2] + format(date[1], 2) + format(date[0], 2) + "T" + format(end[0], 2) + format(end[1], 2) + "00Z\n" +
                     "DESCRIPTION:" + cursor.getString(4) + "\n" +
                     "SUMMARY:" + cursor.getString(1) + "\n" +
                     "END:VEVENT\n";
@@ -86,5 +86,12 @@ public class Database extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return ics;
+    }
+
+    public String format(String s, int n){
+        for(int i = s.length() ; i<n ; i++){
+            s = "0" + s;
+        }
+        return s;
     }
 }
