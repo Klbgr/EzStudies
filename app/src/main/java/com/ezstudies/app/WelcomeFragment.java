@@ -32,6 +32,8 @@ public class WelcomeFragment extends Fragment {
     private Spinner travel_spinner;
     private Spinner agenda_spinner;
 
+    public WelcomeFragment(){}
+
     public WelcomeFragment(int page){
         this.page = page;
     }

@@ -7,13 +7,13 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.ezstudies.app.Login;
 import com.ezstudies.app.R;
 import com.ezstudies.app.WelcomeFragment;
 
@@ -38,6 +38,10 @@ public class Welcome extends FragmentActivity {
             FragmentStateAdapter pagerAdapter = new ScreenSlidePagerAdapter(this);
             viewPager.setAdapter(pagerAdapter);
             setContentView(viewPager);
+            if(savedInstanceState != null){
+                int current_page = savedInstanceState.getInt("current_page", 0);
+                viewPager.setCurrentItem(current_page);
+            }
         }
         else {
             finish();
@@ -45,40 +49,10 @@ public class Welcome extends FragmentActivity {
         }
     }
 
-    public void login () {
-        try{
-            String name = "yo";
-            String password = name;
-
-            Login login = new Login(name, password);
-            login.start();
-            login.join();
-
-            if(login.isSuccess()) {
-
-                editor.putString("name", name);
-                editor.putString("password", password);
-                editor.putBoolean("connected", true);
-                editor.apply();
-
-                Toast.makeText(this, getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
-            }
-            else{
-                String response = login.getResponseUrl();
-                String text;
-                if (response.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
-                    text = getString(R.string.login_fail_credentials);
-                }
-                else {
-                    text = getString(R.string.login_fail_network);
-                }
-                Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
-            }
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putInt("current_page", viewPager.getCurrentItem());
+        super.onSaveInstanceState(outState);
     }
 
     public void enter(View view){
