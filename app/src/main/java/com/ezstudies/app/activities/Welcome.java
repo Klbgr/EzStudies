@@ -60,36 +60,42 @@ public class Welcome extends FragmentActivity {
         }
     }
 
-    public void login (View view) throws InterruptedException {
-        EditText eName = findViewById(R.id.welcome_name);
-        EditText ePassword = findViewById(R.id.welcome_password);
-        String name = eName.getText().toString();
-        String password = ePassword.getText().toString();
+    public void login (View view) {
+        try{
+            EditText eName = findViewById(R.id.welcome_name);
+            EditText ePassword = findViewById(R.id.welcome_password);
+            String name = eName.getText().toString();
+            String password = ePassword.getText().toString();
 
-        Login login = new Login(name, password);
-        login.start();
-        login.join();
+            Login login = new Login(name, password);
+            login.start();
+            login.join();
 
-        if(login.isSuccess()) {
+            if(login.isSuccess()) {
 
-            editor.putString("name", name);
-            editor.putString("password", password);
-            editor.putBoolean("connected", true);
-            editor.apply();
+                editor.putString("name", name);
+                editor.putString("password", password);
+                editor.putBoolean("connected", true);
+                editor.apply();
 
-            Toast.makeText(this, getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
-        }
-        else{
-            String response = login.getResponseUrl();
-            String text;
-            if (response.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
-                text = getString(R.string.login_fail_credentials);
+                Toast.makeText(this, getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
             }
-            else {
-                text = getString(R.string.login_fail_network);
+            else{
+                String response = login.getResponseUrl();
+                String text;
+                if (response.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
+                    text = getString(R.string.login_fail_credentials);
+                }
+                else {
+                    text = getString(R.string.login_fail_network);
+                }
+                Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
             }
-            Toast.makeText(this, text, Toast.LENGTH_SHORT).show();
         }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void enter(View view){

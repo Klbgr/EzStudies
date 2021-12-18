@@ -45,10 +45,12 @@ import java.util.Map;
 
 public class Agenda extends AppCompatActivity {
     private JavaScriptInterface jsi;
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.agenda_layout);
+        sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
     }
 
     @Override
@@ -63,32 +65,36 @@ public class Agenda extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void celcat(View view) throws InterruptedException {
-        SharedPreferences sharedPreferences = this.getSharedPreferences("prefs", MODE_PRIVATE);
-        String name = sharedPreferences.getString("name", null);
-        String password = sharedPreferences.getString("password", null);
-        Login login = new Login(name, password);
-        login.start();
-        login.join();
+    public void import_celcat() {
+        try{
+            String name = sharedPreferences.getString("name", null);
+            String password = sharedPreferences.getString("password", null);
+            Login login = new Login(name, password);
+            login.start();
+            login.join();
 
-        if(!login.isSuccess()){
-            Toast.makeText(this, getString(R.string.login_fail_network), Toast.LENGTH_SHORT).show();
-            return;
-        }
+            if(!login.isSuccess()){
+                Toast.makeText(this, getString(R.string.login_fail_network), Toast.LENGTH_SHORT).show();
+                return;
+            }
 
-        String url = login.getUrl();
-        WebView webview = new WebView(this);
-        webview.setWebViewClient(new myWebView(this));
-        webview.getSettings().setJavaScriptEnabled(true);
-        webview.getSettings().setLoadWithOverviewMode(true);
-        jsi = new JavaScriptInterface();
-        webview.addJavascriptInterface(jsi, "HTMLOUT");
-        HashMap<String, String> cookies = (HashMap<String, String>) login.getCookies();
-        for(Map.Entry<String, String> pair: cookies.entrySet()){
-            String cookie = pair.getKey() + "=" + pair.getValue() + "; path=/";
-            CookieManager.getInstance().setCookie(url, cookie);
+            String url = login.getUrl();
+            WebView webview = new WebView(this);
+            webview.setWebViewClient(new myWebView(this));
+            webview.getSettings().setJavaScriptEnabled(true);
+            webview.getSettings().setLoadWithOverviewMode(true);
+            jsi = new JavaScriptInterface();
+            webview.addJavascriptInterface(jsi, "HTMLOUT");
+            HashMap<String, String> cookies = (HashMap<String, String>) login.getCookies();
+            for(Map.Entry<String, String> pair: cookies.entrySet()){
+                String cookie = pair.getKey() + "=" + pair.getValue() + "; path=/";
+                CookieManager.getInstance().setCookie(url, cookie);
+            }
+            webview.loadUrl(url);
         }
-        webview.loadUrl(url);
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     public void parseCelcat(){
@@ -133,7 +139,7 @@ public class Agenda extends AppCompatActivity {
         Toast.makeText(this, getString(R.string.celcat_success), Toast.LENGTH_SHORT).show();
     }
 
-    public void importICS(View view){
+    public void importICS(){
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("text/calendar");
@@ -190,6 +196,8 @@ public class Agenda extends AppCompatActivity {
             e.printStackTrace();
         }
         database.close();
+
+        Toast.makeText(this, getString(R.string.ics_success), Toast.LENGTH_SHORT).show();
     }
 
     ActivityResultLauncher<Intent> ActivityResultLauncher = registerForActivityResult(
@@ -235,6 +243,20 @@ public class Agenda extends AppCompatActivity {
         }
         catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    public void refresh(View view){
+        int import_mode = sharedPreferences.getInt("import_mode", -1);
+        switch (import_mode){
+            case 0: //celcat
+                import_celcat();
+                break;
+            case 1: //ics
+                importICS();
+                break;
+            case -1:
+                break;
         }
     }
 }

@@ -8,14 +8,12 @@
     <string name="welcome1">Welcome to EzStudies !\nEzStudies is an app made by students for students.\nThe main idea of this app is to ease students’ life.</string>
     <string name="welcome2">Setup</string>
     <string name="welcome3">Login</string>
-    <string name="import_celcat">Import from Celcat</string>
     <string name="perm_granted">Permission granted</string>
     <string name="perm_denied">Permission denied</string>
     <string name="search">Search</string>
     <string name="address_not_found">Address not found</string>
     <string name="ok">Ok</string>
     <string name="please_select_location">Please select a location</string>
-    <string name="import_ics">Import from ICS file</string>
     <string name="set_home_address">Set your address</string>
     <string name="set_school_address">Set your school\'s address</string>
     <string name="empty">Empty</string>
@@ -34,6 +32,7 @@
     <string name="login_fail_credentials">Wrong credentials</string>
     <string name="login_fail_network">Failed, please retry</string>
     <string name="celcat_success">Imported agenda from Celcat</string>
+    <string name="ics_success">Imported agenda from ICS file</string>
     <string name="duration">Estimated duration</string>
     <string name="enter">Enter</string>
     <string name="finish_setup">Please finish setup first</string>
