@@ -358,7 +358,7 @@ public class Settings extends AppCompatActivity {
                             editor.putInt("travel_time", time);
                             editor.apply();
                             TextView textView = findViewById(R.id.settings_travel_time);
-                            textView.setText(time + " " + getString(R.string.minutes));
+                            textView.setText(getString(R.string.minutes, time));
                         }
                         catch (NumberFormatException e){
                             Toast.makeText(Settings.this, R.string.invalid_input, Toast.LENGTH_SHORT).show();
@@ -396,7 +396,7 @@ public class Settings extends AppCompatActivity {
                             editor.putInt("prep_time", time);
                             editor.apply();
                             TextView textView = findViewById(R.id.settings_prep_time);
-                            textView.setText(time + " " + getString(R.string.minutes));
+                            textView.setText(getString(R.string.minutes, time));
                         }
                         catch (NumberFormatException e){
                             Toast.makeText(Settings.this, R.string.invalid_input, Toast.LENGTH_SHORT).show();

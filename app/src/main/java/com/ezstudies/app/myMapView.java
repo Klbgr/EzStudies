@@ -121,6 +121,7 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
         if (marker != null)
             marker.remove();
         marker = googleMap.addMarker(markerOptions);
+        marker.showInfoWindow();
         if(zoom)
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
     }

@@ -323,7 +323,7 @@ public class WelcomeFragment extends Fragment {
                             editor.putInt("travel_time", time);
                             editor.apply();
                             TextView textView = view.findViewById(R.id.settings_travel_time);
-                            textView.setText(time + " " + getString(R.string.minutes));
+                            textView.setText(getString(R.string.minutes, time));
                         }
                         catch (NumberFormatException e){
                             Toast.makeText(getActivity(), R.string.invalid_input, Toast.LENGTH_SHORT).show();
@@ -361,7 +361,7 @@ public class WelcomeFragment extends Fragment {
                             editor.putInt("prep_time", time);
                             editor.apply();
                             TextView textView = view.findViewById(R.id.settings_prep_time);
-                            textView.setText(time + " " + getString(R.string.minutes));
+                            textView.setText(getString(R.string.minutes, time));
                         }
                         catch (NumberFormatException e){
                             Toast.makeText(WelcomeFragment.this.getActivity(), R.string.invalid_input, Toast.LENGTH_SHORT).show();

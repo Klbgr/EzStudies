@@ -61,6 +61,9 @@ public class RouteCalculator extends Thread {
         catch (JSONException e) {
             e.printStackTrace();
         }
+        catch (NullPointerException e){ //no internet
+            return 0;
+        }
         return duration;
     }
 }
