@@ -5,8 +5,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.location.Geocoder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,13 +26,19 @@ import com.ezstudies.app.R;
 import com.ezstudies.app.myMapView;
 
 import java.io.IOException;
+import java.net.URI;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 
 public class Settings extends AppCompatActivity {
     private Spinner travel_spinner;
     private Spinner agenda_spinner;
-    private  SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
+    private Date date = null;
+    private int count = 0;
+    private Toast toast;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -419,7 +427,28 @@ public class Settings extends AppCompatActivity {
         click7.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Date now = Calendar.getInstance().getTime();
+                if(toast != null) {
+                    toast.cancel();
+                }
+                if(date == null || now.getTime() - date.getTime() > 5*1000){ //5s
+                    date = Calendar.getInstance().getTime();
+                    count = 1;
+                    toast = Toast.makeText(Settings.this, getString(R.string.easter_egg_count, 5-count), Toast.LENGTH_SHORT);
+                }
+                else if(count == 4){
+                    toast = Toast.makeText(Settings.this, getString(R.string.easter_egg_enjoy), Toast.LENGTH_SHORT);
+                    date = null;
+                    count = 0;
+                    Uri uri = Uri.parse("https://youtu.be/dQw4w9WgXcQ");
+                    Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                    startActivity(intent);
+                }
+                else{
+                    count ++;
+                    toast = Toast.makeText(Settings.this, getString(R.string.easter_egg_count, 5-count), Toast.LENGTH_SHORT);
+                }
+                toast.show();
             }
         });
     }

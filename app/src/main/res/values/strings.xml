@@ -43,6 +43,8 @@
     <string name="connected_as">Connected as %1$s</string>
     <string name="not_connected">Not connected</string>
     <string name="invalid_settings">Invalid settings</string>
+    <string name="easter_egg_count">%1d more clicks needed (Easter Egg)</string>
+    <string name="easter_egg_enjoy">YOU GOT RICK ROLLED</string>
 
     <string-array name="travel_array">
         <item>Driving</item>

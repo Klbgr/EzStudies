@@ -14,7 +14,7 @@ import java.nio.charset.Charset;
 
 public class RouteCalculator extends Thread {
     private final String KEY = "AnzK_4L_IgHGYge-UleemNLa29Iro40gMPcTPhrI2HX3kZdbw4smKTy434uDNXk5";
-    JSONObject json;
+    private JSONObject json;
     private String url;
     public RouteCalculator(String homeLat, String homeLong, String schoolLat, String schoolLong, int mode){
         String travel_mode = null;
@@ -62,7 +62,7 @@ public class RouteCalculator extends Thread {
             e.printStackTrace();
         }
         catch (NullPointerException e){ //no internet
-            return 0;
+            return duration;
         }
         return duration;
     }
