@@ -1,4 +1,4 @@
-package com.ezstudies.app;
+package com.ezstudies.app.activities;
 
 import android.Manifest;
 import android.content.BroadcastReceiver;
@@ -21,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.ezstudies.app.R;
+import com.ezstudies.app.services.GpsService;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;

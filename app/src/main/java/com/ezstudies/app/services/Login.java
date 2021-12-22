@@ -1,4 +1,4 @@
-package com.ezstudies.app;
+package com.ezstudies.app.services;
 
 import android.app.Service;
 import android.content.Intent;

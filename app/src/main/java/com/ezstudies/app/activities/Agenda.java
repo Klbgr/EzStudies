@@ -9,12 +9,15 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.CookieManager;
+import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -25,10 +28,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ezstudies.app.Database;
-import com.ezstudies.app.JavaScriptInterface;
-import com.ezstudies.app.Login;
 import com.ezstudies.app.R;
-import com.ezstudies.app.myWebView;
+import com.ezstudies.app.services.Login;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -270,6 +271,41 @@ public class Agenda extends AppCompatActivity {
                 CookieManager.getInstance().setCookie(url, cookie);
             }
             webview.loadUrl(url);
+        }
+    }
+
+    private class JavaScriptInterface {
+        private String source;
+        @JavascriptInterface
+        public void processHTML(String html){
+            source = html;
+        }
+
+        public String getSource() {
+            return source;
+        }
+    }
+
+    private class myWebView extends WebViewClient {
+        private Agenda agenda;
+        private Boolean parsing = false;
+
+        public myWebView(Agenda agenda){
+            this.agenda = agenda;
+        }
+        public void onPageFinished(WebView view, String url) {
+            Log.d("url", url);
+            view.loadUrl("javascript:HTMLOUT.processHTML(document.documentElement.outerHTML);");
+            if (url.contains("fid0") && url.contains("listWeek") && !parsing){
+                Log.d("parser", "parsing !!!");
+                parsing = true;
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
+                    public void run() {
+                        agenda.parseCelcat();
+                    }
+                }, 10000);
+            }
         }
     }
 }

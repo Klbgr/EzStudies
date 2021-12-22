@@ -15,7 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.ezstudies.app.R;
-import com.ezstudies.app.RouteCalculator;
+import com.ezstudies.app.services.RouteCalculator;
 
 public class Overview extends AppCompatActivity {
     @Override

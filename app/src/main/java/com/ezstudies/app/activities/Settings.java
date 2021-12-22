@@ -24,9 +24,8 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.ezstudies.app.Login;
 import com.ezstudies.app.R;
-import com.ezstudies.app.myMapView;
+import com.ezstudies.app.services.Login;
 
 import java.io.IOException;
 import java.util.Calendar;

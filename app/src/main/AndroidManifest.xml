@@ -43,13 +43,13 @@
         <activity android:name=".activities.Settings"
             android:label="@string/settings" >
         </activity>
-        <activity android:name=".myMapView"
+        <activity android:name=".activities.myMapView"
             android:label="@string/map" >
         </activity>
 
-        <service android:name=".GpsService" />
-        <service android:name=".Login" />
-        <service android:name=".RouteCalculator" />
+        <service android:name=".services.GpsService" />
+        <service android:name=".services.Login" />
+        <service android:name=".services.RouteCalculator" />
     </application>
 
 </manifest>
