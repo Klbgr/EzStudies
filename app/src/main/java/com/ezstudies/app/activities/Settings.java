@@ -1,14 +1,17 @@
 package com.ezstudies.app.activities;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,7 +29,6 @@ import com.ezstudies.app.R;
 import com.ezstudies.app.myMapView;
 
 import java.io.IOException;
-import java.net.URI;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
@@ -39,6 +41,7 @@ public class Settings extends AppCompatActivity {
     private Date date = null;
     private int count = 0;
     private Toast toast;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -274,38 +277,17 @@ public class Settings extends AppCompatActivity {
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        try{
-                            String nameText = name.getText().toString();
-                            String passwordText = password.getText().toString();
-                            Login login = new Login(nameText, passwordText);
-                            login.start();
-                            login.join();
-
-                            if(login.isSuccess()) {
-                                editor.putString("name", nameText);
-                                editor.putString("password", passwordText);
-                                editor.putBoolean("connected", true);
-                                editor.apply();
-
-                                Toast.makeText(Settings.this, getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
-
-                                TextView textView = findViewById(R.id.settings_status);
-                                textView.setText(getString(R.string.connected_as, nameText));
-                            }
-                            else{
-                                String response = login.getResponseUrl();
-                                String text;
-                                if (response.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
-                                    text = getString(R.string.login_fail_credentials);
-                                }
-                                else {
-                                    text = getString(R.string.login_fail_network);
-                                }
-                                Toast.makeText(Settings.this, text, Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        progressDialog = ProgressDialog.show(Settings.this, getString(R.string.connecting), getString(R.string.loading), true);
+                        String nameText = name.getText().toString();
+                        String passwordText = password.getText().toString();
+                        String target = "SettingsLogin";
+                        Intent intent = new Intent(Settings.this, Login.class);
+                        intent.putExtra("name", nameText);
+                        intent.putExtra("password", passwordText);
+                        intent.putExtra("target", target);
+                        startService(intent);
+                        broadcastReceiver broadcastReceiver = new broadcastReceiver();
+                        registerReceiver(broadcastReceiver, new IntentFilter(target));
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -356,6 +338,7 @@ public class Settings extends AppCompatActivity {
 
                 EditText editText = new EditText(Settings.this);
                 editText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                editText.setHint(R.string.minute_hint);
                 builder.setView(editText);
 
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -394,6 +377,7 @@ public class Settings extends AppCompatActivity {
 
                 EditText editText = new EditText(Settings.this);
                 editText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                editText.setHint(R.string.minute_hint);
                 builder.setView(editText);
 
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -451,5 +435,39 @@ public class Settings extends AppCompatActivity {
                 toast.show();
             }
         });
+    }
+
+    private class broadcastReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            progressDialog.cancel();
+            Boolean success = intent.getBooleanExtra("success", false);
+            String name = intent.getStringExtra("name");
+            String password = intent.getStringExtra("password");
+            String responseUrl = intent.getStringExtra("responseUrl");
+            if(success) {
+                editor.putString("name", name);
+                editor.putString("password", password);
+                editor.putBoolean("connected", true);
+                editor.apply();
+
+                Toast.makeText(Settings.this, getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
+
+                TextView textView = findViewById(R.id.settings_status);
+                textView.setText(getString(R.string.connected_as, name));
+            }
+            else{
+                String response = responseUrl;
+                String text;
+                if (response != null && response.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
+                    text = getString(R.string.login_fail_credentials);
+                }
+                else {
+                    text = getString(R.string.login_fail_network);
+                }
+                Toast.makeText(Settings.this, text, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

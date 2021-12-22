@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">EzStudies</string>
     <string name="agenda">Agenda</string>
-    <string name="homework">Homework</string>
+    <string name="homework">Homeworks</string>
     <string name="settings">Settings</string>
     <string name="overview">Overview</string>
     <string name="map">Map</string>
@@ -26,6 +26,7 @@
     <string name="import_mode">Import mode</string>
     <string name="travel_mode">Travel mode</string>
     <string name="travel_time">Travel time</string>
+    <string name="minute_hint">minute</string>
     <string name="name_hint">login cyu</string>
     <string name="password_hint">password</string>
     <string name="login">Login</string>
@@ -45,6 +46,8 @@
     <string name="invalid_settings">Invalid settings</string>
     <string name="easter_egg_count">%1d more clicks needed (Easter Egg)</string>
     <string name="easter_egg_enjoy">YOU GOT RICK ROLLED</string>
+    <string name="connecting">Connecting</string>
+    <string name="loading">Loading, please wait...</string>
 
     <string-array name="travel_array">
         <item>Driving</item>

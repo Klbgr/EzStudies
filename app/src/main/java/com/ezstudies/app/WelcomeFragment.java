@@ -1,9 +1,12 @@
 package com.ezstudies.app;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -31,6 +34,7 @@ public class WelcomeFragment extends Fragment {
     private View view;
     private Spinner travel_spinner;
     private Spinner agenda_spinner;
+    private ProgressDialog progressDialog;
 
     public WelcomeFragment(){}
 
@@ -231,38 +235,17 @@ public class WelcomeFragment extends Fragment {
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        try{
-                            String nameText = name.getText().toString();
-                            String passwordText = password.getText().toString();
-                            Login login = new Login(nameText, passwordText);
-                            login.start();
-                            login.join();
-
-                            if(login.isSuccess()) {
-                                editor.putString("name", nameText);
-                                editor.putString("password", passwordText);
-                                editor.putBoolean("connected", true);
-                                editor.apply();
-
-                                Toast.makeText(getActivity(), getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
-
-                                TextView textView = view.findViewById(R.id.settings_status);
-                                textView.setText(getString(R.string.connected_as, nameText));
-                            }
-                            else{
-                                String response = login.getResponseUrl();
-                                String text;
-                                if (response.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
-                                    text = getString(R.string.login_fail_credentials);
-                                }
-                                else {
-                                    text = getString(R.string.login_fail_network);
-                                }
-                                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
-                            }
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                        progressDialog = ProgressDialog.show(getContext(), getString(R.string.connecting), getString(R.string.loading), true);
+                        String nameText = name.getText().toString();
+                        String passwordText = password.getText().toString();
+                        String target = "WelcomeLogin";
+                        Intent intent = new Intent(getContext(), Login.class);
+                        intent.putExtra("name", nameText);
+                        intent.putExtra("password", passwordText);
+                        intent.putExtra("target", target);
+                        getActivity().startService(intent);
+                        broadcastReceiver broadcastReceiver = new broadcastReceiver();
+                        getActivity().registerReceiver(broadcastReceiver, new IntentFilter(target));
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -313,6 +296,7 @@ public class WelcomeFragment extends Fragment {
 
                 EditText editText = new EditText(WelcomeFragment.this.getActivity());
                 editText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                editText.setHint(R.string.minute_hint);
                 builder.setView(editText);
 
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -351,6 +335,7 @@ public class WelcomeFragment extends Fragment {
 
                 EditText editText = new EditText(WelcomeFragment.this.getActivity());
                 editText.setInputType(InputType.TYPE_NUMBER_FLAG_DECIMAL);
+                editText.setHint(R.string.minute_hint);
                 builder.setView(editText);
 
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
@@ -379,5 +364,39 @@ public class WelcomeFragment extends Fragment {
                 builder.show();
             }
         });
+    }
+
+    private class broadcastReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            progressDialog.cancel();
+            Boolean success = intent.getBooleanExtra("success", false);
+            String name = intent.getStringExtra("name");
+            String password = intent.getStringExtra("password");
+            String responseUrl = intent.getStringExtra("responseUrl");
+            if(success) {
+                editor.putString("name", name);
+                editor.putString("password", password);
+                editor.putBoolean("connected", true);
+                editor.apply();
+
+                Toast.makeText(getActivity(), getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
+
+                TextView textView = view.findViewById(R.id.settings_status);
+                textView.setText(getString(R.string.connected_as, name));
+            }
+            else{
+                String response = responseUrl;
+                String text;
+                if (response != null && response.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
+                    text = getString(R.string.login_fail_credentials);
+                }
+                else {
+                    text = getString(R.string.login_fail_network);
+                }
+                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }

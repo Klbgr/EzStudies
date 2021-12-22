@@ -1,7 +1,11 @@
 package com.ezstudies.app.activities;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Environment;
@@ -46,6 +50,7 @@ import java.util.Map;
 public class Agenda extends AppCompatActivity {
     private JavaScriptInterface jsi;
     private SharedPreferences sharedPreferences;
+    private ProgressDialog progressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,35 +71,17 @@ public class Agenda extends AppCompatActivity {
     }
 
     public void import_celcat() {
-        try{
-            String name = sharedPreferences.getString("name", null);
-            String password = sharedPreferences.getString("password", null);
-            Login login = new Login(name, password);
-            login.start();
-            login.join();
-
-            if(!login.isSuccess()){
-                Toast.makeText(this, getString(R.string.login_fail_network), Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            String url = login.getUrl();
-            WebView webview = new WebView(this);
-            webview.setWebViewClient(new myWebView(this));
-            webview.getSettings().setJavaScriptEnabled(true);
-            webview.getSettings().setLoadWithOverviewMode(true);
-            jsi = new JavaScriptInterface();
-            webview.addJavascriptInterface(jsi, "HTMLOUT");
-            HashMap<String, String> cookies = (HashMap<String, String>) login.getCookies();
-            for(Map.Entry<String, String> pair: cookies.entrySet()){
-                String cookie = pair.getKey() + "=" + pair.getValue() + "; path=/";
-                CookieManager.getInstance().setCookie(url, cookie);
-            }
-            webview.loadUrl(url);
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        progressDialog = ProgressDialog.show(this, getString(R.string.connecting), getString(R.string.loading), true);
+        String name = sharedPreferences.getString("name", null);
+        String password = sharedPreferences.getString("password", null);
+        String target = "AgendaLogin";
+        Intent intent = new Intent(this, Login.class);
+        intent.putExtra("name", name);
+        intent.putExtra("password", password);
+        intent.putExtra("target", target);
+        startService(intent);
+        broadcastReceiver broadcastReceiver = new broadcastReceiver();
+        registerReceiver(broadcastReceiver, new IntentFilter(target));
     }
 
     public void parseCelcat(){
@@ -136,6 +123,7 @@ public class Agenda extends AppCompatActivity {
         Log.d("db", database.toString());
         database.close();
 
+        progressDialog.cancel();
         Toast.makeText(this, getString(R.string.celcat_success), Toast.LENGTH_SHORT).show();
     }
 
@@ -257,6 +245,31 @@ public class Agenda extends AppCompatActivity {
                 break;
             case -1:
                 break;
+        }
+    }
+
+    private class broadcastReceiver extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String url = intent.getStringExtra("url");
+            Boolean success = intent.getBooleanExtra("success", false);
+            if(!success){
+                progressDialog.cancel();
+                Toast.makeText(Agenda.this, getString(R.string.login_fail_network), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            WebView webview = new WebView(Agenda.this);
+            webview.setWebViewClient(new myWebView(Agenda.this));
+            webview.getSettings().setJavaScriptEnabled(true);
+            webview.getSettings().setLoadWithOverviewMode(true);
+            jsi = new JavaScriptInterface();
+            webview.addJavascriptInterface(jsi, "HTMLOUT");
+            HashMap<String, String> cookies = (HashMap<String, String>) intent.getSerializableExtra("cookies");
+            for(Map.Entry<String, String> pair: cookies.entrySet()){
+                String cookie = pair.getKey() + "=" + pair.getValue() + "; path=/";
+                CookieManager.getInstance().setCookie(url, cookie);
+            }
+            webview.loadUrl(url);
         }
     }
 }

@@ -37,7 +37,7 @@
         <activity android:name=".activities.Agenda"
             android:label="@string/agenda" >
         </activity>
-        <activity android:name=".activities.Homework"
+        <activity android:name=".activities.Homeworks"
             android:label="@string/homework" >
         </activity>
         <activity android:name=".activities.Settings"
@@ -48,6 +48,8 @@
         </activity>
 
         <service android:name=".GpsService" />
+        <service android:name=".Login" />
+        <service android:name=".RouteCalculator" />
     </application>
 
 </manifest>

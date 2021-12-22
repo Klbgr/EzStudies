@@ -1,6 +1,11 @@
 package com.ezstudies.app;
 
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import com.ezstudies.app.activities.Welcome;
 
@@ -9,27 +14,35 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.FormElement;
 
-import java.io.IOException;
-import java.util.Map;
+import java.util.HashMap;
 
-public class Login extends Thread {
+public class Login extends Service implements Runnable{
 
     private final String login_url = Welcome.LOGIN_FORM_URL;
     private final String user_agent = Welcome.USER_AGENT;
-    private final String name;
-    private final String password;
-    private Boolean success = false;
-    private String url;
-    private String responseUrl = null;
-    private Map<String, String> cookies;
+    private Intent intent;
 
-    public Login(String name, String password){
-        this.name = name;
-        this.password = password;
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        this.intent = intent;
+        Thread thread = new Thread(this);
+        thread.start();
+        return super.onStartCommand(intent, flags, startId);
     }
 
     @Override
     public void run() {
+        String name = intent.getStringExtra("name");
+        String password = intent.getStringExtra("password");
+        String responseUrl = null;
+        HashMap<String, String> cookies = null;
+        String url = null;
         try {
             Connection.Response loginFormResponse = Jsoup.connect(login_url)
                     .method(Connection.Method.GET)
@@ -46,11 +59,11 @@ public class Login extends Thread {
                     .execute();
             System.out.println(loginActionResponse.url());
             responseUrl = loginActionResponse.url().toString();
-            cookies = loginActionResponse.cookies();
-        } catch (IOException e) {
+            cookies = (HashMap<String, String>) loginActionResponse.cookies();
+        } catch (Exception e){
             e.printStackTrace();
         }
-
+        Boolean success;
         if(responseUrl != null && !responseUrl.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
             success = true;
             Log.d("cookie", cookies.toString());
@@ -63,21 +76,14 @@ public class Login extends Thread {
             Log.d("erreur", "erreur de connexion ! ");
         }
 
-    }
-
-    public String getResponseUrl() {
-        return responseUrl;
-    }
-
-    public Map<String, String> getCookies() {
-        return cookies;
-    }
-
-    public Boolean isSuccess(){
-        return success;
-    }
-
-    public String getUrl(){
-        return url;
+        String target = intent.getStringExtra("target");
+        Intent intent1 = new Intent(target);
+        intent1.putExtra("success", success);
+        intent1.putExtra("name", name);
+        intent1.putExtra("password", password);
+        intent1.putExtra("responseUrl", responseUrl);
+        intent1.putExtra("url", url);
+        intent1.putExtra("cookies", cookies);
+        sendBroadcast(intent1);
     }
 }
