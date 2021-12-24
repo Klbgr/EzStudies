@@ -16,8 +16,7 @@
         app:backgroundTint="@color/purple_500"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@android:drawable/ic_popup_sync"
-        tools:ignore="SpeakableTextPresentCheck" />
+        app:srcCompat="@android:drawable/ic_popup_sync" />
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewpager2"
