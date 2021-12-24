@@ -160,6 +160,7 @@ public class Agenda extends FragmentActivity {
 
         progressDialog.cancel();
         Toast.makeText(this, getString(R.string.celcat_success), Toast.LENGTH_SHORT).show();
+        restart();
     }
 
     public void importICS(){
@@ -221,6 +222,7 @@ public class Agenda extends FragmentActivity {
         database.close();
 
         Toast.makeText(this, getString(R.string.ics_success), Toast.LENGTH_SHORT).show();
+        restart();
     }
 
     ActivityResultLauncher<Intent> ActivityResultLauncher = registerForActivityResult(
@@ -281,6 +283,11 @@ public class Agenda extends FragmentActivity {
             case -1:
                 break;
         }
+    }
+
+    public void restart(){
+        finish();
+        startActivity(getIntent());
     }
 
     private class broadcastReceiver extends BroadcastReceiver{
