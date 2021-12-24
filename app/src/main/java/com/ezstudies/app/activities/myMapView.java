@@ -37,7 +37,7 @@ import java.util.Locale;
 
 public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
     private Intent intent;
-    private BroadcastReceiver broadcastReceiver;
+    private broadcastReceiver broadcastReceiver;
     public static final int PERMISSION_REQUEST_CODE = 101;
     private MapView mapView;
     private GoogleMap googleMap;

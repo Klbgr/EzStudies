@@ -11,8 +11,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
@@ -33,7 +31,6 @@ import androidx.lifecycle.Lifecycle;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.ezstudies.app.AgendaFragment;
 import com.ezstudies.app.Database;
 import com.ezstudies.app.R;
 import com.ezstudies.app.services.Login;
@@ -61,6 +58,7 @@ public class Agenda extends FragmentActivity {
     private ProgressDialog progressDialog;
     private ViewPager2 viewPager;
     private FragmentAdapter adapter;
+    private broadcastReceiver broadcastReceiver;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,18 +104,6 @@ public class Agenda extends FragmentActivity {
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.agenda_menu, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        exportICS();
-        return super.onOptionsItemSelected(item);
-    }
-
     public void import_celcat() {
         progressDialog = ProgressDialog.show(this, getString(R.string.connecting), getString(R.string.loading), true);
         String name = sharedPreferences.getString("name", null);
@@ -128,7 +114,7 @@ public class Agenda extends FragmentActivity {
         intent.putExtra("password", password);
         intent.putExtra("target", target);
         startService(intent);
-        broadcastReceiver broadcastReceiver = new broadcastReceiver();
+        broadcastReceiver = new broadcastReceiver();
         registerReceiver(broadcastReceiver, new IntentFilter(target));
     }
 
@@ -209,7 +195,7 @@ public class Agenda extends FragmentActivity {
                         break;
                     case "DTSTART": //start time
                         startingAt = list[1].substring(9, 11) + ":" + list[1].substring(11, 13);
-                        date = list[1].substring(6, 8) + "-" + list[1].substring(4, 6) + "-" + list[1].substring(0, 4);
+                        date = list[1].substring(6, 8) + "/" + list[1].substring(4, 6) + "/" + list[1].substring(0, 4);
                         break;
                     case "DTEND": //end time
                         endingAt = list[1].substring(9, 11) + ":" + list[1].substring(11, 13);
@@ -264,7 +250,7 @@ public class Agenda extends FragmentActivity {
                 }
             });
 
-    public void exportICS() {
+    public void exportICS(View view) {
         Database database = new Database(this);
         String ics = database.toICS();
         database.close();
@@ -319,6 +305,7 @@ public class Agenda extends FragmentActivity {
                 CookieManager.getInstance().setCookie(url, cookie);
             }
             webview.loadUrl(url);
+            unregisterReceiver(broadcastReceiver);
         }
     }
 

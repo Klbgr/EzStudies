@@ -92,7 +92,7 @@ public class Database extends SQLiteOpenHelper {
                 "VERSION:2.0\n" +
                 "CALSCALE:GREGORIAN\n";
         while (cursor.moveToNext()){
-            String date[] = cursor.getString(0).split("-");
+            String date[] = cursor.getString(0).split("/");
             String start[] = cursor.getString(2).split(":");
             String end[] = cursor.getString(3).split(":");
             ics += "BEGIN:VEVENT\n" +

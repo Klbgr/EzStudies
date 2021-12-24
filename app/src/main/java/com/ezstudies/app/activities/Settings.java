@@ -41,6 +41,7 @@ public class Settings extends AppCompatActivity {
     private int count = 0;
     private Toast toast;
     private ProgressDialog progressDialog;
+    private broadcastReceiver broadcastReceiver;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -287,7 +288,7 @@ public class Settings extends AppCompatActivity {
                         intent.putExtra("password", passwordText);
                         intent.putExtra("target", target);
                         startService(intent);
-                        broadcastReceiver broadcastReceiver = new broadcastReceiver();
+                        broadcastReceiver = new broadcastReceiver();
                         registerReceiver(broadcastReceiver, new IntentFilter(target));
                     }
                 });
@@ -469,6 +470,7 @@ public class Settings extends AppCompatActivity {
                 }
                 Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             }
+            unregisterReceiver(broadcastReceiver);
         }
     }
 }

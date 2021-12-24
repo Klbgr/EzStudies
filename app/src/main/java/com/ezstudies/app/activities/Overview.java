@@ -19,6 +19,7 @@ import com.ezstudies.app.R;
 import com.ezstudies.app.services.RouteCalculator;
 
 public class Overview extends AppCompatActivity {
+    private broadcastReceiver broadcastReceiver;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,7 +79,7 @@ public class Overview extends AppCompatActivity {
             intent.putExtra("schoolLat", schoolLat);
             intent.putExtra("schoolLong", schoolLong);
             startService(intent);
-            broadcastReceiver broadcastReceiver = new broadcastReceiver();
+            broadcastReceiver = new broadcastReceiver();
             registerReceiver(broadcastReceiver, new IntentFilter("route"));
         }
         else{
@@ -95,6 +96,7 @@ public class Overview extends AppCompatActivity {
             int duration = intent.getIntExtra("duration", -1);
             TextView textView = findViewById(R.id.overview_duration);
             textView.setText(getString(R.string.duration, duration));
+            unregisterReceiver(broadcastReceiver);
         }
     }
 }
