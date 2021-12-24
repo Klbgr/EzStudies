@@ -512,7 +512,7 @@ class WelcomeFragment extends Fragment {
                 editor.putBoolean("connected", true);
                 editor.apply();
 
-                Toast.makeText(getActivity(), getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
 
                 TextView textView = view.findViewById(R.id.settings_status);
                 textView.setText(getString(R.string.connected_as, name));
@@ -526,7 +526,7 @@ class WelcomeFragment extends Fragment {
                 else {
                     text = getString(R.string.login_fail_network);
                 }
-                Toast.makeText(getActivity(), text, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             }
         }
     }

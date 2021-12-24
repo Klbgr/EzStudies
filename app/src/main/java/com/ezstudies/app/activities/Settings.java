@@ -451,7 +451,7 @@ public class Settings extends AppCompatActivity {
                 editor.putBoolean("connected", true);
                 editor.apply();
 
-                Toast.makeText(Settings.this, getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
 
                 TextView textView = findViewById(R.id.settings_status);
                 textView.setText(getString(R.string.connected_as, name));
@@ -465,7 +465,7 @@ public class Settings extends AppCompatActivity {
                 else {
                     text = getString(R.string.login_fail_network);
                 }
-                Toast.makeText(Settings.this, text, Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             }
         }
     }

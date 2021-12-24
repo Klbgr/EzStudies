@@ -256,10 +256,10 @@ public class Agenda extends AppCompatActivity {
             Boolean success = intent.getBooleanExtra("success", false);
             if(!success){
                 progressDialog.cancel();
-                Toast.makeText(Agenda.this, getString(R.string.login_fail_network), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.login_fail_network), Toast.LENGTH_SHORT).show();
                 return;
             }
-            WebView webview = new WebView(Agenda.this);
+            WebView webview = new WebView(context);
             webview.setWebViewClient(new myWebView(Agenda.this));
             webview.getSettings().setJavaScriptEnabled(true);
             webview.getSettings().setLoadWithOverviewMode(true);

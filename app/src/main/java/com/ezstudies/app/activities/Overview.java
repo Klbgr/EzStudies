@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.AlarmClock;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -22,6 +23,15 @@ public class Overview extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overview_layout);
+        /*
+        Intent intent1 = new Intent(AlarmClock.ACTION_SET_ALARM);
+        intent1.putExtra(AlarmClock.EXTRA_HOUR, 14);
+        intent1.putExtra(AlarmClock.EXTRA_MINUTES, 17);
+        intent1.putExtra(AlarmClock.EXTRA_SKIP_UI, true);
+        intent1.putExtra(AlarmClock.EXTRA_MESSAGE, "coucou");
+        startActivity(intent1);
+
+         */
     }
 
     @Override
