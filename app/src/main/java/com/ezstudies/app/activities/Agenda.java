@@ -64,7 +64,7 @@ public class Agenda extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.agenda_layout);
         sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
-        viewPager = findViewById(R.id.viewpager2);
+        viewPager = findViewById(R.id.agenda_viewpager);
         FragmentManager fm = getSupportFragmentManager();
         adapter = new FragmentAdapter(fm, getLifecycle());
         viewPager.setAdapter(adapter);
@@ -137,10 +137,10 @@ public class Agenda extends FragmentActivity {
                 String endHour = hour.substring(hour.indexOf(" - ")+3);
                 String startHourSplit[] = startHour.split(":");
                 String endHourSplit[] = endHour.split(":");
-                int startingHour = Integer.parseInt(startHourSplit[0]);
-                int startingMinute = Integer.parseInt(startHourSplit[1]);
-                int endingHour = Integer.parseInt(endHourSplit[0]);
-                int endingMinute = Integer.parseInt(endHourSplit[1]);
+                String startingHour = startHourSplit[0];
+                String startingMinute = startHourSplit[1];
+                String endingHour = endHourSplit[0];
+                String endingMinute = endHourSplit[1];
                 Element eCourse = e.getElementsByClass("fc-list-item-title fc-widget-content").get(0);
                 String course = eCourse.toString();
                 course = course.substring(course.indexOf("</a>")+4, course.indexOf("</td>"));

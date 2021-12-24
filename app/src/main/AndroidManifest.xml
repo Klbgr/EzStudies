@@ -36,7 +36,8 @@
             android:label="@string/overview" >
         </activity>
         <activity android:name=".activities.Agenda"
-            android:label="@string/agenda" >
+            android:label="@string/agenda"
+            android:screenOrientation="portrait" >
         </activity>
         <activity android:name=".activities.Homeworks"
             android:label="@string/homework" >

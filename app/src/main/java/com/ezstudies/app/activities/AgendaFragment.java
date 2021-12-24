@@ -33,25 +33,25 @@ public class AgendaFragment extends Fragment {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.agenda_page, container, false);
-        TextView day = view.findViewById(R.id.day);
+        TextView day = view.findViewById(R.id.agenda_day);
         switch (page){
             case 1:
-                day.setText("Lundi");
+                day.setText(getString(R.string.monday));
                 break;
             case 2:
-                day.setText("Mardi");
+                day.setText(getString(R.string.tuesday));
                 break;
             case 3:
-                day.setText("Mercredi");
+                day.setText(getString(R.string.wednesday));
                 break;
             case 4:
-                day.setText("Jeudi");
+                day.setText(getString(R.string.thursday));
                 break;
             case 5:
-                day.setText("Vendredi");
+                day.setText(getString(R.string.friday));
                 break;
             case 6:
-                day.setText("Samedi");
+                day.setText(getString(R.string.saturday));
                 break;
             default:
                 break;
@@ -64,22 +64,21 @@ public class AgendaFragment extends Fragment {
             String[] dateTab = row.get(0).split("/");
             Calendar cal = Calendar.getInstance();
             cal.setFirstDayOfWeek(Calendar.MONDAY);
-            Log.d("test", row.get(0));
             cal.set(Integer.parseInt(dateTab[2]), Integer.parseInt(dateTab[1])-1, Integer.parseInt(dateTab[0]));
             int weekDay = cal.get(Calendar.DAY_OF_WEEK)-1;
             Log.d("day", Integer.parseInt(dateTab[2]) + "/" + Integer.parseInt(dateTab[1]) + "/" + Integer.parseInt(dateTab[0]) + " = " + weekDay);
             if (weekDay == page){
-                ArrayList<String> coursData = new ArrayList<String>();
-                coursData.add(row.get(1));
-                coursData.add(row.get(2) + " - " + row.get(3));
+                ArrayList<String> courseData = new ArrayList<String>();
+                courseData.add(row.get(1));
+                courseData.add(row.get(2) + " - " + row.get(3));
                 if (row.get(4).contains(" / ")){
-                    coursData.add(row.get(4).split(" / ")[0]);
-                    coursData.add(row.get(4).split(" / ")[1]);
+                    courseData.add(row.get(4).split(" / ")[0]);
+                    courseData.add(row.get(4).split(" / ")[1]);
                 }
                 else{
-                    coursData.add(row.get(4));
+                    courseData.add(row.get(4));
                 }
-                coursList.add(coursData);
+                coursList.add(courseData);
             }
         }
         recyclerAdapter recyclerAdapter = new recyclerAdapter(this.getContext(), coursList);
@@ -92,7 +91,6 @@ public class AgendaFragment extends Fragment {
         ArrayList<ArrayList<String>> data;
 
         public recyclerAdapter(Context context, ArrayList<ArrayList<String>> data){
-            Database database = new Database(context);
             this.data = data;
         }
 
@@ -100,7 +98,7 @@ public class AgendaFragment extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-            View listItem= layoutInflater.inflate(R.layout.list_item_cours, parent, false);
+            View listItem= layoutInflater.inflate(R.layout.list_item_course, parent, false);
             ViewHolder viewHolder = new ViewHolder(listItem);
             return viewHolder;
         }
@@ -108,9 +106,9 @@ public class AgendaFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             if(!data.get(position).isEmpty()){
-                holder.cours.setText(data.get(position).get(0));
+                holder.course.setText(data.get(position).get(0));
                 holder.hour.setText(data.get(position).get(1));
-                holder.salle.setText(data.get(position).get(2));
+                holder.place.setText(data.get(position).get(2));
                 holder.info.setText(data.get(position).get(3));
             }
 
@@ -122,16 +120,16 @@ public class AgendaFragment extends Fragment {
         }
 
         public class ViewHolder extends RecyclerView.ViewHolder {
-            public TextView cours;
+            public TextView course;
             public TextView hour;
             public TextView info;
-            public TextView salle;
+            public TextView place;
             public ViewHolder(View itemView) {
                 super(itemView);
-                cours = itemView.findViewById(R.id.TextViewCours);
-                hour = itemView.findViewById(R.id.textViewHour);
-                info = itemView.findViewById(R.id.textViewInfo);
-                salle = itemView.findViewById(R.id.textViewSalle);
+                course = itemView.findViewById(R.id.agenda_course);
+                hour = itemView.findViewById(R.id.agenda_hour);
+                info = itemView.findViewById(R.id.agenda_info);
+                place = itemView.findViewById(R.id.agenda_place);
             }
         }
     }

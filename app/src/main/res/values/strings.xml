@@ -48,6 +48,12 @@
     <string name="easter_egg_enjoy">YOU GOT RICK ROLLED</string>
     <string name="connecting">Connecting</string>
     <string name="loading">Loading, please wait...</string>
+    <string name="monday">Monday</string>
+    <string name="tuesday">Tuesday</string>
+    <string name="wednesday">Wednesday</string>
+    <string name="thursday">Thursday</string>
+    <string name="friday">Friday</string>
+    <string name="saturday">Saturday</string>
 
     <string-array name="travel_array">
         <item>Driving</item>
