@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import java.util.ArrayList;
+
 public class Database extends SQLiteOpenHelper {
     private final String table = "agenda";
     private final String col0 = "date";
@@ -62,6 +64,24 @@ public class Database extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return out;
+    }
+
+    public ArrayList<ArrayList<String>> toTab(){
+        ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
+
+        String selectQuery = "SELECT * FROM " + table;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        while(cursor.moveToNext()){
+            ArrayList<String> row = new ArrayList<String>();
+            for(int i = 0; i <=4; i++){
+                row.add(cursor.getString(i));
+            }
+            list.add(row);
+        }
+        cursor.close();
+        db.close();
+        return list;
     }
 
     public String toICS(){

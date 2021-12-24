@@ -56,6 +56,7 @@ public class Login extends Thread {
             Log.d("cookie", cookies.toString());
             url = responseUrl.replace("Unknown", "List");
             url = url.replace("month", "listWeek");
+            url = url.replace("01%2F01%2F0001", "01%2F03%2F2022"); // change la date pour test
             Log.d("url replace", url);
         }
         else{
