@@ -25,8 +25,15 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.ezstudies.app.AgendaFragment;
 import com.ezstudies.app.Database;
 import com.ezstudies.app.R;
 import com.ezstudies.app.services.Login;
@@ -48,15 +55,55 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Agenda extends AppCompatActivity {
+public class Agenda extends FragmentActivity {
     private JavaScriptInterface jsi;
     private SharedPreferences sharedPreferences;
     private ProgressDialog progressDialog;
+    private ViewPager2 viewPager;
+    private FragmentAdapter adapter;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.agenda_layout);
         sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
+        viewPager = findViewById(R.id.viewpager2);
+        FragmentManager fm = getSupportFragmentManager();
+        adapter = new FragmentAdapter(fm, getLifecycle());
+        viewPager.setAdapter(adapter);
+
+    }
+
+    public class FragmentAdapter extends FragmentStateAdapter {
+        public FragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+            super(fragmentManager, lifecycle);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int page) {
+
+            switch (page) {
+                case 0 :
+                    return new AgendaFragment(1);
+                case 1 :
+                    return new AgendaFragment(2);
+                case 2 :
+                    return new AgendaFragment(3);
+                case 3 :
+                    return new AgendaFragment(4);
+                case 4 :
+                    return new AgendaFragment(5);
+                case 5 :
+                    return new AgendaFragment(6);
+                default:
+                    return new AgendaFragment(1);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return 6;
+        }
     }
 
     @Override
@@ -90,6 +137,7 @@ public class Agenda extends AppCompatActivity {
         database.clear();
 
         String source = jsi.getSource();
+        Log.d("source", source);
         Document document = Jsoup.parse(source, "UTF-8");
         Elements days = document.getElementsByClass("fc-list-heading");
         for (Element e : days) { //days
@@ -114,10 +162,10 @@ public class Agenda extends AppCompatActivity {
                 String title = courseInfo[0] + " - " + courseInfo[1];
                 String description = "";
                 for(int i = 2 ; i<courseInfo.length ; i++){
-                    description += courseInfo[i] + " | ";
+                    description += courseInfo[i] + " / ";
                 }
                 description = description.substring(0, description.length()-3);
-                String newDate = dateElements[2] + "-" + dateElements[1] + "-" + dateElements[0];
+                String newDate = dateElements[2] + "/" + dateElements[1] + "/" + dateElements[0];
                 database.add(newDate, title, startingHour + ":" + startingMinute, endingHour + ":" + endingMinute, description);
             }
         }
