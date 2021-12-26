@@ -126,6 +126,7 @@ public class WelcomeFragment extends Fragment {
             default:
                 break;
         }
+        broadcastReceiver = new broadcastReceiver();
         return view;
     }
 
@@ -134,6 +135,15 @@ public class WelcomeFragment extends Fragment {
         super.onResume();
         if (page == 2) {
             loadPrefs();
+            getActivity().registerReceiver(broadcastReceiver, new IntentFilter("WelcomeLogin"));
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if(page == 2){
+            getActivity().unregisterReceiver(broadcastReceiver);
         }
     }
 
@@ -242,14 +252,11 @@ public class WelcomeFragment extends Fragment {
                         progressDialog = ProgressDialog.show(getContext(), getString(R.string.connecting), getString(R.string.loading), true);
                         String nameText = name.getText().toString();
                         String passwordText = password.getText().toString();
-                        String target = "WelcomeLogin";
                         Intent intent = new Intent(getContext(), Login.class);
                         intent.putExtra("name", nameText);
                         intent.putExtra("password", passwordText);
-                        intent.putExtra("target", target);
+                        intent.putExtra("target", "WelcomeLogin");
                         getActivity().startService(intent);
-                        broadcastReceiver = new broadcastReceiver();
-                        getActivity().registerReceiver(broadcastReceiver, new IntentFilter(target));
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -397,7 +404,6 @@ public class WelcomeFragment extends Fragment {
                 }
                 Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             }
-            getActivity().unregisterReceiver(broadcastReceiver);
         }
     }
 }

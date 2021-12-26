@@ -51,8 +51,8 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
         mapView = findViewById(R.id.mymapview_map);
         mapView.getMapAsync(this);
         mapView.onCreate(savedInstanceState);
-
         type = getIntent().getStringExtra("type");
+        broadcastReceiver = new broadcastReceiver();
     }
 
     @Override
@@ -117,6 +117,8 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
             label = new Geocoder(this, Locale.getDefault()).getFromLocation(latLng.latitude, latLng.longitude, 1).get(0).getAddressLine(0);
         } catch (IOException e) {
             e.printStackTrace();
+        } catch (IndexOutOfBoundsException e){
+            label = getString(R.string.unknown);
         }
         markerOptions.title(label);
         markerOptions.position(latLng);
@@ -131,7 +133,6 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
     public void getLocation(){
         intent = new Intent(this, GpsService.class);
         startService(intent);
-        broadcastReceiver = new broadcastReceiver();
         registerReceiver(broadcastReceiver, new IntentFilter("GPS"));
     }
 

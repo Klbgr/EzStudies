@@ -96,7 +96,7 @@ public class Database extends SQLiteOpenHelper {
             String start[] = cursor.getString(2).split(":");
             String end[] = cursor.getString(3).split(":");
             ics += "BEGIN:VEVENT\n" +
-                    "DTSTART:" + date[2] + format(date[1], 2) + format(date[0], 2) + "T" + format(start[0], 2) + format(date[1], 2) + "00Z\n" +
+                    "DTSTART:" + date[2] + format(date[1], 2) + format(date[0], 2) + "T" + format(start[0], 2) + format(start[1], 2) + "00Z\n" +
                     "DTEND:" + date[2] + format(date[1], 2) + format(date[0], 2) + "T" + format(end[0], 2) + format(end[1], 2) + "00Z\n" +
                     "DESCRIPTION:" + cursor.getString(4) + "\n" +
                     "SUMMARY:" + cursor.getString(1) + "\n" +
@@ -113,5 +113,19 @@ public class Database extends SQLiteOpenHelper {
             s = "0" + s;
         }
         return s;
+    }
+
+    public ArrayList<String[]> getFirsts(){
+        String selectQuery = "SELECT * FROM " + table + " GROUP BY " + col0 + " ORDER BY " + col0 + " ASC, " + col2 + " ASC";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        ArrayList<String[]> list = new ArrayList<>();
+        while(cursor.moveToNext()){
+            String row[] = {cursor.getString(0), cursor.getString(2)};
+            list.add(row);
+        }
+        cursor.close();
+        db.close();
+        return list;
     }
 }

@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.ezstudies.app.R;
 import com.ezstudies.app.services.Login;
+import com.ezstudies.app.services.RouteCalculator;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -42,6 +43,7 @@ public class Settings extends AppCompatActivity {
     private Toast toast;
     private ProgressDialog progressDialog;
     private broadcastReceiver broadcastReceiver;
+    private Boolean wait = false;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +97,8 @@ public class Settings extends AppCompatActivity {
                         group1.setVisibility(View.VISIBLE);
                         group2.setVisibility(View.VISIBLE);
                         group3.setVisibility(View.GONE);
+
+                        refreshRoute();
                         break;
                     case 2:
                         group1.setVisibility(View.GONE);
@@ -109,12 +113,41 @@ public class Settings extends AppCompatActivity {
         });
 
         setOnClickListeners();
+
+        broadcastReceiver = new broadcastReceiver();
+    }
+
+    public void refreshRoute(){
+        String homeLat = sharedPreferences.getString("home_latitude", null);
+        String homeLong = sharedPreferences.getString("home_longitude", null);
+        String schoolLat = sharedPreferences.getString("school_latitude", null);
+        String schoolLong = sharedPreferences.getString("school_longitude", null);
+        int mode = sharedPreferences.getInt("travel_mode", 0);
+
+        if(homeLat != null && homeLong != null && schoolLat != null && schoolLong != null){
+            wait = true;
+            Intent intent = new Intent(Settings.this, RouteCalculator.class);
+            intent.putExtra("mode", mode);
+            intent.putExtra("homeLat", homeLat);
+            intent.putExtra("homeLong", homeLong);
+            intent.putExtra("schoolLat", schoolLat);
+            intent.putExtra("schoolLong", schoolLong);
+            intent.putExtra("target", "Settings");
+            startService(intent);
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         loadPrefs();
+        registerReceiver(broadcastReceiver, new IntentFilter("Settings"));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -163,7 +196,7 @@ public class Settings extends AppCompatActivity {
                 break;
         }
 
-        Boolean conditions = condition1 && condition2;
+        Boolean conditions = condition1 && condition2 && !wait;
         if(conditions){
             super.onBackPressed();
         }
@@ -173,6 +206,7 @@ public class Settings extends AppCompatActivity {
     }
 
     public void loadPrefs(){
+        refreshRoute();
         String home_longitude = sharedPreferences.getString("home_longitude", null);
         String home_latitude = sharedPreferences.getString("home_latitude", null);
         if(home_longitude != null && home_latitude != null){
@@ -282,14 +316,12 @@ public class Settings extends AppCompatActivity {
                         progressDialog = ProgressDialog.show(Settings.this, getString(R.string.connecting), getString(R.string.loading), true);
                         String nameText = name.getText().toString();
                         String passwordText = password.getText().toString();
-                        String target = "SettingsLogin";
+                        String target = "Settings";
                         Intent intent = new Intent(Settings.this, Login.class);
                         intent.putExtra("name", nameText);
                         intent.putExtra("password", passwordText);
                         intent.putExtra("target", target);
                         startService(intent);
-                        broadcastReceiver = new broadcastReceiver();
-                        registerReceiver(broadcastReceiver, new IntentFilter(target));
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -443,34 +475,41 @@ public class Settings extends AppCompatActivity {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            progressDialog.cancel();
-            Boolean success = intent.getBooleanExtra("success", false);
-            String name = intent.getStringExtra("name");
-            String password = intent.getStringExtra("password");
-            String responseUrl = intent.getStringExtra("responseUrl");
-            if(success) {
-                editor.putString("name", name);
-                editor.putString("password", password);
-                editor.putBoolean("connected", true);
+            int duration = intent.getIntExtra("duration", -1);
+            if(duration != -1){
+                editor.putInt("duration", duration);
                 editor.apply();
-
-                Toast.makeText(context, getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
-
-                TextView textView = findViewById(R.id.settings_status);
-                textView.setText(getString(R.string.connected_as, name));
+                wait = false;
             }
             else{
-                String response = responseUrl;
-                String text;
-                if (response != null && response.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
-                    text = getString(R.string.login_fail_credentials);
+                progressDialog.cancel();
+                Boolean success = intent.getBooleanExtra("success", false);
+                String name = intent.getStringExtra("name");
+                String password = intent.getStringExtra("password");
+                String responseUrl = intent.getStringExtra("responseUrl");
+                if(success) {
+                    editor.putString("name", name);
+                    editor.putString("password", password);
+                    editor.putBoolean("connected", true);
+                    editor.apply();
+
+                    Toast.makeText(context, getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
+
+                    TextView textView = findViewById(R.id.settings_status);
+                    textView.setText(getString(R.string.connected_as, name));
                 }
-                else {
-                    text = getString(R.string.login_fail_network);
+                else{
+                    String response = responseUrl;
+                    String text;
+                    if (response != null && response.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
+                        text = getString(R.string.login_fail_credentials);
+                    }
+                    else {
+                        text = getString(R.string.login_fail_network);
+                    }
+                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
                 }
-                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             }
-            unregisterReceiver(broadcastReceiver);
         }
     }
 }

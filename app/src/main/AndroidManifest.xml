@@ -52,6 +52,7 @@
         <service android:name=".services.GpsService" />
         <service android:name=".services.Login" />
         <service android:name=".services.RouteCalculator" />
+        <service android:name=".services.AlarmSetter" />
     </application>
 
 </manifest>

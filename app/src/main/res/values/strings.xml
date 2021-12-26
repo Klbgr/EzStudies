@@ -54,6 +54,8 @@
     <string name="thursday">Thursday</string>
     <string name="friday">Friday</string>
     <string name="saturday">Saturday</string>
+    <string name="notification">Notification</string>
+    <string name="unknown">Unknown</string>
 
     <string-array name="travel_array">
         <item>Driving</item>

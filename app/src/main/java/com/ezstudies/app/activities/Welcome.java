@@ -1,25 +1,12 @@
 package com.ezstudies.app.activities;
 
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.location.Geocoder;
 import android.os.Bundle;
-import android.text.InputType;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,10 +17,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.ezstudies.app.R;
-import com.ezstudies.app.services.Login;
-
-import java.io.IOException;
-import java.util.Locale;
+import com.ezstudies.app.services.RouteCalculator;
 
 public class Welcome extends FragmentActivity {
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36";
@@ -41,6 +25,7 @@ public class Welcome extends FragmentActivity {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private ViewPager2 viewPager;
+    private broadcastReceiver broadcastReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +50,19 @@ public class Welcome extends FragmentActivity {
             finish();
             startActivity(new Intent(this, Overview.class));
         }
+        broadcastReceiver = new broadcastReceiver();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(broadcastReceiver, new IntentFilter("Welcome"));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
     }
 
     @Override
@@ -89,6 +87,15 @@ public class Welcome extends FragmentActivity {
                 if(home_latitude != null && home_longitude != null && school_latitude != null && school_longitude != null && prep_time != -1) {
                     condition1 = true;
                 }
+
+                Intent intent = new Intent(this, RouteCalculator.class);
+                intent.putExtra("mode", mode);
+                intent.putExtra("homeLat", home_latitude);
+                intent.putExtra("homeLong", home_longitude);
+                intent.putExtra("schoolLat", school_latitude);
+                intent.putExtra("schoolLong", school_longitude);
+                intent.putExtra("target", "Welcome");
+                startService(intent);
                 break;
             case 2: // transit
                 prep_time = sharedPreferences.getInt("prep_time", -1);
@@ -122,8 +129,10 @@ public class Welcome extends FragmentActivity {
         if(conditions){
             editor.putBoolean("first_time", false);
             editor.apply();
-            finish();
-            startActivity(new Intent(this, Overview.class));
+            if(mode == 2){
+                finish();
+                startActivity(new Intent(this, Overview.class));
+            }
         }
         else{
             Toast.makeText(this, R.string.finish_setup, Toast.LENGTH_SHORT).show();
@@ -154,6 +163,18 @@ public class Welcome extends FragmentActivity {
         @Override
         public int getItemCount() {
             return 2;
+        }
+    }
+
+    private class broadcastReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            int duration = intent.getIntExtra("duration", -1);
+            editor.putInt("duration", duration);
+            editor.apply();
+            finish();
+            startActivity(new Intent(context, Overview.class));
         }
     }
 }

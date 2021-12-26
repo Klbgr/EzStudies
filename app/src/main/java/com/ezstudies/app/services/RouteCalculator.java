@@ -21,20 +21,7 @@ public class RouteCalculator extends Service implements Runnable {
     private final String KEY = "AnzK_4L_IgHGYge-UleemNLa29Iro40gMPcTPhrI2HX3kZdbw4smKTy434uDNXk5";
     private JSONObject json;
     private String url;
-
-    public int getDuration(){
-        int duration = -1;
-        try {
-            duration = json.getJSONArray("resourceSets").getJSONObject(0).getJSONArray("resources").getJSONObject(0).getInt("travelDuration");
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-        catch (NullPointerException e){ //no internet
-            return duration;
-        }
-        return duration;
-    }
+    private Intent intent;
 
     @Nullable
     @Override
@@ -44,6 +31,7 @@ public class RouteCalculator extends Service implements Runnable {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        this.intent = intent;
         int mode = intent.getIntExtra("mode", -1);
         String homeLat = intent.getStringExtra("homeLat");
         String homeLong = intent.getStringExtra("homeLong");
@@ -52,17 +40,17 @@ public class RouteCalculator extends Service implements Runnable {
         String travel_mode = null;
         switch (mode){
             case 0: //driving
-                travel_mode = "Driving";
+                travel_mode = "driving";
                 break;
             case 1: //walking
-                travel_mode = "Walking";
+                travel_mode = "walking";
                 break;
             case -1:
                 break;
             default:
                 break;
         }
-        url = "https://dev.virtualearth.net/REST/v1/Routes/" + travel_mode + "?wayPoint.1=" + homeLat + "," + homeLong + "&wayPoint.2=" + schoolLat + "," + schoolLong + "&key=" + KEY;
+        url = "https://dev.virtualearth.net/REST/v1/Routes/" + travel_mode + "?waypoint.1=" + homeLat + "," + homeLong + "&waypoint.2=" + schoolLat + "," + schoolLong + "&key=" + KEY;
         Log.d("url", url);
         Thread thread = new Thread(this);
         thread.start();
@@ -77,7 +65,7 @@ public class RouteCalculator extends Service implements Runnable {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
             String line;
             String jsonText = "";
-            while ((line = bufferedReader.readLine()) != null){
+            while ((line = bufferedReader.readLine()) != null) {
                 jsonText += line + "\n";
             }
             json = new JSONObject(jsonText);
@@ -87,16 +75,15 @@ public class RouteCalculator extends Service implements Runnable {
             duration = json.getJSONArray("resourceSets").getJSONObject(0).getJSONArray("resources").getJSONObject(0).getInt("travelDuration");
 
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
-            
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-        Intent intent = new Intent("route");
+
+        Intent intent = new Intent(this.intent.getStringExtra("target"));
+        intent.putExtra("target", this.intent.getStringExtra("target"));
         intent.putExtra("duration", duration);
 
         sendBroadcast(intent);

@@ -33,7 +33,9 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.ezstudies.app.Database;
 import com.ezstudies.app.R;
+import com.ezstudies.app.services.AlarmSetter;
 import com.ezstudies.app.services.Login;
+import com.ezstudies.app.services.RouteCalculator;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -48,6 +50,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -55,6 +58,7 @@ import java.util.Map;
 public class Agenda extends FragmentActivity {
     private JavaScriptInterface jsi;
     private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
     private ProgressDialog progressDialog;
     private ViewPager2 viewPager;
     private FragmentAdapter adapter;
@@ -64,11 +68,24 @@ public class Agenda extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.agenda_layout);
         sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
+        editor = sharedPreferences.edit();
         viewPager = findViewById(R.id.agenda_viewpager);
         FragmentManager fm = getSupportFragmentManager();
         adapter = new FragmentAdapter(fm, getLifecycle());
         viewPager.setAdapter(adapter);
+        broadcastReceiver = new broadcastReceiver();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(broadcastReceiver, new IntentFilter("Agenda"));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(broadcastReceiver);
     }
 
     public class FragmentAdapter extends FragmentStateAdapter {
@@ -288,31 +305,104 @@ public class Agenda extends FragmentActivity {
     public void restart(){
         finish();
         startActivity(getIntent());
+        setAlarms();
+    }
+
+    public void setAlarms(){
+        int mode = sharedPreferences.getInt("travel_mode", 0);
+        Database database = new Database(this);
+        ArrayList<String[]> firsts = database.getFirsts();
+        database.close();
+        if(mode != 2){
+            String homeLat = sharedPreferences.getString("home_latitude", null);
+            String homeLong = sharedPreferences.getString("home_longitude", null);
+            String schoolLat = sharedPreferences.getString("school_latitude", null);
+            String schoolLong = sharedPreferences.getString("school_longitude", null);
+
+            Intent intent = new Intent(this, RouteCalculator.class);
+            intent.putExtra("mode", mode);
+            intent.putExtra("homeLat", homeLat);
+            intent.putExtra("homeLong", homeLong);
+            intent.putExtra("schoolLat", schoolLat);
+            intent.putExtra("schoolLong", schoolLong);
+            intent.putExtra("target", "Agenda");
+            startService(intent);
+        }
+        else{
+            int prep_time = sharedPreferences.getInt("prep_time", -1);
+            int travel_time = sharedPreferences.getInt("travel_time", -1);
+            for(String [] infos : firsts){
+                int hour = Integer.parseInt(infos[1].split(":")[0]);
+                int minute = Integer.parseInt(infos[1].split(":")[1]);
+                int total = travel_time + prep_time;
+                int diffHour = total/60;
+                int diffMin = total - diffHour*60;
+                hour -= diffHour;
+                minute -= diffMin;
+                if(minute<0){
+                    minute += 60;
+                    hour--;
+                }
+                infos[1] = hour + ":" + minute;
+            }
+            Intent intent = new Intent(this, AlarmSetter.class);
+            intent.putExtra("list", firsts);
+            startService(intent);
+        }
     }
 
     private class broadcastReceiver extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
-            String url = intent.getStringExtra("url");
-            Boolean success = intent.getBooleanExtra("success", false);
-            if(!success){
-                progressDialog.cancel();
-                Toast.makeText(context, getString(R.string.login_fail_network), Toast.LENGTH_SHORT).show();
-                return;
+            String target = intent.getStringExtra("target");
+            if(target != null && target.equals("Agenda")){
+                Database database = new Database(context);
+                ArrayList<String[]> firsts = database.getFirsts();
+                database.close();
+                int duration = intent.getIntExtra("duration", -1);
+                editor.putInt("duration", duration);
+                editor.apply();
+                int prep_time = sharedPreferences.getInt("prep_time", -1);
+                for(String [] infos : firsts){
+                    int hour = Integer.parseInt(infos[1].split(":")[0]);
+                    int minute = Integer.parseInt(infos[1].split(":")[1]);
+                    int total = duration/60 + prep_time;
+                    int diffHour = total/60;
+                    int diffMin = total - diffHour*60;
+                    hour -= diffHour;
+                    minute -= diffMin;
+                    if(minute<0){
+                        minute += 60;
+                        hour--;
+                    }
+                    infos[1] = hour + ":" + minute;
+                    Log.d("info", infos[1] + "");
+                }
+                Intent intent1 = new Intent(context, AlarmSetter.class);
+                intent1.putExtra("list", firsts);
+                startService(intent1);
             }
-            WebView webview = new WebView(context);
-            webview.setWebViewClient(new myWebView(Agenda.this));
-            webview.getSettings().setJavaScriptEnabled(true);
-            webview.getSettings().setLoadWithOverviewMode(true);
-            jsi = new JavaScriptInterface();
-            webview.addJavascriptInterface(jsi, "HTMLOUT");
-            HashMap<String, String> cookies = (HashMap<String, String>) intent.getSerializableExtra("cookies");
-            for(Map.Entry<String, String> pair: cookies.entrySet()){
-                String cookie = pair.getKey() + "=" + pair.getValue() + "; path=/";
-                CookieManager.getInstance().setCookie(url, cookie);
+            else{
+                String url = intent.getStringExtra("url");
+                Boolean success = intent.getBooleanExtra("success", false);
+                if(!success){
+                    progressDialog.cancel();
+                    Toast.makeText(context, getString(R.string.login_fail_network), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                WebView webview = new WebView(context);
+                webview.setWebViewClient(new myWebView(Agenda.this));
+                webview.getSettings().setJavaScriptEnabled(true);
+                webview.getSettings().setLoadWithOverviewMode(true);
+                jsi = new JavaScriptInterface();
+                webview.addJavascriptInterface(jsi, "HTMLOUT");
+                HashMap<String, String> cookies = (HashMap<String, String>) intent.getSerializableExtra("cookies");
+                for(Map.Entry<String, String> pair: cookies.entrySet()){
+                    String cookie = pair.getKey() + "=" + pair.getValue() + "; path=/";
+                    CookieManager.getInstance().setCookie(url, cookie);
+                }
+                webview.loadUrl(url);
             }
-            webview.loadUrl(url);
-            unregisterReceiver(broadcastReceiver);
         }
     }
 
