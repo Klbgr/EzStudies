@@ -12,12 +12,15 @@ import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputType;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +47,7 @@ public class Settings extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private broadcastReceiver broadcastReceiver;
     private Boolean wait = false;
+    private Switch s;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -110,6 +114,24 @@ public class Settings extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        s = findViewById(R.id.settings_switch);
+        s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                editor.putBoolean("alarm", isChecked);
+                editor.apply();
+                TextView textView = findViewById(R.id.settings_alarm);
+                String text;
+                if(isChecked){
+                    text = getString(R.string.enabled);
+                }
+                else{
+                    text = getString(R.string.disabled);
+                }
+                textView.setText(text);
+            }
         });
 
         setOnClickListeners();
@@ -278,6 +300,17 @@ public class Settings extends AppCompatActivity {
             text = getString(R.string.not_connected);
         }
         textView.setText(text);
+
+        boolean alarm = sharedPreferences.getBoolean("alarm", false);
+        s.setChecked(alarm);
+        textView = findViewById(R.id.settings_alarm);
+        if(alarm){
+            text = getString(R.string.enabled);
+        }
+        else{
+            text = getString(R.string.disabled);
+        }
+        textView.setText(text);
     }
 
     public void setOnClickListeners(){
@@ -443,6 +476,14 @@ public class Settings extends AppCompatActivity {
 
         LinearLayout click7 = findViewById(R.id.settings_click7);
         click7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                s.toggle();
+            }
+        });
+
+        LinearLayout click8 = findViewById(R.id.settings_click8);
+        click8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Date now = Calendar.getInstance().getTime();

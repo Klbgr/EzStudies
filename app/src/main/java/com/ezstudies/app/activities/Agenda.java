@@ -305,7 +305,10 @@ public class Agenda extends FragmentActivity {
     public void restart(){
         finish();
         startActivity(getIntent());
-        setAlarms();
+        Boolean alarm = sharedPreferences.getBoolean("alarm", false);
+        if(alarm){
+            setAlarms();
+        }
     }
 
     public void setAlarms(){

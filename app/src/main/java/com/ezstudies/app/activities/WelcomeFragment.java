@@ -16,9 +16,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +41,7 @@ public class WelcomeFragment extends Fragment {
     private Spinner agenda_spinner;
     private ProgressDialog progressDialog;
     private broadcastReceiver broadcastReceiver;
+    private Switch s;
 
     public WelcomeFragment() {
     }
@@ -63,7 +66,7 @@ public class WelcomeFragment extends Fragment {
                 LinearLayout group1 = view.findViewById(R.id.settings_group1);
                 LinearLayout group2 = view.findViewById(R.id.settings_group2);
                 LinearLayout group3 = view.findViewById(R.id.settings_group3);
-                LinearLayout group5 = view.findViewById(R.id.settings_click7);
+                LinearLayout group5 = view.findViewById(R.id.settings_click8);
                 group5.setVisibility(View.GONE);
 
                 agenda_spinner = view.findViewById(R.id.settings_agenda_spinner);
@@ -118,6 +121,24 @@ public class WelcomeFragment extends Fragment {
 
                     @Override
                     public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
+
+                s = view.findViewById(R.id.settings_switch);
+                s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                        editor.putBoolean("alarm", isChecked);
+                        editor.apply();
+                        TextView textView = view.findViewById(R.id.settings_alarm);
+                        String text;
+                        if(isChecked){
+                            text = getString(R.string.enabled);
+                        }
+                        else{
+                            text = getString(R.string.disabled);
+                        }
+                        textView.setText(text);
                     }
                 });
 
@@ -212,6 +233,17 @@ public class WelcomeFragment extends Fragment {
             text = getString(R.string.connected_as, name);
         } else {
             text = getString(R.string.not_connected);
+        }
+        textView.setText(text);
+
+        boolean alarm = sharedPreferences.getBoolean("alarm", false);
+        s.setChecked(alarm);
+        textView = view.findViewById(R.id.settings_alarm);
+        if(alarm){
+            text = getString(R.string.enabled);
+        }
+        else{
+            text = getString(R.string.disabled);
         }
         textView.setText(text);
     }
@@ -371,6 +403,14 @@ public class WelcomeFragment extends Fragment {
                 });
 
                 builder.show();
+            }
+        });
+
+        LinearLayout click7 = view.findViewById(R.id.settings_click7);
+        click7.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                s.toggle();
             }
         });
     }
