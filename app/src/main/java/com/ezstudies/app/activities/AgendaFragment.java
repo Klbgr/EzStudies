@@ -56,9 +56,10 @@ public class AgendaFragment extends Fragment {
             default:
                 break;
         }
-        list = view.findViewById(R.id.list);
+        list = view.findViewById(R.id.agenda_list);
         Database database = new Database(this.getContext());
-        ArrayList<ArrayList<String>> data = database.toTab();
+        ArrayList<ArrayList<String>> data = database.toTabAgenda();
+        database.close();
         ArrayList<ArrayList<String>> coursList = new ArrayList<>();
         for(ArrayList<String> row : data){
             String[] dateTab = row.get(0).split("/");

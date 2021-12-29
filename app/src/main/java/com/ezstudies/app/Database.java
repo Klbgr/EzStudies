@@ -11,12 +11,17 @@ import androidx.annotation.Nullable;
 import java.util.ArrayList;
 
 public class Database extends SQLiteOpenHelper {
-    private final String table = "agenda";
-    private final String col0 = "date";
-    private final String col1 = "title";
-    private final String col2 = "startingAt";
-    private final String col3 = "endingAt";
-    private final String col4 = "description";
+    private final String table0 = "agenda";
+    private final String table1 = "homeworks";
+    private final String table0_col0 = "date";
+    private final String table0_col1 = "title";
+    private final String table0_col2 = "startingAt";
+    private final String table0_col3 = "endingAt";
+    private final String table0_col4 = "description";
+    private final String table1_col0 = "title";
+    private final String table1_col1 = "date";
+    private final String table1_col2 = "description";
+    private final String table1_col3 = "done";
 
     public Database(@Nullable Context context) {
         super(context, "Database", null, 1);
@@ -24,37 +29,56 @@ public class Database extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        String request = "CREATE TABLE "+table+"("+col0+" TEXT, "+col1+" TEXT, "+col2+" TEXT, "+col3+" TEXT, "+col4 +" TEXT);";
-        sqLiteDatabase.execSQL(request);
+        sqLiteDatabase.execSQL("CREATE TABLE "+table0+"("+table0_col0+" TEXT, "+table0_col1+" TEXT, "+table0_col2+" TEXT, "+table0_col3+" TEXT, "+table0_col4 +" TEXT);");
+        sqLiteDatabase.execSQL("CREATE TABLE "+table1+"("+table1_col0+" TEXT, "+table1_col1+" TEXT, "+table1_col2+" TEXT, "+table1_col3+" TEXT);");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table0);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table1);
         onCreate(sqLiteDatabase);
     }
 
-    public void add(String date, String title, String startingAt, String endingAt, String description){
+    public void addAgenda(String date, String title, String startingAt, String endingAt, String description){
         ContentValues contentValues;
-        SQLiteDatabase db =this.getWritableDatabase();
-        contentValues = new ContentValues();
-        contentValues.put(col0, date);
-        contentValues.put(col1, title);
-        contentValues.put(col2, startingAt);
-        contentValues.put(col3, endingAt);
-        contentValues.put(col4, description);
-        db.insert(table, null, contentValues);
-        db.close();
-    }
-
-    public void clear() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE FROM " + table);
+        contentValues = new ContentValues();
+        contentValues.put(table0_col0, date);
+        contentValues.put(table0_col1, title);
+        contentValues.put(table0_col2, startingAt);
+        contentValues.put(table0_col3, endingAt);
+        contentValues.put(table0_col4, description);
+        db.insert(table0, null, contentValues);
         db.close();
     }
 
-    public String toString(){
-        String selectQuery = "SELECT * FROM " + table;
+    public void addHomework(String title, String date, String description){
+        ContentValues contentValues;
+        SQLiteDatabase db = this.getWritableDatabase();
+        contentValues = new ContentValues();
+        contentValues.put(table1_col0, title);
+        contentValues.put(table1_col1, date);
+        contentValues.put(table1_col2, description);
+        contentValues.put(table1_col3, "f");
+        db.insert(table1, null, contentValues);
+        db.close();
+    }
+
+    public void clearAgenda() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + table0);
+        db.close();
+    }
+
+    public void clearHomeworks(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + table1);
+        db.close();
+    }
+
+    public String toStringAgenda(){
+        String selectQuery = "SELECT * FROM " + table0;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         String out = "";
@@ -66,10 +90,23 @@ public class Database extends SQLiteOpenHelper {
         return out;
     }
 
-    public ArrayList<ArrayList<String>> toTab(){
+    public String toStringHomeworks(){
+        String selectQuery = "SELECT * FROM " + table1;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        String out = "";
+        while (cursor.moveToNext()){
+            out += cursor.getString(0) + "\t" + cursor.getString(1) + "\t" + cursor.getString(2) + "\t" + cursor.getString(3) + "\n";
+        }
+        cursor.close();
+        db.close();
+        return out;
+    }
+
+    public ArrayList<ArrayList<String>> toTabAgenda(){
         ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
 
-        String selectQuery = "SELECT * FROM " + table;
+        String selectQuery = "SELECT * FROM " + table0;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         while(cursor.moveToNext()){
@@ -84,8 +121,26 @@ public class Database extends SQLiteOpenHelper {
         return list;
     }
 
+    public ArrayList<ArrayList<String>> toTabHomeworks(){
+        ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
+
+        String selectQuery = "SELECT * FROM " + table1;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        while(cursor.moveToNext()){
+            ArrayList<String> row = new ArrayList<String>();
+            for(int i = 0; i <=3; i++){
+                row.add(cursor.getString(i));
+            }
+            list.add(row);
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
+
     public String toICS(){
-        String selectQuery = "SELECT * FROM " + table;
+        String selectQuery = "SELECT * FROM " + table0;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         String ics = "BEGIN:VCALENDAR\n" +
@@ -116,7 +171,7 @@ public class Database extends SQLiteOpenHelper {
     }
 
     public ArrayList<String[]> getFirsts(){
-        String selectQuery = "SELECT * FROM " + table + " GROUP BY " + col0 + " ORDER BY " + col0 + " ASC, " + col2 + " ASC";
+        String selectQuery = "SELECT * FROM " + table0 + " GROUP BY " + table0_col0 + " ORDER BY " + table0_col0 + " ASC, " + table0_col2 + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         ArrayList<String[]> list = new ArrayList<>();
@@ -127,5 +182,19 @@ public class Database extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return list;
+    }
+
+    public void removeHomework(String title, String date, String description){
+        String deleteQuery = "DELETE FROM " + table1 + " WHERE " + table1_col0 + "='" + title + "' AND " + table1_col1 + "='" + date + "' AND " + table1_col2 + "='" + description + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(deleteQuery);
+        db.close();
+    }
+
+    public void setHomeworkDone(String title, String date, String description, String done){
+        String updateQuery = "UPDATE " + table1 + " SET " + table1_col3 + " = '" + done + "' WHERE " + table1_col0 + "='" + title + "' AND " + table1_col1 + "='" + date + "' AND " + table1_col2 + "='" + description + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL(updateQuery);
+        db.close();
     }
 }

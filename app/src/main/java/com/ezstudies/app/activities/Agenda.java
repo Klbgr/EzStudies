@@ -137,7 +137,7 @@ public class Agenda extends FragmentActivity {
 
     public void parseCelcat(){
         Database database = new Database(this);
-        database.clear();
+        database.clearAgenda();
 
         String source = jsi.getSource();
         Log.d("source", source);
@@ -169,10 +169,10 @@ public class Agenda extends FragmentActivity {
                 }
                 description = description.substring(0, description.length()-3);
                 String newDate = dateElements[2] + "/" + dateElements[1] + "/" + dateElements[0];
-                database.add(newDate, title, startingHour + ":" + startingMinute, endingHour + ":" + endingMinute, description);
+                database.addAgenda(newDate, title, startingHour + ":" + startingMinute, endingHour + ":" + endingMinute, description);
             }
         }
-        Log.d("db", database.toString());
+        Log.d("db", database.toStringAgenda());
         database.close();
 
         progressDialog.cancel();
@@ -189,7 +189,7 @@ public class Agenda extends FragmentActivity {
 
     public void parseICS(String content){
         Database database = new Database(this);
-        database.clear();
+        database.clearAgenda();
         try {
             BufferedReader bufferedReader = new BufferedReader(new StringReader(content));
             String line;
@@ -226,13 +226,13 @@ public class Agenda extends FragmentActivity {
                         break;
                     case "END": //end
                         if(list[1].equals("VEVENT")) {
-                            database.add(date, title, startingAt, endingAt, description);
+                            database.addAgenda(date, title, startingAt, endingAt, description);
                         }
                         break;
                 }
             }
             bufferedReader.close();
-            Log.d("db", database.toString());
+            Log.d("db", database.toStringAgenda());
         } catch (IOException e) {
             e.printStackTrace();
         }

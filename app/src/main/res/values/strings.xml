@@ -59,6 +59,13 @@
     <string name="auto_alarm">Automatic alarms (BETA)</string>
     <string name="enabled">Enabled</string>
     <string name="disabled">Disabled</string>
+    <string name="add_homework">Add homework</string>
+    <string name="title">title</string>
+    <string name="date">date</string>
+    <string name="description">description</string>
+    <string name="action">Action</string>
+    <string name="remove">Remove</string>
+    <string name="toggle">Toggle</string>
 
     <string-array name="travel_array">
         <item>Driving</item>
