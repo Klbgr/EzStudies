@@ -19,12 +19,12 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.ezstudies.app.R;
 import com.ezstudies.app.services.Login;
@@ -46,7 +46,7 @@ public class Settings extends AppCompatActivity {
     private ProgressDialog progressDialog;
     private broadcastReceiver broadcastReceiver;
     private Boolean wait = false;
-    private Switch s;
+    private SwitchCompat s;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
