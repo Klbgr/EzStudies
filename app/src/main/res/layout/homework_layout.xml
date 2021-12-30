@@ -22,7 +22,7 @@
         android:layout_marginBottom="32dp"
         android:clickable="true"
         android:onClick="add"
-        app:backgroundTint="@color/purple_500"
+        app:backgroundTint="@color/green"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_input_add" />

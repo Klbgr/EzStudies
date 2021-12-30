@@ -3,6 +3,7 @@ package com.ezstudies.app.activities;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -120,9 +121,19 @@ public class Homeworks extends AppCompatActivity {
                 holder.description.setText(data.get(position).get(2));
                 status = data.get(position).get(3);
                 if (status.equals("f")) {
-                    holder.itemView.setBackgroundColor(Color.RED);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        holder.itemView.setBackgroundColor(getColor(R.color.homework_red));
+                    }
+                    else{
+                        holder.itemView.setBackgroundColor(Color.RED);
+                    }
                 } else {
-                    holder.itemView.setBackgroundColor(Color.GREEN);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        holder.itemView.setBackgroundColor(getColor(R.color.homework_green));
+                    }
+                    else{
+                        holder.itemView.setBackgroundColor(Color.GREEN);
+                    }
                 }
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
