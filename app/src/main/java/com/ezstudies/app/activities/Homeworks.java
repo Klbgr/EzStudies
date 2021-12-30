@@ -4,17 +4,14 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,7 +23,6 @@ import com.ezstudies.app.Database;
 import com.ezstudies.app.R;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 public class Homeworks extends AppCompatActivity {
     @Override
@@ -51,18 +47,16 @@ public class Homeworks extends AppCompatActivity {
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
+        DatePicker datePicker = new DatePicker(this);
+
         EditText title = new EditText(this);
         title.setHint(getString(R.string.title));
-
-        EditText date = new EditText(this);
-        date.setInputType(InputType.TYPE_DATETIME_VARIATION_DATE);
-        date.setHint(getString(R.string.date));
 
         EditText description = new EditText(this);
         description.setHint(getString(R.string.description));
 
+        linearLayout.addView(datePicker);
         linearLayout.addView(title);
-        linearLayout.addView(date);
         linearLayout.addView(description);
 
         builder.setView(linearLayout);
@@ -71,7 +65,8 @@ public class Homeworks extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 Database database = new Database(Homeworks.this);
-                database.addHomework(title.getText().toString(), date.getText().toString(), description.getText().toString());
+                String date = datePicker.getDayOfMonth() + "/" + (datePicker.getMonth()+1) + "/" + datePicker.getYear();
+                database.addHomework(title.getText().toString(), date, description.getText().toString());
                 Log.d("db", database.toStringHomeworks());
                 database.close();
 
