@@ -124,7 +124,7 @@ public class Database extends SQLiteOpenHelper {
     public ArrayList<ArrayList<String>> toTabHomeworks(){
         ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
 
-        String selectQuery = "SELECT * FROM " + table1;
+        String selectQuery = "SELECT * FROM " + table1 + " ORDER BY " + table1_col3 + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         while(cursor.moveToNext()){
