@@ -66,6 +66,7 @@
     <string name="action">Action</string>
     <string name="remove">Remove</string>
     <string name="toggle">Toggle</string>
+    <string name="wake_up">You wake up at</string>
 
     <string-array name="travel_array">
         <item>Driving</item>

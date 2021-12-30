@@ -282,6 +282,10 @@ public class Settings extends AppCompatActivity {
         }
         textView.setText(travel_time);
 
+        Intent intent = new Intent(Settings.this, Overview.class);
+        intent.putExtra("travel_time", travel_time);
+        startService(intent);
+
         int travel_mode = sharedPreferences.getInt("travel_mode", 0);
         travel_spinner.setSelection(travel_mode);
 
