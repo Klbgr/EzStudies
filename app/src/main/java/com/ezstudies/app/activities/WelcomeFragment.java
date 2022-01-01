@@ -20,10 +20,10 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
 import com.ezstudies.app.R;
@@ -41,7 +41,7 @@ public class WelcomeFragment extends Fragment {
     private Spinner agenda_spinner;
     private ProgressDialog progressDialog;
     private broadcastReceiver broadcastReceiver;
-    private Switch s;
+    private SwitchCompat s;
 
     public WelcomeFragment() {
     }
@@ -143,6 +143,8 @@ public class WelcomeFragment extends Fragment {
                 });
 
                 setOnClickListeners();
+
+                loadPrefs();
                 break;
             default:
                 break;
@@ -155,7 +157,7 @@ public class WelcomeFragment extends Fragment {
     public void onResume() {
         super.onResume();
         if (page == 2) {
-            loadPrefs();
+            updateLocation();
             getActivity().registerReceiver(broadcastReceiver, new IntentFilter("WelcomeLogin"));
         }
     }
@@ -168,7 +170,7 @@ public class WelcomeFragment extends Fragment {
         }
     }
 
-    public void loadPrefs() {
+    public void updateLocation(){
         String home_longitude = sharedPreferences.getString("home_longitude", null);
         String home_latitude = sharedPreferences.getString("home_latitude", null);
         if (home_longitude != null && home_latitude != null) {
@@ -194,7 +196,9 @@ public class WelcomeFragment extends Fragment {
             }
             textView.setText(address);
         }
+    }
 
+    public void loadPrefs() {
         int ptime = sharedPreferences.getInt("prep_time", -1);
         TextView textView = view.findViewById(R.id.settings_prep_time);
         String prep_time;

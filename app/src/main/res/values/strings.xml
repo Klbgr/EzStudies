@@ -35,7 +35,7 @@
     <string name="login_fail_network">Failed, please retry</string>
     <string name="celcat_success">Imported agenda from Celcat</string>
     <string name="ics_success">Imported agenda from ICS file</string>
-    <string name="duration">Estimated duration : %1$ds</string>
+    <string name="duration">Tomorrow, you\'ll need to wake up at %1$s (%2$d minutes of travel)</string>
     <string name="enter">Enter</string>
     <string name="finish_setup">Please finish setup first</string>
     <string name="export_ics">Export to ICS file</string>
@@ -66,6 +66,10 @@
     <string name="action">Action</string>
     <string name="remove">Remove</string>
     <string name="toggle">Toggle</string>
+    <string name="today">Today</string>
+    <string name="no_agenda">Nothing for today</string>
+    <string name="no_homeworks">No homeworks</string>
+    <string name="nothing_tomorrow">Tomorrow, you won\'t have any courses</string>
 
     <string-array name="travel_array">
         <item>Driving</item>

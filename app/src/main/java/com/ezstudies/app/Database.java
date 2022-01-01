@@ -197,4 +197,22 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(updateQuery);
         db.close();
     }
+
+    public ArrayList<ArrayList<String>> toTabAgendaDay(int day, int month, int year){
+        ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
+        String date = format(String.valueOf(day), 2) + "/" + format(String.valueOf(month), 2) + "/" + format(String.valueOf(year), 4);
+        String selectQuery = "SELECT * FROM " + table0 + " WHERE " + table0_col0 + "='" + date + "'";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        while(cursor.moveToNext()){
+            ArrayList<String> row = new ArrayList<String>();
+            for(int i = 0; i <=4; i++){
+                row.add(cursor.getString(i));
+            }
+            list.add(row);
+        }
+        cursor.close();
+        db.close();
+        return list;
+    }
 }
