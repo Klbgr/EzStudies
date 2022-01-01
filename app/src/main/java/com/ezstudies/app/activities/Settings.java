@@ -38,6 +38,7 @@ import java.util.Locale;
 public class Settings extends AppCompatActivity {
     private Spinner travel_spinner;
     private Spinner agenda_spinner;
+    private Spinner alarm_spinner;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
     private Date date = null;
@@ -59,6 +60,7 @@ public class Settings extends AppCompatActivity {
         LinearLayout group1 = findViewById(R.id.settings_group1);
         LinearLayout group2 = findViewById(R.id.settings_group2);
         LinearLayout group3 = findViewById(R.id.settings_group3);
+        LinearLayout group4 = findViewById(R.id.settings_group4);
 
         agenda_spinner = findViewById(R.id.settings_agenda_spinner);
         ArrayAdapter<CharSequence> agenda_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.agenda_array, android.R.layout.simple_spinner_item);
@@ -115,6 +117,21 @@ public class Settings extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        alarm_spinner = findViewById(R.id.settings_alarm_spinner);
+        ArrayAdapter<CharSequence> alarm_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.alarm_array, android.R.layout.simple_spinner_item);
+        alarm_spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        alarm_spinner.setAdapter(alarm_spinner_adapter);
+        alarm_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                editor.putInt("alarm_ringtone", position);
+                editor.apply();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
         s = findViewById(R.id.settings_switch);
         s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -125,9 +142,11 @@ public class Settings extends AppCompatActivity {
                 String text;
                 if(isChecked){
                     text = getString(R.string.enabled);
+                    group4.setVisibility(View.VISIBLE);
                 }
                 else{
                     text = getString(R.string.disabled);
+                    group4.setVisibility(View.GONE);
                 }
                 textView.setText(text);
             }
@@ -136,6 +155,8 @@ public class Settings extends AppCompatActivity {
         setOnClickListeners();
 
         broadcastReceiver = new broadcastReceiver();
+
+        loadPrefs();
     }
 
     public void refreshRoute(){
@@ -161,7 +182,8 @@ public class Settings extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadPrefs();
+        updateLocation();
+        refreshRoute();
         registerReceiver(broadcastReceiver, new IntentFilter("Settings"));
     }
 
@@ -226,8 +248,7 @@ public class Settings extends AppCompatActivity {
         }
     }
 
-    public void loadPrefs(){
-        refreshRoute();
+    public void updateLocation(){
         String home_longitude = sharedPreferences.getString("home_longitude", null);
         String home_latitude = sharedPreferences.getString("home_latitude", null);
         if(home_longitude != null && home_latitude != null){
@@ -255,7 +276,9 @@ public class Settings extends AppCompatActivity {
             }
             textView.setText(address);
         }
+    }
 
+    public void loadPrefs(){
         int ptime = sharedPreferences.getInt("prep_time", -1);
         TextView textView = findViewById(R.id.settings_prep_time);
         String prep_time;
@@ -288,6 +311,9 @@ public class Settings extends AppCompatActivity {
         int import_mode = sharedPreferences.getInt("import_mode", 0);
         agenda_spinner.setSelection(import_mode);
 
+        int alarm_ringtone = sharedPreferences.getInt("alarm_ringtone", 0);
+        alarm_spinner.setSelection(alarm_ringtone);
+
         boolean connected = sharedPreferences.getBoolean("connected", false);
         textView = findViewById(R.id.settings_status);
         String text;
@@ -303,11 +329,14 @@ public class Settings extends AppCompatActivity {
         boolean alarm = sharedPreferences.getBoolean("alarm", false);
         s.setChecked(alarm);
         textView = findViewById(R.id.settings_alarm);
+        LinearLayout group4 = findViewById(R.id.settings_group4);
         if(alarm){
             text = getString(R.string.enabled);
+            group4.setVisibility(View.VISIBLE);
         }
         else{
             text = getString(R.string.disabled);
+            group4.setVisibility(View.GONE);
         }
         textView.setText(text);
     }
@@ -483,6 +512,14 @@ public class Settings extends AppCompatActivity {
 
         LinearLayout click8 = findViewById(R.id.settings_click8);
         click8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alarm_spinner.performClick();
+            }
+        });
+
+        LinearLayout click9 = findViewById(R.id.settings_click9);
+        click9.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Date now = Calendar.getInstance().getTime();

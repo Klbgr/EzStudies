@@ -83,6 +83,7 @@ public class AlarmSetter extends Service implements Runnable{
     }
 
     public void setAlarm(int day, int hour, int minute){
+        int alarm = getApplicationContext().getSharedPreferences("prefs", MODE_PRIVATE).getInt("alarm_ringtone", 0)+1;
         ArrayList<Integer> days = new ArrayList<>();
         days.add(day);
         Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);
@@ -91,6 +92,7 @@ public class AlarmSetter extends Service implements Runnable{
         intent.putExtra(AlarmClock.EXTRA_MINUTES, minute);
         intent.putExtra(AlarmClock.EXTRA_SKIP_UI, true);
         intent.putExtra(AlarmClock.EXTRA_MESSAGE, getString(R.string.app_name) + " " + getDayName(day));
+        intent.putExtra(AlarmClock.EXTRA_RINGTONE, "android.resource://com.ezstudies.app/raw/ezstudies" + alarm);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
     }

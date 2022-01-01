@@ -39,6 +39,7 @@ public class WelcomeFragment extends Fragment {
     private View view;
     private Spinner travel_spinner;
     private Spinner agenda_spinner;
+    private Spinner alarm_spinner;
     private ProgressDialog progressDialog;
     private broadcastReceiver broadcastReceiver;
     private SwitchCompat s;
@@ -66,7 +67,9 @@ public class WelcomeFragment extends Fragment {
                 LinearLayout group1 = view.findViewById(R.id.settings_group1);
                 LinearLayout group2 = view.findViewById(R.id.settings_group2);
                 LinearLayout group3 = view.findViewById(R.id.settings_group3);
-                LinearLayout group5 = view.findViewById(R.id.settings_click8);
+                LinearLayout group4 = view.findViewById(R.id.settings_group4);
+                LinearLayout group5 = view.findViewById(R.id.settings_click9);
+                group4.setVisibility(View.GONE);
                 group5.setVisibility(View.GONE);
 
                 agenda_spinner = view.findViewById(R.id.settings_agenda_spinner);
@@ -124,6 +127,22 @@ public class WelcomeFragment extends Fragment {
                     }
                 });
 
+                alarm_spinner = view.findViewById(R.id.settings_alarm_spinner);
+                ArrayAdapter<CharSequence> alarm_spinner_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.alarm_array, android.R.layout.simple_spinner_item);
+                alarm_spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                alarm_spinner.setAdapter(alarm_spinner_adapter);
+                alarm_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        editor.putInt("alarm_ringtone", position);
+                        editor.apply();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
+
                 s = view.findViewById(R.id.settings_switch);
                 s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -134,9 +153,11 @@ public class WelcomeFragment extends Fragment {
                         String text;
                         if(isChecked){
                             text = getString(R.string.enabled);
+                            group4.setVisibility(View.VISIBLE);
                         }
                         else{
                             text = getString(R.string.disabled);
+                            group4.setVisibility(View.GONE);
                         }
                         textView.setText(text);
                     }
@@ -144,12 +165,13 @@ public class WelcomeFragment extends Fragment {
 
                 setOnClickListeners();
 
+                broadcastReceiver = new broadcastReceiver();
+
                 loadPrefs();
                 break;
             default:
                 break;
         }
-        broadcastReceiver = new broadcastReceiver();
         return view;
     }
 
@@ -229,6 +251,9 @@ public class WelcomeFragment extends Fragment {
         int import_mode = sharedPreferences.getInt("import_mode", 0);
         agenda_spinner.setSelection(import_mode);
 
+        int alarm_ringtone = sharedPreferences.getInt("alarm_ringtone", 0);
+        alarm_spinner.setSelection(alarm_ringtone);
+
         boolean connected = sharedPreferences.getBoolean("connected", false);
         textView = view.findViewById(R.id.settings_status);
         String text;
@@ -243,11 +268,14 @@ public class WelcomeFragment extends Fragment {
         boolean alarm = sharedPreferences.getBoolean("alarm", false);
         s.setChecked(alarm);
         textView = view.findViewById(R.id.settings_alarm);
+        LinearLayout group4 = view.findViewById(R.id.settings_group4);
         if(alarm){
             text = getString(R.string.enabled);
+            group4.setVisibility(View.VISIBLE);
         }
         else{
             text = getString(R.string.disabled);
+            group4.setVisibility(View.GONE);
         }
         textView.setText(text);
     }
@@ -415,6 +443,14 @@ public class WelcomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 s.toggle();
+            }
+        });
+
+        LinearLayout click8 = view.findViewById(R.id.settings_click8);
+        click8.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
             }
         });
     }
