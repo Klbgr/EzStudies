@@ -19,7 +19,7 @@
     <string name="empty">Empty</string>
     <string name="prep_time">Preparation time</string>
     <string name="about">About us</string>
-    <string name="about_text">We are students etc, we sometimes code things that works but most of the time it crashes\nmaybe some links to our github or social media</string>
+    <string name="about_text">We are students at CY Cergy Paris Université. This app is a project for our Developping Application course.\n\nOur team (GitHub):\n@IIyn\n@Malinx95\n@Klbgr\n\nhttps://github.com/Klbgr/EzStudies</string>
     <string name="minutes">%1$d minutes</string>
     <string name="cancel">Cancel</string>
     <string name="invalid_input">Invalid input</string>
@@ -82,5 +82,5 @@
     </string-array>
 
     <dimen name="settings_spacing">16dp</dimen>
-    <dimen name="logo_spacing">10dp</dimen>
+    <dimen name="logo_spacing">8dp</dimen>
 </resources>
