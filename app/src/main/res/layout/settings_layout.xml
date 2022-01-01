@@ -37,7 +37,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="0"
-                        app:srcCompat="@android:drawable/ic_menu_preferences" />
+                        android:src="@android:drawable/ic_menu_preferences" />
 
                     <Space
                         android:layout_width="@dimen/logo_spacing"
@@ -92,7 +92,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="0"
-                        app:srcCompat="@android:drawable/ic_menu_manage" />
+                        android:src="@android:drawable/ic_menu_manage" />
 
                     <Space
                         android:layout_width="@dimen/logo_spacing"
@@ -146,7 +146,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="0"
-                        app:srcCompat="@android:drawable/ic_menu_preferences" />
+                        android:src="@android:drawable/ic_menu_preferences" />
 
                     <Space
                         android:layout_width="@dimen/logo_spacing"
@@ -201,7 +201,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="0"
-                        app:srcCompat="@android:drawable/ic_menu_myplaces" />
+                        android:src="@android:drawable/ic_menu_myplaces" />
 
                     <Space
                         android:layout_width="@dimen/logo_spacing"
@@ -257,7 +257,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="0"
-                        app:srcCompat="@android:drawable/ic_menu_mylocation" />
+                        android:src="@android:drawable/ic_menu_mylocation" />
 
                     <Space
                         android:layout_width="@dimen/logo_spacing"
@@ -313,7 +313,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="0"
-                        app:srcCompat="@android:drawable/ic_menu_recent_history" />
+                        android:src="@android:drawable/ic_menu_recent_history" />
 
                     <Space
                         android:layout_width="@dimen/logo_spacing"
@@ -367,7 +367,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="0"
-                        app:srcCompat="@android:drawable/ic_menu_recent_history" />
+                        android:src="@android:drawable/ic_menu_recent_history" />
 
                     <Space
                         android:layout_width="@dimen/logo_spacing"
@@ -422,7 +422,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_weight="0"
-                        app:srcCompat="@android:drawable/ic_menu_manage" />
+                        android:src="@android:drawable/ic_menu_manage" />
 
                     <Space
                         android:layout_width="@dimen/logo_spacing"
@@ -479,7 +479,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_weight="0"
-                    app:srcCompat="@android:drawable/ic_menu_help" />
+                    android:src="@android:drawable/ic_menu_help" />
 
                 <Space
                     android:layout_width="@dimen/logo_spacing"

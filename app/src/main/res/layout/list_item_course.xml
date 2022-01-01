@@ -35,7 +35,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/agenda.course"
-        app:srcCompat="@android:drawable/ic_menu_recent_history" />
+        android:src="@android:drawable/ic_menu_recent_history" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -45,7 +45,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        app:srcCompat="@android:drawable/ic_menu_mylocation" />
+        android:src="@android:drawable/ic_menu_mylocation" />
 
     <TextView
         android:id="@+id/agenda.place"
@@ -64,7 +64,7 @@
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView3"
-        app:srcCompat="@android:drawable/ic_dialog_info" />
+        android:src="@android:drawable/ic_menu_info_details" />
 
     <TextView
         android:id="@+id/agenda.info"
