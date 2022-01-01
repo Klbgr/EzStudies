@@ -450,7 +450,7 @@ public class WelcomeFragment extends Fragment {
         click8.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                alarm_spinner.performClick();
             }
         });
     }
