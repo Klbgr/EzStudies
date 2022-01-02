@@ -71,6 +71,7 @@
     <string name="no_homeworks">No homeworks</string>
     <string name="nothing_tomorrow">Tomorrow, you won\'t have any courses</string>
     <string name="alarm_ringtone">Alarm ringtone</string>
+    <string name="reminders">Reminders</string>
 
     <string-array name="travel_array">
         <item>Driving</item>

@@ -70,7 +70,7 @@ public class Agenda extends FragmentActivity {
     /**
      * ID of notification channel
      */
-    private static final String CHANNEL_ID = "EzStudies";
+    private static final String CHANNEL_ID = "EzStudies_Agenda";
     /**
      * JavaScript Interface for processing scripts from websites
      */
@@ -635,7 +635,7 @@ public class Agenda extends FragmentActivity {
             Log.d("receiver", "received ! id = " + intent.getIntExtra("nb", 1));
             Intent agenda = new Intent(context, Agenda.class);
             agenda.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, agenda, 0);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, agenda, PendingIntent.FLAG_IMMUTABLE);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
@@ -661,11 +661,11 @@ public class Agenda extends FragmentActivity {
         intent.putExtra("title", title);
         intent.putExtra("text", text);
         intent.putExtra("nb", nbNotifPending);
-        PendingIntent pending = PendingIntent.getBroadcast(context, nbNotifPending, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pending = PendingIntent.getBroadcast(context, nbNotifPending, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         // Schedule notification
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         manager.setExact(AlarmManager.RTC_WAKEUP, time, pending);
-        Log.d("notification scheduler", "created notif");
+        Log.d("agenda notification", "created notification");
         nbNotifPending ++;
     }
 
@@ -678,7 +678,7 @@ public class Agenda extends FragmentActivity {
             Intent intent = new Intent(context, NotificationReceiver.class);
             intent.putExtra("title", "title");
             intent.putExtra("text", "text");
-            PendingIntent pending = PendingIntent.getBroadcast(context, nbNotifPending, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            PendingIntent pending = PendingIntent.getBroadcast(context, nbNotifPending, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             // Cancel notification
             AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             manager.cancel(pending);
@@ -694,8 +694,8 @@ public class Agenda extends FragmentActivity {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = CHANNEL_ID;
-            String description = "Notification";
+            CharSequence name = getString(R.string.app_name) + getString(R.string.agenda);
+            String description = getString(R.string.reminders);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
@@ -705,5 +705,4 @@ public class Agenda extends FragmentActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
-
 }
