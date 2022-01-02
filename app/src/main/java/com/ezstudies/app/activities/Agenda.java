@@ -22,6 +22,7 @@ import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -108,7 +109,6 @@ public class Agenda extends FragmentActivity {
      */
     private NotificationReceiver notificationReceiver;
 
-
     /**
      * Initiate the activity
      * @param savedInstanceState Bundle
@@ -124,6 +124,68 @@ public class Agenda extends FragmentActivity {
         FragmentManager fm = getSupportFragmentManager();
         adapter = new FragmentAdapter(fm, getLifecycle());
         viewPager.setAdapter(adapter);
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                ImageView dot0 = findViewById(R.id.agenda_dot0);
+                ImageView dot1 = findViewById(R.id.agenda_dot1);
+                ImageView dot2 = findViewById(R.id.agenda_dot2);
+                ImageView dot3 = findViewById(R.id.agenda_dot3);
+                ImageView dot4 = findViewById(R.id.agenda_dot4);
+                ImageView dot5 = findViewById(R.id.agenda_dot5);
+                switch (position){
+                    case 0:
+                        dot0.setImageDrawable(getDrawable(R.drawable.dot_selected));
+                        dot1.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot2.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot3.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot4.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot5.setImageDrawable(getDrawable(R.drawable.dot));
+                        break;
+                    case 1:
+                        dot0.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot1.setImageDrawable(getDrawable(R.drawable.dot_selected));
+                        dot2.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot3.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot4.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot5.setImageDrawable(getDrawable(R.drawable.dot));
+                        break;
+                    case 2:
+                        dot0.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot1.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot2.setImageDrawable(getDrawable(R.drawable.dot_selected));
+                        dot3.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot4.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot5.setImageDrawable(getDrawable(R.drawable.dot));
+                        break;
+                    case 3:
+                        dot0.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot1.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot2.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot3.setImageDrawable(getDrawable(R.drawable.dot_selected));
+                        dot4.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot5.setImageDrawable(getDrawable(R.drawable.dot));
+                        break;
+                    case 4:
+                        dot0.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot1.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot2.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot3.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot4.setImageDrawable(getDrawable(R.drawable.dot_selected));
+                        dot5.setImageDrawable(getDrawable(R.drawable.dot));
+                        break;
+                    case 5:
+                        dot0.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot1.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot2.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot3.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot4.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot5.setImageDrawable(getDrawable(R.drawable.dot_selected));
+                        break;
+                }
+            }
+        });
         Calendar cal = Calendar.getInstance();
         cal.setFirstDayOfWeek(Calendar.MONDAY);
         int weekDay = cal.get(Calendar.DAY_OF_WEEK)-2;

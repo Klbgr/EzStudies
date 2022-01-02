@@ -30,7 +30,7 @@
         android:id="@+id/enterButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="32dp"
+        android:layout_marginBottom="48dp"
         android:onClick="enter"
         android:text="@string/enter"
         app:layout_constraintBottom_toBottomOf="parent"

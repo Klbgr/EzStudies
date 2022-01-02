@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -62,10 +64,28 @@ public class Welcome extends FragmentActivity {
         Boolean firstTime = sharedPreferences.getBoolean("first_time", true);
 
         if(firstTime){
-            viewPager = new ViewPager2(this);
+            setContentView(R.layout.welcome_layout);
+            viewPager = findViewById(R.id.welcome_viewpager);
             FragmentStateAdapter pagerAdapter = new ScreenSlidePagerAdapter(this);
             viewPager.setAdapter(pagerAdapter);
-            setContentView(viewPager);
+            viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(int position) {
+                    super.onPageSelected(position);
+                    ImageView dot0 = findViewById(R.id.welcome_dot0);
+                    ImageView dot1 = findViewById(R.id.welcome_dot1);
+                    switch (position){
+                        case 0:
+                            dot0.setImageDrawable(getDrawable(R.drawable.dot_selected));
+                            dot1.setImageDrawable(getDrawable(R.drawable.dot));
+                            break;
+                        case 1:
+                            dot0.setImageDrawable(getDrawable(R.drawable.dot));
+                            dot1.setImageDrawable(getDrawable(R.drawable.dot_selected));
+                            break;
+                    }
+                }
+            });
             if(savedInstanceState != null){ //set current page
                 int current_page = savedInstanceState.getInt("current_page", 0);
                 viewPager.setCurrentItem(current_page);
