@@ -41,7 +41,7 @@
             android:screenOrientation="portrait" >
         </activity>
         <activity android:name=".activities.Homeworks"
-            android:label="@string/homework" >
+            android:label="@string/homeworks" >
         </activity>
         <activity android:name=".activities.Settings"
             android:label="@string/settings" >
@@ -57,6 +57,9 @@
 
         <receiver
             android:name=".activities.Agenda$NotificationReceiver"
+            android:enabled="true" />
+        <receiver
+            android:name=".activities.Homeworks$NotificationReceiver"
             android:enabled="true" />
     </application>
 

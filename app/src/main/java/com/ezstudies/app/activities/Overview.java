@@ -1,10 +1,13 @@
 package com.ezstudies.app.activities;
 
+import android.app.AlarmManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -42,6 +45,8 @@ public class Overview extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overview_layout);
         sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
+
+        AlarmManager manager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
     }
 
     /**

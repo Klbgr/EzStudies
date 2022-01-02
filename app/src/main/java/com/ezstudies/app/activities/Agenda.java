@@ -70,7 +70,7 @@ public class Agenda extends FragmentActivity {
     /**
      * ID of notification channel
      */
-    private static final String CHANNEL_ID = "EzStudies_Agenda";
+    private static final String CHANNEL_ID_AGENDA = "EzStudies_Agenda";
     /**
      * JavaScript Interface for processing scripts from websites
      */
@@ -102,7 +102,7 @@ public class Agenda extends FragmentActivity {
     /**
      * Number of pending notifications
      */
-    private static int nbNotifPending;
+    private static int nbNotifPendingAgenda;
     /**
      * Notification receiver
      */
@@ -117,7 +117,7 @@ public class Agenda extends FragmentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.agenda_layout);
-        createNotificationChannel();
+        createNotificationChannelAgenda();
         sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
         editor = sharedPreferences.edit();
         viewPager = findViewById(R.id.agenda_viewpager);
@@ -132,7 +132,7 @@ public class Agenda extends FragmentActivity {
             viewPager.setCurrentItem(getIntent().getIntExtra("weekday", weekDay));
         }
         broadcastReceiver = new broadcastReceiver();
-        nbNotifPending = 0;
+        nbNotifPendingAgenda = 0;
         notificationReceiver = new NotificationReceiver();
     }
 
@@ -261,27 +261,6 @@ public class Agenda extends FragmentActivity {
             }
         }
         Log.d("database agenda", database.toStringAgenda());
-
-        cancelNotifications(this);
-        ArrayList<ArrayList<String>> courses = database.toTabAgenda();
-        Log.d("courses", courses.toString());
-        Log.d("courses", courses.get(0).get(0));
-        for (ArrayList<String> row : courses){
-            Calendar calendar = Calendar.getInstance();
-            String[] date = row.get(0).split("/");
-            String[] hour = row.get(2).split(":");
-            int minute = Integer.parseInt(hour[1]) - 15;
-            int heure = Integer.parseInt(hour[0]);
-            if (minute < 0){
-                heure --;
-                minute = 60 + minute;
-            }
-            calendar.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]), heure, minute);
-            long time = calendar.getTimeInMillis();
-            String text = row.get(2) + " - " + row.get(3) + "\n" + row.get(4);
-            scheduleNotification(this, time, row.get(1), text);
-            Log.d("new notification", row.get(0) + " at " + heure + "h" + minute);
-        }
         database.close();
 
         progressDialog.cancel();
@@ -437,6 +416,7 @@ public class Agenda extends FragmentActivity {
      * Restart activity to reload every pages of ViewPager
      */
     public void restart(){
+        setNotificationsAgenda(this);
         finish();
         startActivity(getIntent());
         Boolean alarm = sharedPreferences.getBoolean("alarm", false);
@@ -636,14 +616,15 @@ public class Agenda extends FragmentActivity {
             Intent agenda = new Intent(context, Agenda.class);
             agenda.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, agenda, PendingIntent.FLAG_IMMUTABLE);
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID_AGENDA)
                     .setSmallIcon(R.mipmap.ic_launcher)
                     .setPriority(NotificationCompat.PRIORITY_DEFAULT)
                     .setStyle(new NotificationCompat.BigTextStyle()
                             .bigText(intent.getStringExtra("text")))
                     .setContentTitle(intent.getStringExtra("title"))
                     .setContentText(intent.getStringExtra("text"))
-                    .setContentIntent(pendingIntent);
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
             notificationManager.notify(intent.getIntExtra("nb", -1), builder.build());
         }
@@ -656,53 +637,88 @@ public class Agenda extends FragmentActivity {
      * @param title Title
      * @param text Text
      */
-    public static void scheduleNotification(Context context, long time, String title, String text) {
+    public static void scheduleNotificationAgenda(Context context, long time, String title, String text) {
         Intent intent = new Intent(context, NotificationReceiver.class);
         intent.putExtra("title", title);
         intent.putExtra("text", text);
-        intent.putExtra("nb", nbNotifPending);
-        PendingIntent pending = PendingIntent.getBroadcast(context, nbNotifPending, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        intent.putExtra("nb", nbNotifPendingAgenda);
+        PendingIntent pending = PendingIntent.getBroadcast(context, nbNotifPendingAgenda, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         // Schedule notification
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         manager.setExact(AlarmManager.RTC_WAKEUP, time, pending);
         Log.d("agenda notification", "created notification");
-        nbNotifPending ++;
+        nbNotifPendingAgenda ++;
     }
 
     /**
      * Cancel a notification
      * @param context Context
      */
-    public static void cancelNotifications(Context context) {
-        while(nbNotifPending >= 0){
+    public static void cancelNotificationsAgenda(Context context) {
+        while(nbNotifPendingAgenda >= 0){
             Intent intent = new Intent(context, NotificationReceiver.class);
             intent.putExtra("title", "title");
             intent.putExtra("text", "text");
-            PendingIntent pending = PendingIntent.getBroadcast(context, nbNotifPending, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            PendingIntent pending = PendingIntent.getBroadcast(context, nbNotifPendingAgenda, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
             // Cancel notification
             AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
             manager.cancel(pending);
-            nbNotifPending --;
+            nbNotifPendingAgenda --;
         }
-        nbNotifPending = 0;
+        nbNotifPendingAgenda = 0;
     }
 
     /**
      * Create a notification channel
      */
-    private void createNotificationChannel() {
+    private void createNotificationChannelAgenda() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = getString(R.string.app_name) + getString(R.string.agenda);
+            CharSequence name = getString(R.string.app_name) + " " + getString(R.string.agenda);
             String description = getString(R.string.reminders);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID_AGENDA, name, importance);
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    /**
+     * Set notifications
+     * @param context Context
+     */
+    public static void setNotificationsAgenda(Context context){
+        Database database = new Database(context);
+        cancelNotificationsAgenda(context);
+        Calendar now = Calendar.getInstance();
+        now.set(Calendar.HOUR_OF_DAY, 0);
+        now.set(Calendar.MINUTE, 0);
+        now.set(Calendar.SECOND, 0);
+        now.setTimeInMillis(now.getTimeInMillis()+(1000*60*60*24));
+        ArrayList<ArrayList<String>> courses = database.toTabAgenda();
+        database.close();
+        Log.d("courses", courses.toString());
+        for (ArrayList<String> row : courses){
+            Calendar calendar = Calendar.getInstance();
+            String[] date = row.get(0).split("/");
+            String[] hour = row.get(2).split(":");
+            int minute = Integer.parseInt(hour[1]) - 15;
+            int heure = Integer.parseInt(hour[0]);
+            if (minute < 0){
+                heure --;
+                minute = 60 + minute;
+            }
+            calendar.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]), heure, minute);
+            long time = calendar.getTimeInMillis();
+            if(now.getTimeInMillis() < time){
+                String text = row.get(2) + " - " + row.get(3) + "\n" + row.get(4);
+                scheduleNotificationAgenda(context, time, row.get(1), text);
+                Log.d("new notification", row.get(0) + " at " + heure + "h" + minute);
+            }
         }
     }
 }
