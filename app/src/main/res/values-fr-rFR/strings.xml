@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">EzStudies</string>
+    <string name="agenda">Agenda</string>
+    <string name="homeworks">Devoirs</string>
+    <string name="settings">Paramètres</string>
+    <string name="overview">Résumé</string>
+    <string name="map">Carte</string>
+    <string name="welcome1"><b>Bienvenue dans EzStudies !</b>\n\nEzStudies est une app <b>faite par des étudiants, pour des étudiants</b>. Le but de cette app est de faciliter la vie des étudiants.\n\n<b>Balayez vers la gauche pour continuer !</b></string>
+    <string name="welcome2">Configuration</string>
+    <string name="enter">Entrer</string>
+    <string name="perm_granted">Permission accordée</string>
+    <string name="perm_denied">Permission refusée</string>
+    <string name="search">Rechercher</string>
+    <string name="address_not_found">Adresse introuvable</string>
+    <string name="ok">Ok</string>
+    <string name="please_select_location">Veuillez choisir un emplacement</string>
+    <string name="set_home_address">Définir votre adresse</string>
+    <string name="set_school_address">Définir l\'adresse de votre lieu d\'études</string>
+    <string name="empty">Vide</string>
+    <string name="prep_time">Temps de préparation</string>
+    <string name="about">À propos de nous</string>
+    <string name="about_text">Nous sommes des étudiants à CY Cergy Paris Université. Cette app est un projet pour notre unité d\'enseignement de Developping Application.\n\nNotre équipe (GitHub) :\n<b>@IIyn\n@Malinx95\n@Klbgr\n\n</b>Code source : <u>https://github.com/Klbgr/EzStudies</u></string>
+    <string name="minutes">%1$d minutes</string>
+    <string name="cancel">Annuler</string>
+    <string name="invalid_input">Entrée invalide</string>
+    <string name="import_mode">Mode d\'importation</string>
+    <string name="travel_mode">Mode de transport</string>
+    <string name="travel_time">Temps de trajet</string>
+    <string name="minute_hint">minute</string>
+    <string name="name_hint">identifiant cyu</string>
+    <string name="password_hint">mot de passe</string>
+    <string name="login_succes">Connecté</string>
+    <string name="login_fail_credentials">Identifiants erronés</string>
+    <string name="login_fail_network">Erreur, veuillez réessayer</string>
+    <string name="celcat_success">Agenda importé depuis Celcat</string>
+    <string name="ics_success">Agenda importé depuis un fichier ICS</string>
+    <string name="duration">Demain, vous devez vous réveiller à %1$s (%2$d minutes de trajet)</string>
+    <string name="finish_setup">Veuillez terminer la configuration</string>
+    <string name="export_success">Enregistré dans /Download/</string>
+    <string name="connect_celcat">Se connecter à Celcat</string>
+    <string name="connected_as">Connecté en tant que %1$s</string>
+    <string name="not_connected">Non connecté</string>
+    <string name="invalid_settings">Paramètres invalides</string>
+    <string name="easter_egg_count">%1d clicks supplémentaires requis (Easter Egg)</string>
+    <string name="easter_egg_enjoy">YOU GOT RICK ROLLED</string>
+    <string name="connecting">Connexion</string>
+    <string name="loading">Chargement, veuillez patienter...</string>
+    <string name="monday">Lundi</string>
+    <string name="tuesday">Mardi</string>
+    <string name="wednesday">Mercredi</string>
+    <string name="thursday">Jeudi</string>
+    <string name="friday">Vendredi</string>
+    <string name="saturday">Samedi</string>
+    <string name="unknown">Inconnu</string>
+    <string name="auto_alarm">Alarmes automatiques (BETA)</string>
+    <string name="enabled">Activé</string>
+    <string name="disabled">Désactivé</string>
+    <string name="add_homework">Ajouter un devoir</string>
+    <string name="title">titre</string>
+    <string name="description">description</string>
+    <string name="action">Action</string>
+    <string name="remove">Supprimer</string>
+    <string name="toggle">Basculer</string>
+    <string name="today">Aujourd\'hui</string>
+    <string name="no_agenda">Rien pour aujourd\'hui</string>
+    <string name="no_homeworks">Pas de devoirs</string>
+    <string name="nothing_tomorrow">Demain, vous n\'aurez aucun cours</string>
+    <string name="alarm_ringtone">Sonnerie d\'alarme</string>
+    <string name="reminders">Rappels</string>
+    <string name="homework_tomorrow">Devoir pour demain</string>
+    <string name="on_boot">Notifications restaurées</string>
+
+    <string-array name="travel_array">
+        <item>En voiture</item>
+        <item>À pied</item>
+        <item>En transports</item>
+    </string-array>
+    <string-array name="agenda_array">
+        <item>Depuis Celcat</item>
+        <item>Depuis un fichier ICS</item>
+    </string-array>
+</resources>

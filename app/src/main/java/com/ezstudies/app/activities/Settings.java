@@ -756,8 +756,8 @@ public class Settings extends AppCompatActivity {
          */
         @Override
         public void onReceive(Context context, Intent intent) {
-            int duration = intent.getIntExtra("duration", -1);
-            if(duration != -1){
+            int duration = intent.getIntExtra("duration", -2);
+            if(duration != -2){
                 editor.putInt("duration", duration);
                 editor.apply();
                 wait = false;
