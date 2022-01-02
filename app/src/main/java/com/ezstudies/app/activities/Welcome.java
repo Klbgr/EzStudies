@@ -19,14 +19,39 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.ezstudies.app.R;
 import com.ezstudies.app.services.RouteCalculator;
 
+/**
+ * Activity that displays introduction and first setup
+ */
 public class Welcome extends FragmentActivity {
+    /**
+     * User agent of WebView
+     */
     public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36";
+    /**
+     * URL of login
+     */
     public static final String LOGIN_FORM_URL  = "https://services-web.u-cergy.fr/calendar/LdapLogin";
+    /**
+     * Shared preferences
+     */
     private SharedPreferences sharedPreferences;
+    /**
+     * Shared preferences editor
+     */
     private SharedPreferences.Editor editor;
+    /**
+     * ViewPager
+     */
     private ViewPager2 viewPager;
+    /**
+     * Broadcast receiver
+     */
     private broadcastReceiver broadcastReceiver;
 
+    /**
+     * On create
+     * @param savedInstanceState Bundle
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +66,7 @@ public class Welcome extends FragmentActivity {
             FragmentStateAdapter pagerAdapter = new ScreenSlidePagerAdapter(this);
             viewPager.setAdapter(pagerAdapter);
             setContentView(viewPager);
-            if(savedInstanceState != null){
+            if(savedInstanceState != null){ //set current page
                 int current_page = savedInstanceState.getInt("current_page", 0);
                 viewPager.setCurrentItem(current_page);
             }
@@ -53,24 +78,38 @@ public class Welcome extends FragmentActivity {
         broadcastReceiver = new broadcastReceiver();
     }
 
+    /**
+     * On resume
+     */
     @Override
     protected void onResume() {
         super.onResume();
         registerReceiver(broadcastReceiver, new IntentFilter("Welcome"));
     }
 
+    /**
+     * On pause
+     */
     @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver(broadcastReceiver);
     }
 
+    /**
+     * On save instance state
+     * @param outState Bundle
+     */
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putInt("current_page", viewPager.getCurrentItem());
         super.onSaveInstanceState(outState);
     }
 
+    /**
+     * Finish setup
+     * @param view View
+     */
     public void enter(View view){
         Boolean condition1 = false;
         Boolean condition2 = false;
@@ -138,11 +177,23 @@ public class Welcome extends FragmentActivity {
         }
     }
 
+    /**
+     * Create pages of ViewPager
+     */
     private class ScreenSlidePagerAdapter extends FragmentStateAdapter {
+        /**
+         * Constructor
+         * @param fragmentActivity FragmentActivity
+         */
         public ScreenSlidePagerAdapter(FragmentActivity fragmentActivity) {
             super(fragmentActivity);
         }
 
+        /**
+         * Create fragment
+         * @param position Position
+         * @return Fragment
+         */
         @Override
         public Fragment createFragment(int position) {
             Fragment page = null;
@@ -159,14 +210,25 @@ public class Welcome extends FragmentActivity {
             return page;
         }
 
+        /**
+         * Get number of pages
+         * @return Number of pages
+         */
         @Override
         public int getItemCount() {
             return 2;
         }
     }
 
+    /**
+     * Broadcast receiver
+     */
     private class broadcastReceiver extends BroadcastReceiver{
-
+        /**
+         * On receive
+         * @param context Context
+         * @param intent Intent
+         */
         @Override
         public void onReceive(Context context, Intent intent) {
             int duration = intent.getIntExtra("duration", -1);

@@ -25,7 +25,14 @@ import com.ezstudies.app.R;
 
 import java.util.ArrayList;
 
+/**
+ * Activity that displays homeworks
+ */
 public class Homeworks extends AppCompatActivity {
+    /**
+     * On create
+     * @param savedInstanceState Bundle
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +48,10 @@ public class Homeworks extends AppCompatActivity {
         list.setAdapter(recyclerAdapter);
     }
 
+    /**
+     * Add a homework
+     * @param view View
+     */
     public void add(View view){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.add_homework));
@@ -68,7 +79,7 @@ public class Homeworks extends AppCompatActivity {
                 Database database = new Database(Homeworks.this);
                 String date = datePicker.getDayOfMonth() + "/" + (datePicker.getMonth()+1) + "/" + datePicker.getYear();
                 database.addHomework(title.getText().toString(), date, description.getText().toString());
-                Log.d("db", database.toStringHomeworks());
+                Log.d("database homeworks", database.toStringHomeworks());
                 database.close();
 
                 reload();
@@ -84,6 +95,9 @@ public class Homeworks extends AppCompatActivity {
         builder.show();
     }
 
+    /**
+     * Reload page with new values
+     */
     public void reload(){
         Database database = new Database(this);
         RecyclerView list = findViewById(R.id.homeworks_list);
@@ -95,13 +109,29 @@ public class Homeworks extends AppCompatActivity {
         list.setAdapter(recyclerAdapter);
     }
 
+    /**
+     * RecyclerView Adapter
+     */
     private class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.ViewHolder>{
+        /**
+         * Data
+         */
         private ArrayList<ArrayList<String>> data;
 
+        /**
+         * Constructor
+         * @param data Data
+         */
         public recyclerAdapter(ArrayList<ArrayList<String>> data) {
             this.data = data;
         }
 
+        /**
+         * On create ViewHolder
+         * @param parent ViewGroup
+         * @param viewType Type of view
+         * @return ViewHolder
+         */
         @NonNull
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -111,6 +141,11 @@ public class Homeworks extends AppCompatActivity {
             return viewHolder;
         }
 
+        /**
+         * On bind ViewHolder
+         * @param holder ViewHolder
+         * @param p Position
+         */
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int p) {
             int position = p;
@@ -120,14 +155,15 @@ public class Homeworks extends AppCompatActivity {
                 holder.date.setText(data.get(position).get(1));
                 holder.description.setText(data.get(position).get(2));
                 status = data.get(position).get(3);
-                if (status.equals("f")) {
+                if (status.equals("f")) { //red if not done
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.itemView.setBackgroundColor(getColor(R.color.homework_red));
                     }
                     else{
                         holder.itemView.setBackgroundColor(Color.RED);
                     }
-                } else {
+                }
+                else { //green if done
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.itemView.setBackgroundColor(getColor(R.color.homework_green));
                     }
@@ -137,6 +173,10 @@ public class Homeworks extends AppCompatActivity {
                 }
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    /**
+                     * On click
+                     * @param v View
+                     */
                     @Override
                     public void onClick(View v) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
@@ -147,7 +187,7 @@ public class Homeworks extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 Database database = new Database(Homeworks.this);
                                 database.removeHomework(data.get(position).get(0), data.get(position).get(1), data.get(position).get(2));
-                                Log.d("db", database.toStringHomeworks());
+                                Log.d("database homeworks", database.toStringHomeworks());
                                 database.close();
 
                                 reload();
@@ -155,6 +195,11 @@ public class Homeworks extends AppCompatActivity {
                         });
 
                         builder.setNeutralButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                            /**
+                             * On click
+                             * @param dialog DialogInterface
+                             * @param which ID of DialogInterface
+                             */
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
@@ -162,15 +207,21 @@ public class Homeworks extends AppCompatActivity {
                         });
 
                         builder.setPositiveButton(getString(R.string.toggle), new DialogInterface.OnClickListener() {
+                            /**
+                             * On click
+                             * @param dialog DialogInterface
+                             * @param which ID of DialogInterface
+                             */
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Database database = new Database(Homeworks.this);
                                 if (status.equals("f")) {
                                     database.setHomeworkDone(data.get(position).get(0), data.get(position).get(1), data.get(position).get(2), "t");
-                                } else {
+                                }
+                                else {
                                     database.setHomeworkDone(data.get(position).get(0), data.get(position).get(1), data.get(position).get(2), "f");
                                 }
-                                Log.d("db", database.toStringHomeworks());
+                                Log.d("database homeworks", database.toStringHomeworks());
                                 database.close();
 
                                 reload();
@@ -183,15 +234,36 @@ public class Homeworks extends AppCompatActivity {
             }
         }
 
+        /**
+         * Get number of items
+         * @return Number of items
+         */
         @Override
         public int getItemCount() {
             return data.size();
         }
 
+        /**
+         * ViewHolder
+         */
         public class ViewHolder extends RecyclerView.ViewHolder {
+            /**
+             * Title of homework
+             */
             public TextView title;
+            /**
+             * Due date of homework
+             */
             public TextView date;
+            /**
+             * Description of homework
+             */
             public TextView description;
+
+            /**
+             * Constructor
+             * @param itemView View
+             */
             public ViewHolder(View itemView) {
                 super(itemView);
                 title = itemView.findViewById(R.id.homeworks_title);

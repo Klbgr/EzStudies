@@ -24,8 +24,19 @@ import com.ezstudies.app.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/**
+ * Activity that displays important information
+ */
 public class Overview extends AppCompatActivity {
+    /**
+     * Shared preferences
+     */
     private SharedPreferences sharedPreferences;
+
+    /**
+     * On create
+     * @param savedInstanceState Bundle
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,12 +44,22 @@ public class Overview extends AppCompatActivity {
         sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
     }
 
+    /**
+     * On create OptionMenu
+     * @param menu Menu
+     * @return Success
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.overview_menu, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * On OptionItem selected
+     * @param item MenuItem
+     * @return Success
+     */
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()){
@@ -55,6 +76,9 @@ public class Overview extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    /**
+     * On resume
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -62,6 +86,9 @@ public class Overview extends AppCompatActivity {
         reload();
     }
 
+    /**
+     * Reload agenda and homeworks
+     */
     public void reload(){
         Calendar now = Calendar.getInstance();
         Database database = new Database(this);
@@ -119,6 +146,9 @@ public class Overview extends AppCompatActivity {
         listHomeworks.setAdapter(recyclerAdapterHomeworks);
     }
 
+    /**
+     * Display wake up time and time of travel for tomorrow
+     */
     public void route(){
         Calendar tomorrow = Calendar.getInstance();
         tomorrow.setTimeInMillis(tomorrow.getTimeInMillis() + 1000*60*60*24);
@@ -164,13 +194,29 @@ public class Overview extends AppCompatActivity {
         }
     }
 
+    /**
+     * RecyclerView Adapter for agenda
+     */
     public class recyclerAdapterAgenda extends RecyclerView.Adapter<recyclerAdapterAgenda.ViewHolder>{
-        ArrayList<ArrayList<String>> data;
+        /**
+         * Data
+         */
+        private ArrayList<ArrayList<String>> data;
 
+        /**
+         * Constructor
+         * @param data Data
+         */
         public recyclerAdapterAgenda(ArrayList<ArrayList<String>> data){
             this.data = data;
         }
 
+        /**
+         * On create ViewHolder
+         * @param parent ViewGroup
+         * @param viewType Type of view
+         * @return
+         */
         @NonNull
         @Override
         public recyclerAdapterAgenda.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -180,6 +226,11 @@ public class Overview extends AppCompatActivity {
             return viewHolder;
         }
 
+        /**
+         * On bind ViewHolder
+         * @param holder ViewHolder
+         * @param position Position
+         */
         @Override
         public void onBindViewHolder(@NonNull recyclerAdapterAgenda.ViewHolder holder, int position) {
             if(!data.get(position).isEmpty()){
@@ -189,25 +240,52 @@ public class Overview extends AppCompatActivity {
                 holder.info.setText(data.get(position).get(3));
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    /**
+                     * On click
+                     * @param v View
+                     */
                     @Override
                     public void onClick(View v) {
                         startActivity(new Intent(Overview.this, Agenda.class));
                     }
                 });
             }
-
         }
 
+        /**
+         * Get number of items
+         * @return Number of items
+         */
         @Override
         public int getItemCount() {
             return data.size();
         }
 
+        /**
+         * ViewHolder
+         */
         public class ViewHolder extends RecyclerView.ViewHolder {
+            /**
+             * Name of course
+             */
             public TextView course;
+            /**
+             * Hour of course
+             */
             public TextView hour;
+            /**
+             * Info of course
+             */
             public TextView info;
+            /**
+             * Place of course
+             */
             public TextView place;
+
+            /**
+             * Constructor
+             * @param itemView View
+             */
             public ViewHolder(View itemView) {
                 super(itemView);
                 course = itemView.findViewById(R.id.agenda_course);
@@ -218,13 +296,29 @@ public class Overview extends AppCompatActivity {
         }
     }
 
+    /**
+     * RecyclerView Adapter for homeworks
+     */
     private class recyclerAdapterHomeworks extends RecyclerView.Adapter<recyclerAdapterHomeworks.ViewHolder>{
+        /**
+         * Data
+         */
         private ArrayList<ArrayList<String>> data;
 
+        /**
+         * Constructor
+         * @param data Data
+         */
         public recyclerAdapterHomeworks(ArrayList<ArrayList<String>> data) {
             this.data = data;
         }
 
+        /**
+         * On create ViewHolder
+         * @param parent ViewGroup
+         * @param viewType Type of view
+         * @return View Holder
+         */
         @NonNull
         @Override
         public recyclerAdapterHomeworks.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -234,6 +328,11 @@ public class Overview extends AppCompatActivity {
             return viewHolder;
         }
 
+        /**
+         * On bind ViewHolder
+         * @param holder ViewHolder
+         * @param p Position
+         */
         @Override
         public void onBindViewHolder(@NonNull recyclerAdapterHomeworks.ViewHolder holder, int p) {
             int position = p;
@@ -250,7 +349,8 @@ public class Overview extends AppCompatActivity {
                     else{
                         holder.itemView.setBackgroundColor(Color.RED);
                     }
-                }else if(status.equals("t")) {
+                }
+                else if(status.equals("t")) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                         holder.itemView.setBackgroundColor(getColor(R.color.homework_green));
                     }
@@ -260,6 +360,10 @@ public class Overview extends AppCompatActivity {
                 }
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    /**
+                     * On click
+                     * @param v View
+                     */
                     @Override
                     public void onClick(View v) {
                         startActivity(new Intent(Overview.this, Homeworks.class));
@@ -268,15 +372,36 @@ public class Overview extends AppCompatActivity {
             }
         }
 
+        /**
+         * Get number of items
+         * @return Number of items
+         */
         @Override
         public int getItemCount() {
             return data.size();
         }
 
+        /**
+         * ViewHolder
+         */
         public class ViewHolder extends RecyclerView.ViewHolder {
+            /**
+             * Title of homework
+             */
             public TextView title;
+            /**
+             * Due date of homework
+             */
             public TextView date;
+            /**
+             * Description of homework
+             */
             public TextView description;
+
+            /**
+             * Constructor
+             * @param itemView View
+             */
             public ViewHolder(View itemView) {
                 super(itemView);
                 title = itemView.findViewById(R.id.homeworks_title);

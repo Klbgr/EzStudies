@@ -17,18 +17,45 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.nio.charset.Charset;
 
+/**
+ * Service that gets travel time between to location, using Bing Route REST API
+ */
 public class RouteCalculator extends Service implements Runnable {
+    /**
+     * API key
+     */
     private final String KEY = "AnzK_4L_IgHGYge-UleemNLa29Iro40gMPcTPhrI2HX3kZdbw4smKTy434uDNXk5";
+    /**
+     * JSON
+     */
     private JSONObject json;
+    /**
+     * URL
+     */
     private String url;
+    /**
+     * Intent
+     */
     private Intent intent;
 
+    /**
+     * On bind
+     * @param intent Intent
+     * @return IBinder
+     */
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
+    /**
+     * On start command
+     * @param intent Intent
+     * @param flags Flags
+     * @param startId ID
+     * @return Success
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         this.intent = intent;
@@ -45,8 +72,6 @@ public class RouteCalculator extends Service implements Runnable {
             case 1: //walking
                 travel_mode = "walking";
                 break;
-            case -1:
-                break;
             default:
                 break;
         }
@@ -57,6 +82,9 @@ public class RouteCalculator extends Service implements Runnable {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    /**
+     * Start
+     */
     public void run(){
         json = null;
         int duration = -1;
@@ -71,16 +99,12 @@ public class RouteCalculator extends Service implements Runnable {
             json = new JSONObject(jsonText);
             inputStream.close();
 
-
             duration = json.getJSONArray("resourceSets").getJSONObject(0).getJSONArray("resources").getJSONObject(0).getInt("travelDuration");
-
-
         } catch (IOException e) {
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
 
         Intent intent = new Intent(this.intent.getStringExtra("target"));
         intent.putExtra("target", this.intent.getStringExtra("target"));

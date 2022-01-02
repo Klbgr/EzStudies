@@ -11,13 +11,28 @@ import android.os.IBinder;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+/**
+ * Service that gets location from GPS sensor
+ */
 public class GpsService extends Service {
+    /**
+     * On bind
+     * @param intent Intent
+     * @return IBinder
+     */
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
+    /**
+     * On start command
+     * @param intent Intent
+     * @param flags Flags
+     * @param startId ID
+     * @return Success
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -27,8 +42,14 @@ public class GpsService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    /**
+     * LocationListener
+     */
     private class GpsListener implements LocationListener{
-
+        /**
+         * On location changed
+         * @param location Location
+         */
         @Override
         public void onLocationChanged(@NonNull Location location) {
             Intent intent = new Intent("GPS");

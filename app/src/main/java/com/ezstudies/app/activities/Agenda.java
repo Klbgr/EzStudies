@@ -55,14 +55,43 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Activity that displays an agenda
+ */
 public class Agenda extends FragmentActivity {
+    /**
+     * JavaScript Interface for processing scripts from websites
+     */
     private JavaScriptInterface jsi;
+    /**
+     * Shared preferences
+     */
     private SharedPreferences sharedPreferences;
+    /**
+     * Shared preferences editor
+     */
     private SharedPreferences.Editor editor;
+    /**
+     * Loading dialog
+     */
     private ProgressDialog progressDialog;
+    /**
+     * ViewPager, slide between fragments
+     */
     private ViewPager2 viewPager;
+    /**
+     * Adapter for ViewPager
+     */
     private FragmentAdapter adapter;
+    /**
+     * Broadcast receiver
+     */
     private broadcastReceiver broadcastReceiver;
+
+    /**
+     * Initiate the activity
+     * @param savedInstanceState Bundle
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,27 +105,45 @@ public class Agenda extends FragmentActivity {
         broadcastReceiver = new broadcastReceiver();
     }
 
+    /**
+     * On resume
+     */
     @Override
     protected void onResume() {
         super.onResume();
         registerReceiver(broadcastReceiver, new IntentFilter("Agenda"));
     }
 
+    /**
+     * On pause
+     */
     @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver(broadcastReceiver);
     }
 
+    /**
+     * Create pages of ViewPager
+     */
     public class FragmentAdapter extends FragmentStateAdapter {
+        /**
+         * Constructor
+         * @param fragmentManager FragmentManager
+         * @param lifecycle Lifecycle
+         */
         public FragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
             super(fragmentManager, lifecycle);
         }
 
+        /**
+         * Create fragment
+         * @param page Page
+         * @return Fragment
+         */
         @NonNull
         @Override
         public Fragment createFragment(int page) {
-
             switch (page) {
                 case 0 :
                     return new AgendaFragment(1);
@@ -115,12 +162,19 @@ public class Agenda extends FragmentActivity {
             }
         }
 
+        /**
+         * Get number of pages
+         * @return Number of pages
+         */
         @Override
         public int getItemCount() {
             return 6;
         }
     }
 
+    /**
+     * Import agenda from Celcat
+     */
     public void import_celcat() {
         progressDialog = ProgressDialog.show(this, getString(R.string.connecting), getString(R.string.loading), true);
         String name = sharedPreferences.getString("name", null);
@@ -135,18 +189,21 @@ public class Agenda extends FragmentActivity {
         registerReceiver(broadcastReceiver, new IntentFilter(target));
     }
 
+    /**
+     * Parse HTML source from Celcat
+     */
     public void parseCelcat(){
         Database database = new Database(this);
         database.clearAgenda();
 
         String source = jsi.getSource();
-        Log.d("source", source);
+        Log.d("html source", source);
         Document document = Jsoup.parse(source, "UTF-8");
         Elements days = document.getElementsByClass("fc-list-heading");
-        for (Element e : days) { //days
+        for (Element e : days) { //for each days
             String date = e.attr("data-date");
             String dateElements[] = date.split("-");
-            while(e.nextElementSibling() != null && e.nextElementSibling().className().equals("fc-list-item")){
+            while(e.nextElementSibling() != null && e.nextElementSibling().className().equals("fc-list-item")){ //for each courses in that day
                 e = e.nextElementSibling();
                 Element eHours = e.getElementsByClass("fc-list-item-time fc-widget-content").get(0);
                 String hour = eHours.text();
@@ -172,7 +229,7 @@ public class Agenda extends FragmentActivity {
                 database.addAgenda(newDate, title, startingHour + ":" + startingMinute, endingHour + ":" + endingMinute, description);
             }
         }
-        Log.d("db", database.toStringAgenda());
+        Log.d("database agenda", database.toStringAgenda());
         database.close();
 
         progressDialog.cancel();
@@ -180,6 +237,9 @@ public class Agenda extends FragmentActivity {
         restart();
     }
 
+    /**
+     * Import ICS file from storage
+     */
     public void importICS(){
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -187,6 +247,10 @@ public class Agenda extends FragmentActivity {
         ActivityResultLauncher.launch(intent);
     }
 
+    /**
+     * Parse content of ICS file
+     * @param content ICS file content
+     */
     public void parseICS(String content){
         Database database = new Database(this);
         database.clearAgenda();
@@ -199,9 +263,9 @@ public class Agenda extends FragmentActivity {
             String endingAt = null;
             String description = null;
             String list[];
-            while((line = bufferedReader.readLine()) != null) {
+            while((line = bufferedReader.readLine()) != null) { //read every lines
                 list = line.split(":");
-                switch (list[0]){
+                switch (list[0]){ //detect type of data of the line
                     case "BEGIN": //start
                         if(list[1].equals("VEVENT")) {
                             date = null;
@@ -232,7 +296,7 @@ public class Agenda extends FragmentActivity {
                 }
             }
             bufferedReader.close();
-            Log.d("db", database.toStringAgenda());
+            Log.d("database agenda", database.toStringAgenda());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -242,12 +306,19 @@ public class Agenda extends FragmentActivity {
         restart();
     }
 
+    /**
+     * Handle when an activity finishes
+     */
     ActivityResultLauncher<Intent> ActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
+                /**
+                 * On file selected
+                 * @param result Result
+                 */
                 @Override
                 public void onActivityResult(ActivityResult result) {
-                    if (result.getResultCode() == Activity.RESULT_OK) {
+                    if (result.getResultCode() == Activity.RESULT_OK) { //file selected
                         try {
                             InputStream inputStream = getContentResolver().openInputStream(result.getData().getData());
                             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -256,7 +327,7 @@ public class Agenda extends FragmentActivity {
                             while ((line = bufferedReader.readLine()) != null) {
                                 content = content + line + "\n";
                             }
-                            Log.d("uri", content);
+                            Log.d("ics content", content);
                             bufferedReader.close();
                             inputStream.close();
                             parseICS(content);
@@ -269,6 +340,10 @@ public class Agenda extends FragmentActivity {
                 }
             });
 
+    /**
+     * Export agenda from database to ICS file
+     * @param view View
+     */
     public void exportICS(View view) {
         Database database = new Database(this);
         String ics = database.toICS();
@@ -277,7 +352,7 @@ public class Agenda extends FragmentActivity {
             Calendar now = Calendar.getInstance();
             String date = now.get(Calendar.DAY_OF_MONTH) + "" + (now.get(Calendar.MONTH)+1) + "" + now.get(Calendar.YEAR) + "" + now.get(Calendar.HOUR_OF_DAY) + "" + now.get(Calendar.MINUTE) + "" + now.get(Calendar.SECOND);
             String name = "celcat_" + date + ".ics";
-            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + name);
+            File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + name); //downloads folder
             FileWriter fileWriter = new FileWriter(file, false);
             fileWriter.write(ics);
             fileWriter.close();
@@ -288,6 +363,10 @@ public class Agenda extends FragmentActivity {
         }
     }
 
+    /**
+     * Refresh agenda, accordingly to the chosen mode
+     * @param view View
+     */
     public void refresh(View view){
         int import_mode = sharedPreferences.getInt("import_mode", -1);
         switch (import_mode){
@@ -302,6 +381,9 @@ public class Agenda extends FragmentActivity {
         }
     }
 
+    /**
+     * Restart activity to reload every pages of ViewPager
+     */
     public void restart(){
         finish();
         startActivity(getIntent());
@@ -311,12 +393,12 @@ public class Agenda extends FragmentActivity {
         }
     }
 
+    /**
+     * Set alarms for every days of the week
+     */
     public void setAlarms(){
         int mode = sharedPreferences.getInt("travel_mode", 0);
-        Database database = new Database(this);
-        ArrayList<String[]> firsts = database.getFirsts();
-        database.close();
-        if(mode != 2){
+        if(mode != 2){ //not transit
             String homeLat = sharedPreferences.getString("home_latitude", null);
             String homeLong = sharedPreferences.getString("home_longitude", null);
             String schoolLat = sharedPreferences.getString("school_latitude", null);
@@ -331,10 +413,13 @@ public class Agenda extends FragmentActivity {
             intent.putExtra("target", "Agenda");
             startService(intent);
         }
-        else{
+        else{ //transit
+            Database database = new Database(this);
+            ArrayList<String[]> firsts = database.getFirsts();
+            database.close();
             int prep_time = sharedPreferences.getInt("prep_time", -1);
             int travel_time = sharedPreferences.getInt("travel_time", -1);
-            for(String [] infos : firsts){
+            for(String [] infos : firsts){ //calculate alarm for each days
                 int hour = Integer.parseInt(infos[1].split(":")[0]);
                 int minute = Integer.parseInt(infos[1].split(":")[1]);
                 int total = travel_time + prep_time;
@@ -354,11 +439,17 @@ public class Agenda extends FragmentActivity {
         }
     }
 
+    /**
+     * Broadcast receiver
+     */
     private class broadcastReceiver extends BroadcastReceiver{
         @Override
+        /**
+         * On receive
+         */
         public void onReceive(Context context, Intent intent) {
             String target = intent.getStringExtra("target");
-            if(target != null && target.equals("Agenda")){
+            if(target != null && target.equals("Agenda")){ //broadcast from RouteCalculator
                 Database database = new Database(context);
                 ArrayList<String[]> firsts = database.getFirsts();
                 database.close();
@@ -385,7 +476,7 @@ public class Agenda extends FragmentActivity {
                 intent1.putExtra("list", firsts);
                 startService(intent1);
             }
-            else{
+            else{ //broadcast from Login
                 String url = intent.getStringExtra("url");
                 Boolean success = intent.getBooleanExtra("success", false);
                 if(!success){
@@ -409,37 +500,71 @@ public class Agenda extends FragmentActivity {
         }
     }
 
+    /**
+     * JavaScript Interface
+     */
     private class JavaScriptInterface {
+        /**
+         * HTML source
+         */
         private String source;
+
+        /**
+         * Handle HTML source
+         * @param html HTML source
+         */
         @JavascriptInterface
         public void processHTML(String html){
             source = html;
         }
 
+        /**
+         * Get HTML source
+         * @return HTML source
+         */
         public String getSource() {
             return source;
         }
     }
 
+    /**
+     * WebView
+     */
     private class myWebView extends WebViewClient {
+        /**
+         * Agenda
+         */
         private Agenda agenda;
+        /**
+         * Status of parsing
+         */
         private Boolean parsing = false;
 
+        /**
+         * Constructor
+         * @param agenda Agenda
+         */
         public myWebView(Agenda agenda){
             this.agenda = agenda;
         }
+
+        /**
+         * On page finished
+         * @param view View
+         * @param url URL
+         */
         public void onPageFinished(WebView view, String url) {
             Log.d("url", url);
-            view.loadUrl("javascript:HTMLOUT.processHTML(document.documentElement.outerHTML);");
+            view.loadUrl("javascript:HTMLOUT.processHTML(document.documentElement.outerHTML);"); //extract html source using javascript interface
             if (url.contains("fid0") && url.contains("listWeek") && !parsing){
-                Log.d("parser", "parsing !!!");
+                Log.d("html parser", "parsing");
                 parsing = true;
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         agenda.parseCelcat();
                     }
-                }, 10000);
+                }, 10000); //delay to let page to load et process correctly its content
             }
         }
     }

@@ -16,18 +16,41 @@ import org.jsoup.nodes.FormElement;
 
 import java.util.HashMap;
 
+/**
+ * Service that logs into Celcat
+ */
 public class Login extends Service implements Runnable{
-
+    /**
+     * URL of login
+     */
     private final String login_url = Welcome.LOGIN_FORM_URL;
+    /**
+     * User agent of WebView
+     */
     private final String user_agent = Welcome.USER_AGENT;
+    /**
+     * Intent
+     */
     private Intent intent;
 
+    /**
+     * On bind
+     * @param intent Intent
+     * @return IBinder
+     */
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
+    /**
+     * On start command
+     * @param intent Intent
+     * @param flags Flags
+     * @param startId ID
+     * @return Success
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         this.intent = intent;
@@ -36,6 +59,9 @@ public class Login extends Service implements Runnable{
         return super.onStartCommand(intent, flags, startId);
     }
 
+    /**
+     * Start
+     */
     @Override
     public void run() {
         String name = intent.getStringExtra("name");

@@ -14,15 +14,33 @@ import com.ezstudies.app.R;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/**
+ * Service that sets alarms
+ */
 public class AlarmSetter extends Service implements Runnable{
+    /**
+     * List of times
+     */
     private ArrayList<String[]> list;
 
+    /**
+     * On bind
+     * @param intent Intent
+     * @return IBinder
+     */
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return null;
     }
 
+    /**
+     * On start command
+     * @param intent Intent
+     * @param flags Flags
+     * @param startId ID
+     * @return Success
+     */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         list = (ArrayList<String[]>) intent.getSerializableExtra("list");
@@ -31,6 +49,9 @@ public class AlarmSetter extends Service implements Runnable{
         return super.onStartCommand(intent, flags, startId);
     }
 
+    /**
+     * Start
+     */
     public void run(){
         for(String infos[] : list){
             int day = Integer.parseInt(infos[0].split("/")[0]);
@@ -57,6 +78,11 @@ public class AlarmSetter extends Service implements Runnable{
         }
     }
 
+    /**
+     * Get name of a day
+     * @param d Day
+     * @return Name of a day
+     */
     public String getDayName(int d){
         String name = null;
         switch (d){
@@ -82,6 +108,12 @@ public class AlarmSetter extends Service implements Runnable{
         return name;
     }
 
+    /**
+     * Set an alarm
+     * @param day Day
+     * @param hour Hour
+     * @param minute Minute
+     */
     public void setAlarm(int day, int hour, int minute){
         int alarm = getApplicationContext().getSharedPreferences("prefs", MODE_PRIVATE).getInt("alarm_ringtone", 0)+1;
         ArrayList<Integer> days = new ArrayList<>();

@@ -35,19 +35,63 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+/**
+ * Activity that displays settings of the app
+ */
 public class Settings extends AppCompatActivity {
+    /**
+     * Travel mode spinner
+     */
     private Spinner travel_spinner;
+    /**
+     * Agenda importation mode spinner
+     */
     private Spinner agenda_spinner;
+    /**
+     * Alarm ringtone spinner
+     */
     private Spinner alarm_spinner;
+    /**
+     * Shared preferences
+     */
     private SharedPreferences sharedPreferences;
+    /**
+     * Shared preferences editor
+     */
     private SharedPreferences.Editor editor;
+    /**
+     * Date for easter egg
+     */
     private Date date = null;
+    /**
+     * Click count for easter egg
+     */
     private int count = 0;
+    /**
+     * Toast
+     */
     private Toast toast;
+    /**
+     * Loading dialog
+     */
     private ProgressDialog progressDialog;
+    /**
+     * Broadcast receiver
+     */
     private broadcastReceiver broadcastReceiver;
+    /**
+     * Status of process
+     */
     private Boolean wait = false;
+    /**
+     * Switch
+     */
     private SwitchCompat s;
+
+    /**
+     * On create
+     * @param savedInstanceState Bundle
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,11 +106,19 @@ public class Settings extends AppCompatActivity {
         LinearLayout group3 = findViewById(R.id.settings_group3);
         LinearLayout group4 = findViewById(R.id.settings_group4);
 
+        //agenda
         agenda_spinner = findViewById(R.id.settings_agenda_spinner);
         ArrayAdapter<CharSequence> agenda_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.agenda_array, android.R.layout.simple_spinner_item);
         agenda_spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         agenda_spinner.setAdapter(agenda_spinner_adapter);
         agenda_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            /**
+             * On item selected
+             * @param parent AdapterView
+             * @param view View
+             * @param position Position
+             * @param id ID
+             */
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 editor.putInt("import_mode", position);
@@ -82,15 +134,27 @@ public class Settings extends AppCompatActivity {
                 }
             }
 
+            /**
+             * On nothing selected
+             * @param parent AdapterView
+             */
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        //travel
         travel_spinner = findViewById(R.id.settings_travel_spinner);
         ArrayAdapter<CharSequence> travel_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.travel_array, android.R.layout.simple_spinner_item);
         travel_spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         travel_spinner.setAdapter(travel_spinner_adapter);
         travel_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            /**
+             * On item selected
+             * @param parent AdapterView
+             * @param view View
+             * @param position Position
+             * @param id ID
+             */
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 editor.putInt("travel_mode", position);
@@ -113,27 +177,49 @@ public class Settings extends AppCompatActivity {
                 }
             }
 
+            /**
+             * On nothing selected
+             * @param parent AdapterView
+             */
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        //alarm
         alarm_spinner = findViewById(R.id.settings_alarm_spinner);
         ArrayAdapter<CharSequence> alarm_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.alarm_array, android.R.layout.simple_spinner_item);
         alarm_spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         alarm_spinner.setAdapter(alarm_spinner_adapter);
         alarm_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            /**
+             * On item selected
+             * @param parent AdapterView
+             * @param view View
+             * @param position Position
+             * @param id ID
+             */
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 editor.putInt("alarm_ringtone", position);
                 editor.apply();
             }
 
+            /**
+             * On nothing selected
+             * @param parent AdapterView
+             */
             @Override
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
+        //switch
         s = findViewById(R.id.settings_switch);
         s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            /**
+             * On checked changed
+             * @param buttonView CompoundButton
+             * @param isChecked Is checked
+             */
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 editor.putBoolean("alarm", isChecked);
@@ -159,6 +245,9 @@ public class Settings extends AppCompatActivity {
         loadPrefs();
     }
 
+    /**
+     * Refresh time of travel
+     */
     public void refreshRoute(){
         String homeLat = sharedPreferences.getString("home_latitude", null);
         String homeLong = sharedPreferences.getString("home_longitude", null);
@@ -179,6 +268,9 @@ public class Settings extends AppCompatActivity {
         }
     }
 
+    /**
+     * On resume
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -187,12 +279,18 @@ public class Settings extends AppCompatActivity {
         registerReceiver(broadcastReceiver, new IntentFilter("Settings"));
     }
 
+    /**
+     * On pause
+     */
     @Override
     protected void onPause() {
         super.onPause();
         unregisterReceiver(broadcastReceiver);
     }
 
+    /**
+     * On back pressed, check if settings are valid
+     */
     @Override
     public void onBackPressed() {
         Boolean condition1 = false;
@@ -248,7 +346,11 @@ public class Settings extends AppCompatActivity {
         }
     }
 
+    /**
+     * Update location names
+     */
     public void updateLocation(){
+        //home
         String home_longitude = sharedPreferences.getString("home_longitude", null);
         String home_latitude = sharedPreferences.getString("home_latitude", null);
         if(home_longitude != null && home_latitude != null){
@@ -258,10 +360,13 @@ public class Settings extends AppCompatActivity {
                 address = new Geocoder(this, Locale.getDefault()).getFromLocation(Double.parseDouble(home_latitude), Double.parseDouble(home_longitude), 1).get(0).getAddressLine(0);
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (IndexOutOfBoundsException e){
+                e.printStackTrace();
             }
             textView.setText(address);
         }
 
+        //school
         String school_longitude = sharedPreferences.getString("school_longitude", null);
         String school_latitude = sharedPreferences.getString("school_latitude", null);
         if(school_longitude != null && school_latitude != null){
@@ -278,7 +383,11 @@ public class Settings extends AppCompatActivity {
         }
     }
 
+    /**
+     * Load preferences
+     */
     public void loadPrefs(){
+        //preparation time
         int ptime = sharedPreferences.getInt("prep_time", -1);
         TextView textView = findViewById(R.id.settings_prep_time);
         String prep_time;
@@ -292,6 +401,7 @@ public class Settings extends AppCompatActivity {
         }
         textView.setText(prep_time);
 
+        //travel time
         int ttime = sharedPreferences.getInt("travel_time", -1);
         textView = findViewById(R.id.settings_travel_time);
         String travel_time;
@@ -305,15 +415,19 @@ public class Settings extends AppCompatActivity {
         }
         textView.setText(travel_time);
 
+        //travel mode
         int travel_mode = sharedPreferences.getInt("travel_mode", 0);
         travel_spinner.setSelection(travel_mode);
 
+        //import mode
         int import_mode = sharedPreferences.getInt("import_mode", 0);
         agenda_spinner.setSelection(import_mode);
 
+        //alarm ringtone
         int alarm_ringtone = sharedPreferences.getInt("alarm_ringtone", 0);
         alarm_spinner.setSelection(alarm_ringtone);
 
+        //connected to Celcat
         boolean connected = sharedPreferences.getBoolean("connected", false);
         textView = findViewById(R.id.settings_status);
         String text;
@@ -326,6 +440,7 @@ public class Settings extends AppCompatActivity {
         }
         textView.setText(text);
 
+        //alarms
         boolean alarm = sharedPreferences.getBoolean("alarm", false);
         s.setChecked(alarm);
         textView = findViewById(R.id.settings_alarm);
@@ -341,9 +456,16 @@ public class Settings extends AppCompatActivity {
         textView.setText(text);
     }
 
+    /**
+     * Set OnClickListeners
+     */
     public void setOnClickListeners(){
         LinearLayout click0 = findViewById(R.id.settings_click0);
         click0.setOnClickListener(new View.OnClickListener() {
+            /**
+             * On click
+             * @param view View
+             */
             @Override
             public void onClick(View view) {
                 agenda_spinner.performClick();
@@ -352,6 +474,10 @@ public class Settings extends AppCompatActivity {
 
         LinearLayout click1 = findViewById(R.id.settings_click1);
         click1.setOnClickListener(new View.OnClickListener() {
+            /**
+             * On click
+             * @param view View
+             */
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
@@ -372,6 +498,11 @@ public class Settings extends AppCompatActivity {
                 builder.setView(linearLayout);
 
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    /**
+                     * On click
+                     * @param dialog DialogInterface
+                     * @param which Type of DialogInterface
+                     */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         progressDialog = ProgressDialog.show(Settings.this, getString(R.string.connecting), getString(R.string.loading), true);
@@ -386,6 +517,11 @@ public class Settings extends AppCompatActivity {
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    /**
+                     * On click
+                     * @param dialog DialogInterface
+                     * @param which Type of DialogInterface
+                     */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -398,6 +534,10 @@ public class Settings extends AppCompatActivity {
 
         LinearLayout click2 = findViewById(R.id.settings_click2);
         click2.setOnClickListener(new View.OnClickListener() {
+            /**
+             * On click
+             * @param view View
+             */
             @Override
             public void onClick(View view) {
                 travel_spinner.performClick();
@@ -406,6 +546,10 @@ public class Settings extends AppCompatActivity {
 
         LinearLayout click3 = findViewById(R.id.settings_click3);
         click3.setOnClickListener(new View.OnClickListener() {
+            /**
+             * On click
+             * @param view View
+             */
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Settings.this, myMapView.class);
@@ -416,6 +560,10 @@ public class Settings extends AppCompatActivity {
 
         LinearLayout click4 = findViewById(R.id.settings_click4);
         click4.setOnClickListener(new View.OnClickListener() {
+            /**
+             * On click
+             * @param view View
+             */
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(Settings.this, myMapView.class);
@@ -426,6 +574,10 @@ public class Settings extends AppCompatActivity {
 
         LinearLayout click5 = findViewById(R.id.settings_click5);
         click5.setOnClickListener(new View.OnClickListener() {
+            /**
+             * On click
+             * @param view View
+             */
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
@@ -437,6 +589,11 @@ public class Settings extends AppCompatActivity {
                 builder.setView(editText);
 
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    /**
+                     * On click
+                     * @param dialog DialogInterface
+                     * @param which Type of DialogInterface
+                     */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try{
@@ -453,6 +610,11 @@ public class Settings extends AppCompatActivity {
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    /**
+                     * On click
+                     * @param dialog DialogInterface
+                     * @param which Type of DialogInterface
+                     */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -465,6 +627,10 @@ public class Settings extends AppCompatActivity {
 
         LinearLayout click6 = findViewById(R.id.settings_click6);
         click6.setOnClickListener(new View.OnClickListener() {
+            /**
+             * On click
+             * @param view View
+             */
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(Settings.this);
@@ -476,6 +642,11 @@ public class Settings extends AppCompatActivity {
                 builder.setView(editText);
 
                 builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    /**
+                     * On click
+                     * @param dialog DialogInterface
+                     * @param which Type of DialogInterface
+                     */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         try{
@@ -492,6 +663,11 @@ public class Settings extends AppCompatActivity {
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+                    /**
+                     * On click
+                     * @param dialog DialogInterface
+                     * @param which Type of DialogInterface
+                     */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.cancel();
@@ -504,22 +680,34 @@ public class Settings extends AppCompatActivity {
 
         LinearLayout click7 = findViewById(R.id.settings_click7);
         click7.setOnClickListener(new View.OnClickListener() {
+            /**
+             * On click
+             * @param view View
+             */
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 s.toggle();
             }
         });
 
         LinearLayout click8 = findViewById(R.id.settings_click8);
         click8.setOnClickListener(new View.OnClickListener() {
+            /**
+             * On click
+             * @param view View
+             */
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 alarm_spinner.performClick();
             }
         });
 
         LinearLayout click9 = findViewById(R.id.settings_click9);
         click9.setOnClickListener(new View.OnClickListener() {
+            /**
+             * On click
+             * @param view View
+             */
             @Override
             public void onClick(View view) {
                 Date now = Calendar.getInstance().getTime();
@@ -548,8 +736,15 @@ public class Settings extends AppCompatActivity {
         });
     }
 
+    /**
+     * Broadcast receiver
+     */
     private class broadcastReceiver extends BroadcastReceiver {
-
+        /**
+         * On receive
+         * @param context Context
+         * @param intent Intent
+         */
         @Override
         public void onReceive(Context context, Intent intent) {
             int duration = intent.getIntExtra("duration", -1);

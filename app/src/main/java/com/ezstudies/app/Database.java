@@ -10,29 +10,79 @@ import androidx.annotation.Nullable;
 
 import java.util.ArrayList;
 
+/**
+ * Database
+ */
 public class Database extends SQLiteOpenHelper {
+    /**
+     * Name of table 0
+     */
     private final String table0 = "agenda";
+    /**
+     * Name of table 1
+     */
     private final String table1 = "homeworks";
+    /**
+     * Name of column 0 of table 0
+     */
     private final String table0_col0 = "date";
+    /**
+     * Name of column 1 of table 0
+     */
     private final String table0_col1 = "title";
+    /**
+     * Name of column 2 of table 0
+     */
     private final String table0_col2 = "startingAt";
+    /**
+     * Name of column 3 of table 0
+     */
     private final String table0_col3 = "endingAt";
+    /**
+     * Name of column 4 of table 0
+     */
     private final String table0_col4 = "description";
+    /**
+     * Name of column 0 of table 1
+     */
     private final String table1_col0 = "title";
+    /**
+     * Name of column 1 of table 1
+     */
     private final String table1_col1 = "date";
+    /**
+     * Name of column 2 of table 1
+     */
     private final String table1_col2 = "description";
+    /**
+     * Name of column 3 of table 1
+     */
     private final String table1_col3 = "done";
 
+    /**
+     * Constructor
+     * @param context Context
+     */
     public Database(@Nullable Context context) {
         super(context, "Database", null, 1);
     }
 
+    /**
+     * On create, creates agenda and homeworks tables
+     * @param sqLiteDatabase SQLiteDatabase
+     */
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE "+table0+"("+table0_col0+" TEXT, "+table0_col1+" TEXT, "+table0_col2+" TEXT, "+table0_col3+" TEXT, "+table0_col4 +" TEXT);");
         sqLiteDatabase.execSQL("CREATE TABLE "+table1+"("+table1_col0+" TEXT, "+table1_col1+" TEXT, "+table1_col2+" TEXT, "+table1_col3+" TEXT);");
     }
 
+    /**
+     * On upgrade, drop all tables
+     * @param sqLiteDatabase SQLiteDatabase
+     * @param i i
+     * @param i1 i1
+     */
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table0);
@@ -40,6 +90,14 @@ public class Database extends SQLiteOpenHelper {
         onCreate(sqLiteDatabase);
     }
 
+    /**
+     * Add row to agenda table
+     * @param date Date
+     * @param title Title
+     * @param startingAt Start
+     * @param endingAt End
+     * @param description Description
+     */
     public void addAgenda(String date, String title, String startingAt, String endingAt, String description){
         ContentValues contentValues;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -53,6 +111,12 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Add row to homeworks table
+     * @param title Title
+     * @param date Date
+     * @param description Description
+     */
     public void addHomework(String title, String date, String description){
         ContentValues contentValues;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -65,18 +129,28 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Clear agenda table
+     */
     public void clearAgenda() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + table0);
         db.close();
     }
 
+    /**
+     * Clear homeworks table
+     */
     public void clearHomeworks(){
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + table1);
         db.close();
     }
 
+    /**
+     * Agenda table to String
+     * @return String
+     */
     public String toStringAgenda(){
         String selectQuery = "SELECT * FROM " + table0;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -90,6 +164,10 @@ public class Database extends SQLiteOpenHelper {
         return out;
     }
 
+    /**
+     * Homeworks table to String
+     * @return String
+     */
     public String toStringHomeworks(){
         String selectQuery = "SELECT * FROM " + table1;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -103,6 +181,10 @@ public class Database extends SQLiteOpenHelper {
         return out;
     }
 
+    /**
+     * Agenda table to tab
+     * @return Tab
+     */
     public ArrayList<ArrayList<String>> toTabAgenda(){
         ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
 
@@ -121,6 +203,10 @@ public class Database extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * Homeworks table to tab
+     * @return Tab
+     */
     public ArrayList<ArrayList<String>> toTabHomeworks(){
         ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
 
@@ -139,6 +225,10 @@ public class Database extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * Agenda table to ICS
+     * @return ICS
+     */
     public String toICS(){
         String selectQuery = "SELECT * FROM " + table0;
         SQLiteDatabase db = this.getWritableDatabase();
@@ -163,6 +253,12 @@ public class Database extends SQLiteOpenHelper {
         return ics;
     }
 
+    /**
+     * Concatenate a number of 0 before String
+     * @param s String
+     * @param n Number of 0
+     * @return Formatted string
+     */
     public String format(String s, int n){
         for(int i = s.length() ; i<n ; i++){
             s = "0" + s;
@@ -170,6 +266,10 @@ public class Database extends SQLiteOpenHelper {
         return s;
     }
 
+    /**
+     * Get first course of every days
+     * @return First course of every day
+     */
     public ArrayList<String[]> getFirsts(){
         String selectQuery = "SELECT * FROM " + table0 + " GROUP BY " + table0_col0 + " ORDER BY " + table0_col0 + " ASC, " + table0_col2 + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -184,6 +284,12 @@ public class Database extends SQLiteOpenHelper {
         return list;
     }
 
+    /**
+     * Delete a row from homeworks table
+     * @param title Title
+     * @param date Date
+     * @param description Description
+     */
     public void removeHomework(String title, String date, String description){
         String deleteQuery = "DELETE FROM " + table1 + " WHERE " + table1_col0 + "='" + title + "' AND " + table1_col1 + "='" + date + "' AND " + table1_col2 + "='" + description + "'";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -191,6 +297,13 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Update done column of homeworks table
+     * @param title Title
+     * @param date Date
+     * @param description Description
+     * @param done Done
+     */
     public void setHomeworkDone(String title, String date, String description, String done){
         String updateQuery = "UPDATE " + table1 + " SET " + table1_col3 + " = '" + done + "' WHERE " + table1_col0 + "='" + title + "' AND " + table1_col1 + "='" + date + "' AND " + table1_col2 + "='" + description + "'";
         SQLiteDatabase db = this.getWritableDatabase();
@@ -198,6 +311,13 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * A day of agenda table to tab
+     * @param day Day
+     * @param month Month
+     * @param year Year
+     * @return Tab
+     */
     public ArrayList<ArrayList<String>> toTabAgendaDay(int day, int month, int year){
         ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
         String date = format(String.valueOf(day), 2) + "/" + format(String.valueOf(month), 2) + "/" + format(String.valueOf(year), 4);
