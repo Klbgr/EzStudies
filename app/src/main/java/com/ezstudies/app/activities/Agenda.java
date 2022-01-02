@@ -1,12 +1,18 @@
 package com.ezstudies.app.activities;
 
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -24,6 +30,8 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -59,6 +67,7 @@ import java.util.Map;
  * Activity that displays an agenda
  */
 public class Agenda extends FragmentActivity {
+    private static final String CHANNEL_ID = "EZStudies";
     /**
      * JavaScript Interface for processing scripts from websites
      */
@@ -87,6 +96,9 @@ public class Agenda extends FragmentActivity {
      * Broadcast receiver
      */
     private broadcastReceiver broadcastReceiver;
+    private static int nbNotifPending;
+    private NotificationReceiver notificationReceiver;
+
 
     /**
      * Initiate the activity
@@ -96,13 +108,23 @@ public class Agenda extends FragmentActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.agenda_layout);
+        createNotificationChannel();
         sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
         editor = sharedPreferences.edit();
         viewPager = findViewById(R.id.agenda_viewpager);
         FragmentManager fm = getSupportFragmentManager();
         adapter = new FragmentAdapter(fm, getLifecycle());
         viewPager.setAdapter(adapter);
+        Calendar cal = Calendar.getInstance();
+        cal.setFirstDayOfWeek(Calendar.MONDAY);
+        int weekDay = cal.get(Calendar.DAY_OF_WEEK)-2;
+        Log.d("weekday", String.valueOf(weekDay));
+        if(weekDay != 7){
+            viewPager.setCurrentItem(getIntent().getIntExtra("weekday", weekDay));
+        }
         broadcastReceiver = new broadcastReceiver();
+        nbNotifPending = 0;
+        notificationReceiver = new NotificationReceiver();
     }
 
     /**
@@ -230,6 +252,27 @@ public class Agenda extends FragmentActivity {
             }
         }
         Log.d("database agenda", database.toStringAgenda());
+
+        cancelNotifications(this);
+        ArrayList<ArrayList<String>> courses = database.toTabAgenda();
+        Log.d("courses", courses.toString());
+        Log.d("courses", courses.get(0).get(0));
+        for (ArrayList<String> row : courses){
+            Calendar calendar = Calendar.getInstance();
+            String[] date = row.get(0).split("/");
+            String[] hour = row.get(2).split(":");
+            int minute = Integer.parseInt(hour[1]) - 15;
+            int heure = Integer.parseInt(hour[0]);
+            if (minute < 0){
+                heure --;
+                minute = 60 + minute;
+            }
+            calendar.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]), heure, minute);
+            long time = calendar.getTimeInMillis();
+            String text = row.get(2) + " - " + row.get(3) + "\n" + row.get(4);
+            scheduleNotification(this, time, row.get(1), text);
+            Log.d("new notif", row.get(0) + " a " + heure + "h" + minute);
+        }
         database.close();
 
         progressDialog.cancel();
@@ -568,4 +611,68 @@ public class Agenda extends FragmentActivity {
             }
         }
     }
+
+    public static class NotificationReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("receiver", "received ! id = " + intent.getIntExtra("nb", 1));
+            Intent agenda = new Intent(context, Agenda.class);
+            agenda.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, agenda, 0);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(intent.getStringExtra("text")))
+                    .setContentTitle(intent.getStringExtra("title"))
+                    .setContentText(intent.getStringExtra("text"))
+                    .setContentIntent(pendingIntent);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+            notificationManager.notify( intent.getIntExtra("nb", -1), builder.build());
+        }
+    }
+
+    public static void scheduleNotification(Context context, long time, String title, String text) {
+        Intent intent = new Intent(context, NotificationReceiver.class);
+        intent.putExtra("title", title);
+        intent.putExtra("text", text);
+        intent.putExtra("nb", nbNotifPending);
+        PendingIntent pending = PendingIntent.getBroadcast(context, nbNotifPending, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // Schdedule notification
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        manager.setExact(AlarmManager.RTC_WAKEUP, time, pending);
+        Log.d("schedueler", "created notif");
+        nbNotifPending ++;
+    }
+
+    public static void cancelNotifications(Context context) {
+        while(nbNotifPending >= 0){
+            Intent intent = new Intent(context, NotificationReceiver.class);
+            intent.putExtra("title", "title");
+            intent.putExtra("text", "text");
+            PendingIntent pending = PendingIntent.getBroadcast(context, nbNotifPending, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            // Cancel notification
+            AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+            manager.cancel(pending);
+            nbNotifPending --;
+        }
+        nbNotifPending = 0;
+    }
+
+    private void createNotificationChannel() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "test";
+            String description = "desc";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
 }
