@@ -67,7 +67,10 @@ import java.util.Map;
  * Activity that displays an agenda
  */
 public class Agenda extends FragmentActivity {
-    private static final String CHANNEL_ID = "EZStudies";
+    /**
+     * ID of notification channel
+     */
+    private static final String CHANNEL_ID = "EzStudies";
     /**
      * JavaScript Interface for processing scripts from websites
      */
@@ -96,7 +99,13 @@ public class Agenda extends FragmentActivity {
      * Broadcast receiver
      */
     private broadcastReceiver broadcastReceiver;
+    /**
+     * Number of pending notifications
+     */
     private static int nbNotifPending;
+    /**
+     * Notification receiver
+     */
     private NotificationReceiver notificationReceiver;
 
 
@@ -271,7 +280,7 @@ public class Agenda extends FragmentActivity {
             long time = calendar.getTimeInMillis();
             String text = row.get(2) + " - " + row.get(3) + "\n" + row.get(4);
             scheduleNotification(this, time, row.get(1), text);
-            Log.d("new notif", row.get(0) + " a " + heure + "h" + minute);
+            Log.d("new notification", row.get(0) + " at " + heure + "h" + minute);
         }
         database.close();
 
@@ -612,7 +621,15 @@ public class Agenda extends FragmentActivity {
         }
     }
 
+    /**
+     * Broadcast receiver for notifications
+     */
     public static class NotificationReceiver extends BroadcastReceiver {
+        /**
+         * On receive
+         * @param context Context
+         * @param intent Intent
+         */
         @Override
         public void onReceive(Context context, Intent intent) {
             Log.d("receiver", "received ! id = " + intent.getIntExtra("nb", 1));
@@ -628,23 +645,34 @@ public class Agenda extends FragmentActivity {
                     .setContentText(intent.getStringExtra("text"))
                     .setContentIntent(pendingIntent);
             NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-            notificationManager.notify( intent.getIntExtra("nb", -1), builder.build());
+            notificationManager.notify(intent.getIntExtra("nb", -1), builder.build());
         }
     }
 
+    /**
+     * Schedule a notification
+     * @param context Context
+     * @param time Time
+     * @param title Title
+     * @param text Text
+     */
     public static void scheduleNotification(Context context, long time, String title, String text) {
         Intent intent = new Intent(context, NotificationReceiver.class);
         intent.putExtra("title", title);
         intent.putExtra("text", text);
         intent.putExtra("nb", nbNotifPending);
         PendingIntent pending = PendingIntent.getBroadcast(context, nbNotifPending, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        // Schdedule notification
+        // Schedule notification
         AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         manager.setExact(AlarmManager.RTC_WAKEUP, time, pending);
-        Log.d("schedueler", "created notif");
+        Log.d("notification scheduler", "created notif");
         nbNotifPending ++;
     }
 
+    /**
+     * Cancel a notification
+     * @param context Context
+     */
     public static void cancelNotifications(Context context) {
         while(nbNotifPending >= 0){
             Intent intent = new Intent(context, NotificationReceiver.class);
@@ -659,12 +687,15 @@ public class Agenda extends FragmentActivity {
         nbNotifPending = 0;
     }
 
+    /**
+     * Create a notification channel
+     */
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "test";
-            String description = "desc";
+            CharSequence name = CHANNEL_ID;
+            String description = "Notification";
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
             channel.setDescription(description);
