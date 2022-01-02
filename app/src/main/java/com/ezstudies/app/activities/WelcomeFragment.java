@@ -215,6 +215,8 @@ public class WelcomeFragment extends Fragment {
                 address = new Geocoder(getActivity(), Locale.getDefault()).getFromLocation(Double.parseDouble(school_latitude), Double.parseDouble(school_longitude), 1).get(0).getAddressLine(0);
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (IndexOutOfBoundsException e){
+                e.printStackTrace();
             }
             textView.setText(address);
         }
