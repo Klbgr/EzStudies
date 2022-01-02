@@ -734,6 +734,15 @@ public class Settings extends AppCompatActivity {
                 toast.show();
             }
         });
+        click9.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                Uri uri = Uri.parse("https://github.com/Klbgr/EzStudies");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+                return false;
+            }
+        });
     }
 
     /**
