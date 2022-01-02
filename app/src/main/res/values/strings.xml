@@ -73,6 +73,7 @@
     <string name="alarm_ringtone">Alarm ringtone</string>
     <string name="reminders">Reminders</string>
     <string name="homework_tomorrow">Homework for tomorrow</string>
+    <string name="on_boot">Restored notifications</string>
 
     <string-array name="travel_array">
         <item>Driving</item>

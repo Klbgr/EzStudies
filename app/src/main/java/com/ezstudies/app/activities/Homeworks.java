@@ -392,7 +392,7 @@ public class Homeworks extends AppCompatActivity {
      * Set notifications
      * @param context Context
      */
-    private static void setNotificationsHomeworks(Context context){
+    public static void setNotificationsHomeworks(Context context){
         Database database = new Database(context);
         cancelNotificationsHomeworks(context);
         Calendar now = Calendar.getInstance();
