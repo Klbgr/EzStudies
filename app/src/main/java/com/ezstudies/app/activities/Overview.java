@@ -1,7 +1,5 @@
 package com.ezstudies.app.activities;
 
-import android.app.AlarmManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -113,7 +111,7 @@ public class Overview extends AppCompatActivity {
             for(ArrayList<String> row : dataAgenda){
                 ArrayList<String> courseData = new ArrayList<String>();
                 courseData.add(row.get(1));
-                courseData.add(row.get(2) + " - " + row.get(3));
+                courseData.add(row.get(0) + " : " + row.get(2) + " - " + row.get(3));
                 if (row.get(4).contains(" / ")){
                     courseData.add(row.get(4).split(" / ")[0]);
                     courseData.add(row.get(4).split(" / ")[1]);
@@ -122,7 +120,6 @@ public class Overview extends AppCompatActivity {
                     courseData.add(row.get(4));
                 }
                 coursList.add(courseData);
-
             }
             dataAgenda = coursList;
         }
@@ -240,6 +237,12 @@ public class Overview extends AppCompatActivity {
                 holder.hour.setText(data.get(position).get(1));
                 holder.place.setText(data.get(position).get(2));
                 holder.info.setText(data.get(position).get(3));
+
+                if(data.get(position).get(0).equals(getString(R.string.no_agenda))){
+                    holder.itemView.findViewById(R.id.agenda_img0).setVisibility(View.GONE);
+                    holder.itemView.findViewById(R.id.agenda_img1).setVisibility(View.GONE);
+                    holder.itemView.findViewById(R.id.agenda_img2).setVisibility(View.GONE);
+                }
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     /**

@@ -94,7 +94,7 @@ public class AgendaFragment extends Fragment {
             if (weekDay == page){ //correct day
                 ArrayList<String> courseData = new ArrayList<String>();
                 courseData.add(row.get(1));
-                courseData.add(row.get(2) + " - " + row.get(3));
+                courseData.add(row.get(0) + " : " + row.get(2) + " - " + row.get(3));
                 if (row.get(4).contains(" / ")){ //if multiple infos
                     courseData.add(row.get(4).split(" / ")[0]);
                     courseData.add(row.get(4).split(" / ")[1]);
@@ -152,10 +152,14 @@ public class AgendaFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             if(!data.get(position).isEmpty()){ //not null
-                holder.course.setText(data.get(position).get(0));
-                holder.hour.setText(data.get(position).get(1));
-                holder.place.setText(data.get(position).get(2));
-                holder.info.setText(data.get(position).get(3));
+                try{
+                    holder.course.setText(data.get(position).get(0));
+                    holder.hour.setText(data.get(position).get(1));
+                    holder.place.setText(data.get(position).get(2));
+                    holder.info.setText(data.get(position).get(3));
+                } catch (IndexOutOfBoundsException e){
+                    e.printStackTrace();
+                }
             }
         }
 

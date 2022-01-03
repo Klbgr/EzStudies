@@ -28,7 +28,7 @@
     <string name="travel_mode">Mode de transport</string>
     <string name="travel_time">Temps de trajet</string>
     <string name="minute_hint">minute</string>
-    <string name="name_hint">identifiant cyu</string>
+    <string name="name_hint">login cyu</string>
     <string name="password_hint">mot de passe</string>
     <string name="login_succes">Connecté</string>
     <string name="login_fail_credentials">Identifiants erronés</string>

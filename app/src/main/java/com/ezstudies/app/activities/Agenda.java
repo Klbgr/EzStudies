@@ -756,10 +756,6 @@ public class Agenda extends FragmentActivity {
         Database database = new Database(context);
         cancelNotificationsAgenda(context);
         Calendar now = Calendar.getInstance();
-        now.set(Calendar.HOUR_OF_DAY, 0);
-        now.set(Calendar.MINUTE, 0);
-        now.set(Calendar.SECOND, 0);
-        now.setTimeInMillis(now.getTimeInMillis()+(1000*60*60*24));
         ArrayList<ArrayList<String>> courses = database.toTabAgenda();
         database.close();
         Log.d("courses", courses.toString());
@@ -778,7 +774,7 @@ public class Agenda extends FragmentActivity {
             if(now.getTimeInMillis() < time){
                 String text = row.get(2) + " - " + row.get(3) + "\n" + row.get(4);
                 scheduleNotificationAgenda(context, time, row.get(1), text);
-                Log.d("new notification", row.get(0) + " at " + heure + "h" + minute);
+                Log.d("new notification", row.get(0) + " at " + heure + ":" + minute);
             }
         }
     }

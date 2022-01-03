@@ -59,7 +59,7 @@ public class Homeworks extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.homework_layout);
+        setContentView(R.layout.homeworks_layout);
         createNotificationChannelHomeworks();
 
         RecyclerView list = findViewById(R.id.homeworks_list);
@@ -411,7 +411,7 @@ public class Homeworks extends AppCompatActivity {
                 calendar.setTimeInMillis(calendar.getTimeInMillis()-(1000*60*60*24));
 
                 scheduleNotificationHomeworks(context, calendar.getTimeInMillis(), context.getString(R.string.homework_tomorrow), row.get(0) + "\n" + row.get(2));
-                Log.d("new notification", calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH)+1) + "/" + calendar.get(Calendar.YEAR) + " at 19h00");
+                Log.d("new notification", calendar.get(Calendar.DAY_OF_MONTH) + "/" + (calendar.get(Calendar.MONTH)+1) + "/" + calendar.get(Calendar.YEAR) + " at 19:00");
             }
         }
     }

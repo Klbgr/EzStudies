@@ -525,12 +525,11 @@
 
                     <androidx.appcompat.widget.SwitchCompat
                         android:id="@+id/settings.switch"
+                        app:theme="@style/Switch"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
-                        android:minHeight="48dp"
-                        app:thumbTint="@color/green"
-                        app:trackTint="@color/green_dark" />
+                        android:minHeight="48dp" />
 
                     <Space
                         android:layout_width="@dimen/logo_spacing"
