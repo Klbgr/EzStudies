@@ -32,6 +32,11 @@
                     android:minHeight="48dp"
                     android:orientation="horizontal">
 
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
+
                     <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -63,6 +68,11 @@
 
                     </LinearLayout>
 
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
+
                 </LinearLayout>
 
                 <Space
@@ -86,6 +96,11 @@
                     android:focusable="true"
                     android:minHeight="48dp"
                     android:orientation="horizontal">
+
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -118,6 +133,11 @@
                             android:textStyle="italic" />
                     </LinearLayout>
 
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
+
                 </LinearLayout>
 
                 <Space
@@ -140,6 +160,11 @@
                     android:focusable="true"
                     android:minHeight="48dp"
                     android:orientation="horizontal">
+
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -172,6 +197,11 @@
 
                     </LinearLayout>
 
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
+
                 </LinearLayout>
 
                 <Space
@@ -195,6 +225,11 @@
                     android:focusable="true"
                     android:minHeight="48dp"
                     android:orientation="horizontal">
+
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -228,6 +263,11 @@
                             android:textStyle="italic" />
                     </LinearLayout>
 
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
+
                 </LinearLayout>
 
                 <Space
@@ -251,6 +291,11 @@
                     android:focusable="true"
                     android:minHeight="48dp"
                     android:orientation="horizontal">
+
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -284,6 +329,11 @@
                             android:textStyle="italic" />
                     </LinearLayout>
 
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
+
                 </LinearLayout>
 
                 <Space
@@ -307,6 +357,11 @@
                     android:focusable="true"
                     android:minHeight="48dp"
                     android:orientation="horizontal">
+
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -339,6 +394,11 @@
                             android:textStyle="italic" />
                     </LinearLayout>
 
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
+
                 </LinearLayout>
 
                 <Space
@@ -361,6 +421,11 @@
                     android:focusable="true"
                     android:minHeight="48dp"
                     android:orientation="horizontal">
+
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -393,6 +458,11 @@
                             android:textStyle="italic" />
                     </LinearLayout>
 
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
+
                 </LinearLayout>
 
                 <Space
@@ -416,6 +486,11 @@
                     android:gravity="center"
                     android:minHeight="48dp"
                     android:orientation="horizontal">
+
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -457,6 +532,11 @@
                         app:thumbTint="@color/green"
                         app:trackTint="@color/green_dark" />
 
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
+
                 </LinearLayout>
 
                 <Space
@@ -480,6 +560,11 @@
                     android:focusable="true"
                     android:minHeight="48dp"
                     android:orientation="horizontal">
+
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -512,6 +597,11 @@
 
                     </LinearLayout>
 
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
+
                 </LinearLayout>
 
                 <Space
@@ -528,6 +618,11 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="@dimen/logo_spacing"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -559,6 +654,11 @@
                         android:text="@string/about_text"
                         android:textStyle="italic" />
                 </LinearLayout>
+
+                <Space
+                    android:layout_width="@dimen/logo_spacing"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0" />
 
             </LinearLayout>
 

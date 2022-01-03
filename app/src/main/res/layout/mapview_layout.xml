@@ -11,14 +11,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/mymapview.input" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
         android:id="@+id/mymapview.input"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:backgroundTint="@color/green"
         android:ems="10"
+        android:hint="@string/address"
         android:inputType="textPostalAddress"
+        app:layout_constraintBottom_toBottomOf="@+id/mymapview.search"
         app:layout_constraintEnd_toStartOf="@+id/mymapview.search"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -27,8 +33,11 @@
         android:id="@+id/mymapview.search"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:onClick="searchLocation"
         android:text="@string/search"
+        app:cornerRadius="@dimen/radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,6 +48,7 @@
         android:layout_marginBottom="32dp"
         android:onClick="ok"
         android:text="@string/ok"
+        app:cornerRadius="@dimen/radius"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 

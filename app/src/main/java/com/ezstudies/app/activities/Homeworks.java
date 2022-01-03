@@ -186,18 +186,18 @@ public class Homeworks extends AppCompatActivity {
                 status = data.get(position).get(3);
                 if (status.equals("f")) { //red if not done
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        holder.itemView.setBackgroundColor(getColor(R.color.homework_red));
+                        holder.itemView.findViewById(R.id.homeworks_card).setBackgroundColor(getColor(R.color.homework_red));
                     }
                     else{
-                        holder.itemView.setBackgroundColor(Color.RED);
+                        holder.itemView.findViewById(R.id.homeworks_card).setBackgroundColor(Color.RED);
                     }
                 }
                 else { //green if done
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                        holder.itemView.setBackgroundColor(getColor(R.color.homework_green));
+                        holder.itemView.findViewById(R.id.homeworks_card).setBackgroundColor(getColor(R.color.homework_green));
                     }
                     else{
-                        holder.itemView.setBackgroundColor(Color.GREEN);
+                        holder.itemView.findViewById(R.id.homeworks_card).setBackgroundColor(Color.GREEN);
                     }
                 }
 

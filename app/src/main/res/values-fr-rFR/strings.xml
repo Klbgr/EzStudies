@@ -20,7 +20,7 @@
     <string name="empty">Vide</string>
     <string name="prep_time">Temps de préparation</string>
     <string name="about">À propos de nous</string>
-    <string name="about_text">Nous sommes des étudiants à CY Cergy Paris Université. Cette app est un projet pour notre unité d\'enseignement de Developping Application.\n\nNotre équipe (GitHub) :\n<b>@IIyn\n@Malinx95\n@Klbgr\n\n</b>Code source : <u>https://github.com/Klbgr/EzStudies</u></string>
+    <string name="about_text">Nous sommes des étudiants à CY Cergy Paris Université. Cette app est un projet pour notre unité d\'enseignement de Developping Application.\nNotre équipe (GitHub) :\n<b>@IIyn\n@Malinx95\n@Klbgr\n</b>Code source : <u>https://github.com/Klbgr/EzStudies</u></string>
     <string name="minutes">%1$d minutes</string>
     <string name="cancel">Annuler</string>
     <string name="invalid_input">Entrée invalide</string>
@@ -35,7 +35,7 @@
     <string name="login_fail_network">Erreur, veuillez réessayer</string>
     <string name="celcat_success">Agenda importé depuis Celcat</string>
     <string name="ics_success">Agenda importé depuis un fichier ICS</string>
-    <string name="duration">Demain, vous devez vous réveiller à %1$s (%2$d minutes de trajet)</string>
+    <string name="duration">Demain, vous devrez vous réveiller à %1$s (%2$d minutes de trajet)</string>
     <string name="finish_setup">Veuillez terminer la configuration</string>
     <string name="export_success">Enregistré dans /Download/</string>
     <string name="connect_celcat">Se connecter à Celcat</string>
@@ -70,6 +70,7 @@
     <string name="reminders">Rappels</string>
     <string name="homework_tomorrow">Devoir pour demain</string>
     <string name="on_boot">Notifications restaurées</string>
+    <string name="address">adresse</string>
 
     <string-array name="travel_array">
         <item>En voiture</item>
