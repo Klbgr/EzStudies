@@ -8,6 +8,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
+import com.ezstudies.app.activities.Agenda;
+
 import java.util.ArrayList;
 
 /**
@@ -109,6 +111,20 @@ public class Database extends SQLiteOpenHelper {
         contentValues.put(table0_col4, description);
         db.insert(table0, null, contentValues);
         db.close();
+    }
+
+    public void editAgenda(String date, String title, String startingAt, String endingAt, String newDate, String newTitle, String newStartingAt, String newEndingAt, String newDescription, Context context){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues cv = new ContentValues();
+        cv.put(table0_col0, newDate);
+        cv.put(table0_col1, newTitle);
+        cv.put(table0_col2, newStartingAt);
+        cv.put(table0_col3, newEndingAt);
+        cv.put(table0_col4, newDescription);
+        db.update(table0, cv, table0_col0 + " = ? AND " + table0_col1 + " = ? AND " + table0_col2 + " = ? AND " + table0_col3 + " = ?", new String[]{date, title, startingAt, endingAt});
+        db.close();
+        Agenda.cancelNotificationsAgenda(context);
+        Agenda.setNotificationsAgenda(context);
     }
 
     /**

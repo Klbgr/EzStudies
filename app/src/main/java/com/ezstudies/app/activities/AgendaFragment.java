@@ -1,6 +1,8 @@
 package com.ezstudies.app.activities;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +10,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,6 +39,8 @@ public class AgendaFragment extends Fragment {
      */
     private RecyclerView list;
 
+    private Activity activity;
+
     /**
      * Constructor
      */
@@ -44,8 +50,9 @@ public class AgendaFragment extends Fragment {
      * Constructor
      * @param page Requested page
      */
-    public AgendaFragment (int page){
+    public AgendaFragment (int page, Activity activity){
         this.page = page;
+        this.activity = activity;
     }
 
     /**
@@ -157,6 +164,18 @@ public class AgendaFragment extends Fragment {
                     holder.hour.setText(data.get(position).get(1));
                     holder.place.setText(data.get(position).get(2));
                     holder.info.setText(data.get(position).get(3));
+                    holder.card.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(getContext(), EditCourse.class);
+                            intent.putExtra("course", holder.course.getText());
+                            intent.putExtra("hour", holder.hour.getText());
+                            intent.putExtra("place", holder.place.getText());
+                            intent.putExtra("info", holder.info.getText());
+                            startActivity(intent);
+                            activity.finish();
+                        }
+                    });
                 } catch (IndexOutOfBoundsException e){
                     e.printStackTrace();
                 }
@@ -194,6 +213,11 @@ public class AgendaFragment extends Fragment {
             public TextView place;
 
             /**
+             * Main layout
+             */
+            public ConstraintLayout card;
+
+            /**
              * Constructor
              * @param itemView View
              */
@@ -203,6 +227,7 @@ public class AgendaFragment extends Fragment {
                 hour = itemView.findViewById(R.id.agenda_hour);
                 info = itemView.findViewById(R.id.agenda_info);
                 place = itemView.findViewById(R.id.agenda_place);
+                card = itemView.findViewById(R.id.card);
             }
         }
     }

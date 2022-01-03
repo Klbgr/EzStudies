@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ezstudies.app" >
+    package="com.ezstudies.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -15,7 +15,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.EzStudies" >
+        android:theme="@style/Theme.EzStudies">
+        <activity
+            android:name=".activities.EditCourse"
+            android:exported="true" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
@@ -34,25 +38,27 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-            <meta-data android:name="android.app.shortcuts"
+
+            <meta-data
+                android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
-        <activity android:name=".activities.Overview"
-            android:label="@string/overview" >
-        </activity>
-        <activity android:name=".activities.Agenda"
+        <activity
+            android:name=".activities.Overview"
+            android:label="@string/overview"></activity>
+        <activity
+            android:name=".activities.Agenda"
             android:label="@string/agenda"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity android:name=".activities.Homeworks"
-            android:label="@string/homeworks" >
-        </activity>
-        <activity android:name=".activities.Settings"
-            android:label="@string/settings" >
-        </activity>
-        <activity android:name=".activities.myMapView"
-            android:label="@string/map" >
-        </activity>
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".activities.Homeworks"
+            android:label="@string/homeworks"></activity>
+        <activity
+            android:name=".activities.Settings"
+            android:label="@string/settings"></activity>
+        <activity
+            android:name=".activities.myMapView"
+            android:label="@string/map"></activity>
 
         <service android:name=".services.GpsService" />
         <service android:name=".services.Login" />
@@ -65,7 +71,8 @@
         <receiver
             android:name=".activities.Homeworks$NotificationReceiver"
             android:enabled="true" />
-        <receiver android:name=".AlarmRestorer"
+        <receiver
+            android:name=".AlarmRestorer"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

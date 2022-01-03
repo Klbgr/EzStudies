@@ -238,19 +238,19 @@ public class Agenda extends FragmentActivity {
         public Fragment createFragment(int page) {
             switch (page) {
                 case 0 :
-                    return new AgendaFragment(1);
+                    return new AgendaFragment(1, Agenda.this);
                 case 1 :
-                    return new AgendaFragment(2);
+                    return new AgendaFragment(2, Agenda.this);
                 case 2 :
-                    return new AgendaFragment(3);
+                    return new AgendaFragment(3, Agenda.this);
                 case 3 :
-                    return new AgendaFragment(4);
+                    return new AgendaFragment(4, Agenda.this);
                 case 4 :
-                    return new AgendaFragment(5);
+                    return new AgendaFragment(5, Agenda.this);
                 case 5 :
-                    return new AgendaFragment(6);
+                    return new AgendaFragment(6, Agenda.this);
                 default:
-                    return new AgendaFragment(1);
+                    return new AgendaFragment(1, Agenda.this);
             }
         }
 
