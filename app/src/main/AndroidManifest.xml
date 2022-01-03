@@ -49,16 +49,19 @@
         <activity
             android:name=".activities.Agenda"
             android:label="@string/agenda"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".activities.Homeworks"
-            android:label="@string/homeworks"></activity>
-        <activity
-            android:name=".activities.Settings"
-            android:label="@string/settings"></activity>
-        <activity
-            android:name=".activities.myMapView"
-            android:label="@string/map"></activity>
+            android:screenOrientation="portrait"
+            android:exported="true" >
+        </activity>
+        <activity android:name=".activities.Homeworks"
+            android:label="@string/homeworks"
+            android:exported="true" >
+        </activity>
+        <activity android:name=".activities.Settings"
+            android:label="@string/settings" >
+        </activity>
+        <activity android:name=".activities.myMapView"
+            android:label="@string/map" >
+        </activity>
 
         <service android:name=".services.GpsService" />
         <service android:name=".services.Login" />

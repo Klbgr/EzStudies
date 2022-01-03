@@ -198,24 +198,6 @@ public class Agenda extends FragmentActivity {
     }
 
     /**
-     * On resume
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(broadcastReceiver, new IntentFilter("Agenda"));
-    }
-
-    /**
-     * On destroy
-     */
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        unregisterReceiver(broadcastReceiver);
-    }
-
-    /**
      * Create pages of ViewPager
      */
     public class FragmentAdapter extends FragmentStateAdapter {
@@ -277,7 +259,6 @@ public class Agenda extends FragmentActivity {
         intent.putExtra("password", password);
         intent.putExtra("target", target);
         startService(intent);
-        broadcastReceiver = new broadcastReceiver();
         registerReceiver(broadcastReceiver, new IntentFilter(target));
     }
 
@@ -477,9 +458,9 @@ public class Agenda extends FragmentActivity {
      * Restart activity to reload every pages of ViewPager
      */
     public void restart(){
-        setNotificationsAgenda(this);
         finish();
         startActivity(getIntent());
+        setNotificationsAgenda(this);
         Boolean alarm = sharedPreferences.getBoolean("alarm", false);
         if(alarm){
             setAlarms();
@@ -505,6 +486,7 @@ public class Agenda extends FragmentActivity {
             intent.putExtra("schoolLong", schoolLong);
             intent.putExtra("target", "Agenda");
             startService(intent);
+            registerReceiver(broadcastReceiver, new IntentFilter("Agenda"));
         }
         else{ //transit
             Database database = new Database(this);
@@ -541,8 +523,10 @@ public class Agenda extends FragmentActivity {
          * On receive
          */
         public void onReceive(Context context, Intent intent) {
+            unregisterReceiver(broadcastReceiver);
             String target = intent.getStringExtra("target");
             if(target != null && target.equals("Agenda")){ //broadcast from RouteCalculator
+                Log.d("jnnsd", "sduusoid");
                 Database database = new Database(context);
                 ArrayList<String[]> firsts = database.getFirsts();
                 database.close();

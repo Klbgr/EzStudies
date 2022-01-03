@@ -272,18 +272,6 @@ public class WelcomeFragment extends Fragment {
         super.onResume();
         if (page == 2) {
             updateLocation();
-            getActivity().registerReceiver(broadcastReceiver, new IntentFilter("WelcomeLogin"));
-        }
-    }
-
-    /**
-     * On pause
-     */
-    @Override
-    public void onPause() {
-        super.onPause();
-        if(page == 2){
-            getActivity().unregisterReceiver(broadcastReceiver);
         }
     }
 
@@ -438,6 +426,7 @@ public class WelcomeFragment extends Fragment {
                         intent.putExtra("password", passwordText);
                         intent.putExtra("target", "WelcomeLogin");
                         getActivity().startService(intent);
+                        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("WelcomeLogin"));
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -503,7 +492,6 @@ public class WelcomeFragment extends Fragment {
                         } catch (NumberFormatException e) {
                             Toast.makeText(getActivity(), R.string.invalid_input, Toast.LENGTH_SHORT).show();
                         }
-
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -583,6 +571,7 @@ public class WelcomeFragment extends Fragment {
          */
         @Override
         public void onReceive(Context context, Intent intent) {
+            context.unregisterReceiver(broadcastReceiver);
             progressDialog.cancel();
             Boolean success = intent.getBooleanExtra("success", false);
             String name = intent.getStringExtra("name");

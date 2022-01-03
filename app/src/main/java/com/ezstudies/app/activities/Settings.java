@@ -265,6 +265,7 @@ public class Settings extends AppCompatActivity {
             intent.putExtra("schoolLong", schoolLong);
             intent.putExtra("target", "Settings");
             startService(intent);
+            registerReceiver(broadcastReceiver, new IntentFilter("Settings"));
         }
     }
 
@@ -275,17 +276,6 @@ public class Settings extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         updateLocation();
-        refreshRoute();
-        registerReceiver(broadcastReceiver, new IntentFilter("Settings"));
-    }
-
-    /**
-     * On pause
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(broadcastReceiver);
     }
 
     /**
@@ -514,6 +504,7 @@ public class Settings extends AppCompatActivity {
                         intent.putExtra("password", passwordText);
                         intent.putExtra("target", target);
                         startService(intent);
+                        registerReceiver(broadcastReceiver, new IntentFilter("Settings"));
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -756,6 +747,7 @@ public class Settings extends AppCompatActivity {
          */
         @Override
         public void onReceive(Context context, Intent intent) {
+            unregisterReceiver(broadcastReceiver);
             int duration = intent.getIntExtra("duration", -2);
             if(duration != -2){
                 editor.putInt("duration", duration);

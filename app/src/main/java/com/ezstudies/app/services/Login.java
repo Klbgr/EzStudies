@@ -53,9 +53,11 @@ public class Login extends Service implements Runnable{
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        this.intent = intent;
-        Thread thread = new Thread(this);
-        thread.start();
+        if(intent != null){
+            this.intent = intent;
+            Thread thread = new Thread(this);
+            thread.start();
+        }
         return super.onStartCommand(intent, flags, startId);
     }
 
@@ -83,7 +85,7 @@ public class Login extends Service implements Runnable{
                     .cookies(loginFormResponse.cookies())
                     .userAgent(user_agent)
                     .execute();
-            System.out.println(loginActionResponse.url());
+            Log.d("url response", loginActionResponse.url().toString());
             responseUrl = loginActionResponse.url().toString();
             cookies = (HashMap<String, String>) loginActionResponse.cookies();
         } catch (Exception e){
@@ -100,7 +102,7 @@ public class Login extends Service implements Runnable{
         }
         else{
             success = false;
-            Log.d("erreur", "erreur de connexion ! ");
+            Log.d("error", "connection error");
         }
 
         String target = intent.getStringExtra("target");
