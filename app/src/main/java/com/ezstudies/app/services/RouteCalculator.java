@@ -87,7 +87,7 @@ public class RouteCalculator extends Service implements Runnable {
      */
     public void run(){
         json = null;
-        int duration = -1;
+        int duration = 0;
         try {
             InputStream inputStream = new URL(url).openStream();
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
@@ -105,7 +105,6 @@ public class RouteCalculator extends Service implements Runnable {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         Intent intent = new Intent(this.intent.getStringExtra("target"));
         intent.putExtra("target", this.intent.getStringExtra("target"));
         intent.putExtra("duration", duration);

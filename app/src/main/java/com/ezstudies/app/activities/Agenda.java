@@ -2,7 +2,6 @@ package com.ezstudies.app.activities;
 
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -208,11 +207,11 @@ public class Agenda extends FragmentActivity {
     }
 
     /**
-     * On pause
+     * On destroy
      */
     @Override
-    protected void onPause() {
-        super.onPause();
+    protected void onDestroy() {
+        super.onDestroy();
         unregisterReceiver(broadcastReceiver);
     }
 
@@ -564,7 +563,7 @@ public class Agenda extends FragmentActivity {
                         hour--;
                     }
                     infos[1] = hour + ":" + minute;
-                    Log.d("info", infos[1] + "");
+                    Log.d("alarm hour", infos[1]);
                 }
                 Intent intent1 = new Intent(context, AlarmSetter.class);
                 intent1.putExtra("list", firsts);
