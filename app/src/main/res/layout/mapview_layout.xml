@@ -24,8 +24,6 @@
         android:ems="10"
         android:hint="@string/address"
         android:inputType="textPostalAddress"
-        android:textColor="@color/white"
-        android:textColorHint="@color/white"
         app:layout_constraintBottom_toBottomOf="@+id/mymapview.search"
         app:layout_constraintEnd_toStartOf="@+id/mymapview.search"
         app:layout_constraintStart_toStartOf="parent"

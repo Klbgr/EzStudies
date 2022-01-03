@@ -98,24 +98,6 @@ public class Welcome extends FragmentActivity {
     }
 
     /**
-     * On resume
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-        registerReceiver(broadcastReceiver, new IntentFilter("Welcome"));
-    }
-
-    /**
-     * On pause
-     */
-    @Override
-    protected void onPause() {
-        super.onPause();
-        unregisterReceiver(broadcastReceiver);
-    }
-
-    /**
      * On save instance state
      * @param outState Bundle
      */
@@ -152,6 +134,7 @@ public class Welcome extends FragmentActivity {
                     intent.putExtra("schoolLong", school_longitude);
                     intent.putExtra("target", "Welcome");
                     startService(intent);
+                    registerReceiver(broadcastReceiver, new IntentFilter("Welcome"));
                 }
                 break;
             case 2: // transit
@@ -250,6 +233,7 @@ public class Welcome extends FragmentActivity {
          */
         @Override
         public void onReceive(Context context, Intent intent) {
+            unregisterReceiver(broadcastReceiver);
             int duration = intent.getIntExtra("duration", -1);
             editor.putInt("duration", duration);
             editor.apply();

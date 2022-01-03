@@ -284,11 +284,11 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
          */
         @Override
         public void onReceive(Context context, Intent intent) {
+            unregisterReceiver(broadcastReceiver);
             double longitude = intent.getDoubleExtra("longitude", -1);
             double latitude = intent.getDoubleExtra("latitude", -1);
             setMarker(new LatLng(latitude, longitude), true);
             Log.d("location", latitude + " " + longitude);
-            unregisterReceiver(broadcastReceiver);
         }
     }
 }
