@@ -638,7 +638,7 @@ public class Agenda extends FragmentActivity {
                 parsing = true;
                 String source = "";
                 int i = 0;
-                while (i <= 10 && !source.contains("Aucun événement à afficher") && !source.contains("fc-list-table")){
+                while (i <= 10 && !source.contains("Aucun événement à afficher") && !source.contains("fc-list-table")){ // cycle max 10times for 1sec and check if the javascript content is ready to be parsed
                     Log.d("iteration parser", String.valueOf(i));
                     try {
                         Thread.sleep(1000);

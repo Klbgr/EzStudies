@@ -113,6 +113,19 @@ public class Database extends SQLiteOpenHelper {
         db.close();
     }
 
+    /**
+     * Register the changes on the courses
+     * @param date original date
+     * @param title original title
+     * @param startingAt original starting hour
+     * @param endingAt original ending hour
+     * @param newDate new date
+     * @param newTitle new title
+     * @param newStartingAt new starting hour
+     * @param newEndingAt new ending hour
+     * @param newDescription new description
+     * @param context context
+     */
     public void editAgenda(String date, String title, String startingAt, String endingAt, String newDate, String newTitle, String newStartingAt, String newEndingAt, String newDescription, Context context){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
@@ -127,6 +140,14 @@ public class Database extends SQLiteOpenHelper {
         Agenda.setNotificationsAgenda(context);
     }
 
+    /**
+     * Delete a course from the database
+     * @param date original date
+     * @param title original title
+     * @param startingAt original starting hour
+     * @param endingAt original ending hour
+     * @param context context
+     */
     public void deleteAgenda(String date, String title, String startingAt, String endingAt, Context context){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(table0, table0_col0 + " = ? AND " + table0_col1 + " = ? AND " + table0_col2 + " = ? AND " + table0_col3 + " = ?", new String[]{date, title, startingAt, endingAt});

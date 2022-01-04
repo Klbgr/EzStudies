@@ -18,15 +18,40 @@ import com.ezstudies.app.R;
 
 import java.util.Calendar;
 
+/**
+ * Activity to edit a course
+ */
 public class EditCourse extends AppCompatActivity {
 
+    /**
+     *  EditText to display the start hour
+     */
     EditText startHour;
+    /**
+     *  EditText to display the end hour
+     */
     EditText endHour;
+    /**
+     *  EditText to display the date
+     */
     EditText date;
+    /**
+     *  EditText to display the place
+     */
     EditText place;
+    /**
+     *  EditText to display the info
+     */
     EditText info;
+    /**
+     *  EditText to display the title of the course
+     */
     EditText course;
 
+    /**
+     * Initiate the activity
+     * @param savedInstanceState Bundle
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,6 +124,10 @@ public class EditCourse extends AppCompatActivity {
         });
     }
 
+    /**
+     * Save the changes on the course
+     * @param view view
+     */
     public void save(View view){
         String date = getIntent().getStringExtra("hour").split(" : ")[0];
         String startAt = getIntent().getStringExtra("hour").substring(getIntent().getStringExtra("hour").indexOf(" : ") + 3, getIntent().getStringExtra("hour").indexOf(" - "));
@@ -125,6 +154,10 @@ public class EditCourse extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * Delete a course
+     * @param view view
+     */
     public void delete(View view){
         String date = getIntent().getStringExtra("hour").split(" : ")[0];
         String startAt = getIntent().getStringExtra("hour").substring(getIntent().getStringExtra("hour").indexOf(" : ") + 3, getIntent().getStringExtra("hour").indexOf(" - "));
