@@ -636,12 +636,19 @@ public class Agenda extends FragmentActivity {
             if (url.contains("fid0") && url.contains("listWeek") && !parsing){
                 Log.d("html parser", "parsing");
                 parsing = true;
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    public void run() {
-                        agenda.parseCelcat();
+                String source = "";
+                int i = 0;
+                while (i <= 10 && !source.contains("Aucun événement à afficher") && !source.contains("fc-list-table")){
+                    Log.d("iteration parser", String.valueOf(i));
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
-                }, 10000); //delay to let page to load et process correctly its content
+                    source = jsi.getSource();
+                    i++;
+                }
+                agenda.parseCelcat();
             }
         }
     }
