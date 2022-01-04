@@ -124,4 +124,19 @@ public class EditCourse extends AppCompatActivity {
         startActivity(new Intent(this, Agenda.class));
         finish();
     }
+
+    public void delete(View view){
+        String date = getIntent().getStringExtra("hour").split(" : ")[0];
+        String startAt = getIntent().getStringExtra("hour").substring(getIntent().getStringExtra("hour").indexOf(" : ") + 3, getIntent().getStringExtra("hour").indexOf(" - "));
+        String endAt = getIntent().getStringExtra("hour").substring(getIntent().getStringExtra("hour").indexOf(" - ") + 3);
+        String title = getIntent().getStringExtra("course");
+        Log.d("date", date);
+        Log.d("startAt", startAt);
+        Log.d("endAt", endAt);
+        Log.d("title", title);
+        Database db = new Database(this);
+        db.deleteAgenda(date, title, startAt, endAt, this);
+        startActivity(new Intent(this, Agenda.class));
+        finish();
+    }
 }

@@ -127,6 +127,14 @@ public class Database extends SQLiteOpenHelper {
         Agenda.setNotificationsAgenda(context);
     }
 
+    public void deleteAgenda(String date, String title, String startingAt, String endingAt, Context context){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(table0, table0_col0 + " = ? AND " + table0_col1 + " = ? AND " + table0_col2 + " = ? AND " + table0_col3 + " = ?", new String[]{date, title, startingAt, endingAt});
+        db.close();
+        Agenda.cancelNotificationsAgenda(context);
+        Agenda.setNotificationsAgenda(context);
+    }
+
     /**
      * Add row to homeworks table
      * @param title Title
