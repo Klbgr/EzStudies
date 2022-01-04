@@ -4,16 +4,18 @@
 ------
 ## Description
 
-EZStudies is an application made by students for students. As a student at CYU, using that application can optimize your lifestyle and your workflow. Connect to Celcat, set your travel time and preparation time and the application does the rest.
+`EZStudies` is an application **made by students for students**. As a student at CYU, using that application can optimize your lifestyle and your workflow. Connect to Celcat, set your travel time and preparation time and the application does the rest.
 
 ## Collaborators
 
 Here are all the collaborators of this repository :
-- @Klgbr
-- @Malinx95
-- @IIyn
+- [@Klgbr](https://github.com/Klbgr)
+- [@Malinx95](https://github.com/Malinx95)
+- [@IIyn](https://github.com/IIyn)
 
 ## Activities
+
+Here are the activities of the app :
 
 - [Welcome.java](./app/src/main/java/com/ezstudies/app/activities/Agenda.java)
 - [WelcomeFragment.java ](./app/src/main/java/com/ezstudies/app/activities/WelcomeFragment.java)
@@ -25,6 +27,8 @@ Here are all the collaborators of this repository :
 - [myMapView.java](./app/src/main/java/com/ezstudies/app/activities/myMapView.java)
 
 ## Services
+
+Here are the services of the app :
 
 - [AlarmSetter.java](./app/src/main/java/com/ezstudies/app/services/AlarmSetter.java)
 - [GpsService.java](./app/src/main/java/com/ezstudies/app/services/GpsService.java)
