@@ -1,11 +1,10 @@
 # EzStudies
 
-> The best application available on all plateforms :)
 ![logo](./app/src/main/res/drawable/logo.png)
 ------
 ## Description
 
-EZStudies is an application made by students for students. As a CYU student, using that application can optimize your lifestyle and your workflow. Connect to CELCAT, set your travel time and preparation time and the application does the rest.
+EZStudies is an application made by students for students. As a student at CY Cergu Paris Université, using that application can optimize your lifestyle and your workflow. Connect to Celcat, set your travel time and preparation time and the application does the rest.
 
 ## Collaborators
 
