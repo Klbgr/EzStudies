@@ -45,9 +45,9 @@ public class Welcome extends FragmentActivity {
      */
     private ViewPager2 viewPager;
     /**
-     * Broadcast receiver
+     * Broadcast receiver for RouteCalculator
      */
-    private broadcastReceiver broadcastReceiver;
+    private RouteReceiver routeReceiver;
 
     /**
      * On create
@@ -65,8 +65,8 @@ public class Welcome extends FragmentActivity {
         if(firstTime){
             setContentView(R.layout.welcome_layout);
             viewPager = findViewById(R.id.welcome_viewpager);
-            FragmentStateAdapter pagerAdapter = new ScreenSlidePagerAdapter(this);
-            viewPager.setAdapter(pagerAdapter);
+            FragmentStateAdapterWelcome fragmentAdapter = new FragmentStateAdapterWelcome(this);
+            viewPager.setAdapter(fragmentAdapter);
             viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
                 @Override
                 public void onPageSelected(int position) {
@@ -94,7 +94,7 @@ public class Welcome extends FragmentActivity {
             finish();
             startActivity(new Intent(this, Overview.class));
         }
-        broadcastReceiver = new broadcastReceiver();
+        routeReceiver = new RouteReceiver();
     }
 
     /**
@@ -132,9 +132,9 @@ public class Welcome extends FragmentActivity {
                     intent.putExtra("homeLong", home_longitude);
                     intent.putExtra("schoolLat", school_latitude);
                     intent.putExtra("schoolLong", school_longitude);
-                    intent.putExtra("target", "Welcome");
+                    intent.putExtra("target", "WelcomeRoute");
                     startService(intent);
-                    registerReceiver(broadcastReceiver, new IntentFilter("Welcome"));
+                    registerReceiver(routeReceiver, new IntentFilter("WelcomeRoute"));
                 }
                 break;
             case 2: // transit
@@ -182,12 +182,12 @@ public class Welcome extends FragmentActivity {
     /**
      * Create pages of ViewPager
      */
-    private class ScreenSlidePagerAdapter extends FragmentStateAdapter {
+    private class FragmentStateAdapterWelcome extends FragmentStateAdapter {
         /**
          * Constructor
          * @param fragmentActivity FragmentActivity
          */
-        public ScreenSlidePagerAdapter(FragmentActivity fragmentActivity) {
+        public FragmentStateAdapterWelcome(FragmentActivity fragmentActivity) {
             super(fragmentActivity);
         }
 
@@ -223,9 +223,9 @@ public class Welcome extends FragmentActivity {
     }
 
     /**
-     * Broadcast receiver
+     * Broadcast receiver for RouteCalculator
      */
-    private class broadcastReceiver extends BroadcastReceiver{
+    private class RouteReceiver extends BroadcastReceiver{
         /**
          * On receive
          * @param context Context
@@ -233,7 +233,7 @@ public class Welcome extends FragmentActivity {
          */
         @Override
         public void onReceive(Context context, Intent intent) {
-            unregisterReceiver(broadcastReceiver);
+            unregisterReceiver(routeReceiver);
             int duration = intent.getIntExtra("duration", -1);
             editor.putInt("duration", duration);
             editor.apply();

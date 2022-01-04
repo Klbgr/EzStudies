@@ -76,9 +76,13 @@ public class Settings extends AppCompatActivity {
      */
     private ProgressDialog progressDialog;
     /**
-     * Broadcast receiver
+     * Broadcast receiver for RouteCalculator
      */
-    private broadcastReceiver broadcastReceiver;
+    private RouteReceiver routeReceiver;
+    /**
+     * Broadcast receiver for Login
+     */
+    private LoginReceiver loginReceiver;
     /**
      * Status of process
      */
@@ -240,7 +244,8 @@ public class Settings extends AppCompatActivity {
 
         setOnClickListeners();
 
-        broadcastReceiver = new broadcastReceiver();
+        loginReceiver = new LoginReceiver();
+        routeReceiver = new RouteReceiver();
 
         loadPrefs();
     }
@@ -263,9 +268,9 @@ public class Settings extends AppCompatActivity {
             intent.putExtra("homeLong", homeLong);
             intent.putExtra("schoolLat", schoolLat);
             intent.putExtra("schoolLong", schoolLong);
-            intent.putExtra("target", "Settings");
+            intent.putExtra("target", "SettingsRoute");
             startService(intent);
-            registerReceiver(broadcastReceiver, new IntentFilter("Settings"));
+            registerReceiver(routeReceiver, new IntentFilter("SettingsRoute"));
         }
     }
 
@@ -498,13 +503,12 @@ public class Settings extends AppCompatActivity {
                         progressDialog = ProgressDialog.show(Settings.this, getString(R.string.connecting), getString(R.string.loading), true);
                         String nameText = name.getText().toString();
                         String passwordText = password.getText().toString();
-                        String target = "Settings";
                         Intent intent = new Intent(Settings.this, Login.class);
                         intent.putExtra("name", nameText);
                         intent.putExtra("password", passwordText);
-                        intent.putExtra("target", target);
+                        intent.putExtra("target", "SettingsLogin");
                         startService(intent);
-                        registerReceiver(broadcastReceiver, new IntentFilter("Settings"));
+                        registerReceiver(loginReceiver, new IntentFilter("SettingsLogin"));
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -543,7 +547,7 @@ public class Settings extends AppCompatActivity {
              */
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Settings.this, myMapView.class);
+                Intent intent = new Intent(Settings.this, MyMapView.class);
                 intent.putExtra("type", "home");
                 startActivity(intent);
             }
@@ -557,7 +561,7 @@ public class Settings extends AppCompatActivity {
              */
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Settings.this, myMapView.class);
+                Intent intent = new Intent(Settings.this, MyMapView.class);
                 intent.putExtra("type", "school");
                 startActivity(intent);
             }
@@ -737,9 +741,9 @@ public class Settings extends AppCompatActivity {
     }
 
     /**
-     * Broadcast receiver
+     * Broadcast receiver for RouteCalculator
      */
-    private class broadcastReceiver extends BroadcastReceiver {
+    private class RouteReceiver extends BroadcastReceiver {
         /**
          * On receive
          * @param context Context
@@ -747,41 +751,52 @@ public class Settings extends AppCompatActivity {
          */
         @Override
         public void onReceive(Context context, Intent intent) {
-            unregisterReceiver(broadcastReceiver);
-            int duration = intent.getIntExtra("duration", -2);
-            if(duration != -2){
-                editor.putInt("duration", duration);
+            unregisterReceiver(routeReceiver);
+            int duration = intent.getIntExtra("duration", 0);
+            editor.putInt("duration", duration);
+            editor.apply();
+            wait = false;
+        }
+    }
+
+    /**
+     * Broadcast receiver for Login
+     */
+    private class LoginReceiver extends BroadcastReceiver{
+        /**
+         * On receive
+         * @param context Context
+         * @param intent Intent
+         */
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            unregisterReceiver(loginReceiver);
+            progressDialog.cancel();
+            Boolean success = intent.getBooleanExtra("success", false);
+            String name = intent.getStringExtra("name");
+            String password = intent.getStringExtra("password");
+            String responseUrl = intent.getStringExtra("responseUrl");
+            if(success) {
+                editor.putString("name", name);
+                editor.putString("password", password);
+                editor.putBoolean("connected", true);
                 editor.apply();
-                wait = false;
+
+                Toast.makeText(context, getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
+
+                TextView textView = findViewById(R.id.settings_status);
+                textView.setText(getString(R.string.connected_as, name));
             }
             else{
-                progressDialog.cancel();
-                Boolean success = intent.getBooleanExtra("success", false);
-                String name = intent.getStringExtra("name");
-                String password = intent.getStringExtra("password");
-                String responseUrl = intent.getStringExtra("responseUrl");
-                if(success) {
-                    editor.putString("name", name);
-                    editor.putString("password", password);
-                    editor.putBoolean("connected", true);
-                    editor.apply();
-
-                    Toast.makeText(context, getString(R.string.login_succes), Toast.LENGTH_SHORT).show();
-
-                    TextView textView = findViewById(R.id.settings_status);
-                    textView.setText(getString(R.string.connected_as, name));
+                String response = responseUrl;
+                String text;
+                if (response != null && response.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
+                    text = getString(R.string.login_fail_credentials);
                 }
-                else{
-                    String response = responseUrl;
-                    String text;
-                    if (response != null && response.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
-                        text = getString(R.string.login_fail_credentials);
-                    }
-                    else {
-                        text = getString(R.string.login_fail_network);
-                    }
-                    Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
+                else {
+                    text = getString(R.string.login_fail_network);
                 }
+                Toast.makeText(context, text, Toast.LENGTH_SHORT).show();
             }
         }
     }

@@ -69,9 +69,9 @@ public class WelcomeFragment extends Fragment {
      */
     private ProgressDialog progressDialog;
     /**
-     * Broadcast receiver
+     * Broadcast receiver for Login
      */
-    private broadcastReceiver broadcastReceiver;
+    private LoginReceiver loginReceiver;
     /**
      * Switch
      */
@@ -254,7 +254,7 @@ public class WelcomeFragment extends Fragment {
 
                 setOnClickListeners();
 
-                broadcastReceiver = new broadcastReceiver();
+                loginReceiver = new LoginReceiver();
 
                 loadPrefs();
                 break;
@@ -426,7 +426,7 @@ public class WelcomeFragment extends Fragment {
                         intent.putExtra("password", passwordText);
                         intent.putExtra("target", "WelcomeLogin");
                         getActivity().startService(intent);
-                        getActivity().registerReceiver(broadcastReceiver, new IntentFilter("WelcomeLogin"));
+                        getActivity().registerReceiver(loginReceiver, new IntentFilter("WelcomeLogin"));
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
@@ -452,7 +452,7 @@ public class WelcomeFragment extends Fragment {
         click3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(WelcomeFragment.this.getActivity(), myMapView.class);
+                Intent intent = new Intent(WelcomeFragment.this.getActivity(), MyMapView.class);
                 intent.putExtra("type", "home");
                 startActivity(intent);
             }
@@ -462,7 +462,7 @@ public class WelcomeFragment extends Fragment {
         click4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(WelcomeFragment.this.getActivity(), myMapView.class);
+                Intent intent = new Intent(WelcomeFragment.this.getActivity(), MyMapView.class);
                 intent.putExtra("type", "school");
                 startActivity(intent);
             }
@@ -561,9 +561,9 @@ public class WelcomeFragment extends Fragment {
     }
 
     /**
-     * Broadcast receiver
+     * Broadcast receiver for Login
      */
-    private class broadcastReceiver extends BroadcastReceiver {
+    private class LoginReceiver extends BroadcastReceiver {
         /**
          * On receive
          * @param context Context
@@ -571,7 +571,7 @@ public class WelcomeFragment extends Fragment {
          */
         @Override
         public void onReceive(Context context, Intent intent) {
-            context.unregisterReceiver(broadcastReceiver);
+            context.unregisterReceiver(loginReceiver);
             progressDialog.cancel();
             Boolean success = intent.getBooleanExtra("success", false);
             String name = intent.getStringExtra("name");

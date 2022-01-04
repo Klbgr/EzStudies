@@ -5,6 +5,7 @@
     <string name="settings">Settings</string>
     <string name="overview">Overview</string>
     <string name="map">Map</string>
+    <string name="course_editor">Course editor</string>
     <string name="welcome1"><b>Welcome to EzStudies !</b>\n\nEzStudies is an app made <b>by students, for students</b>. The goal of this app is to ease students’ life.\n\n<b>Swipe to the left to continue !</b></string>
     <string name="welcome2">Setup</string>
     <string name="enter">Enter</string>
@@ -70,6 +71,8 @@
     <string name="homework_tomorrow">Homework for tomorrow</string>
     <string name="on_boot">Restored notifications</string>
     <string name="address">address</string>
+    <string name="save">Save</string>
+    <string name="invalid_homework">Please fill in all text fields</string>
 
     <string-array name="travel_array">
         <item>Driving</item>

@@ -14,7 +14,6 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -94,19 +93,19 @@ public class Agenda extends FragmentActivity {
     /**
      * Adapter for ViewPager
      */
-    private FragmentAdapter adapter;
+    private FragmentStateAdapterAgenda adapter;
     /**
-     * Broadcast receiver
+     * Broadcast receiver for RouteCalculator
      */
-    private broadcastReceiver broadcastReceiver;
+    private RouteReceiver routeReceiver;
+    /**
+     * Broadcast receiver for Login
+     */
+    private LoginReceiver loginReceiver;
     /**
      * Number of pending notifications
      */
     private static int nbNotifPendingAgenda;
-    /**
-     * Notification receiver
-     */
-    private NotificationReceiver notificationReceiver;
 
     /**
      * Initiate the activity
@@ -121,7 +120,7 @@ public class Agenda extends FragmentActivity {
         editor = sharedPreferences.edit();
         viewPager = findViewById(R.id.agenda_viewpager);
         FragmentManager fm = getSupportFragmentManager();
-        adapter = new FragmentAdapter(fm, getLifecycle());
+        adapter = new FragmentStateAdapterAgenda(fm, getLifecycle());
         viewPager.setAdapter(adapter);
         viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
@@ -192,21 +191,21 @@ public class Agenda extends FragmentActivity {
         if(weekDay != 7){
             viewPager.setCurrentItem(getIntent().getIntExtra("weekday", weekDay));
         }
-        broadcastReceiver = new broadcastReceiver();
+        routeReceiver = new RouteReceiver();
+        loginReceiver = new LoginReceiver();
         nbNotifPendingAgenda = 0;
-        notificationReceiver = new NotificationReceiver();
     }
 
     /**
      * Create pages of ViewPager
      */
-    public class FragmentAdapter extends FragmentStateAdapter {
+    private class FragmentStateAdapterAgenda extends FragmentStateAdapter {
         /**
          * Constructor
          * @param fragmentManager FragmentManager
          * @param lifecycle Lifecycle
          */
-        public FragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+        public FragmentStateAdapterAgenda(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
             super(fragmentManager, lifecycle);
         }
 
@@ -253,13 +252,12 @@ public class Agenda extends FragmentActivity {
         progressDialog = ProgressDialog.show(this, getString(R.string.connecting), getString(R.string.loading), true);
         String name = sharedPreferences.getString("name", null);
         String password = sharedPreferences.getString("password", null);
-        String target = "AgendaLogin";
         Intent intent = new Intent(this, Login.class);
         intent.putExtra("name", name);
         intent.putExtra("password", password);
-        intent.putExtra("target", target);
+        intent.putExtra("target", "AgendaLogin");
         startService(intent);
-        registerReceiver(broadcastReceiver, new IntentFilter(target));
+        registerReceiver(loginReceiver, new IntentFilter("AgendaLogin"));
     }
 
     /**
@@ -484,9 +482,9 @@ public class Agenda extends FragmentActivity {
             intent.putExtra("homeLong", homeLong);
             intent.putExtra("schoolLat", schoolLat);
             intent.putExtra("schoolLong", schoolLong);
-            intent.putExtra("target", "Agenda");
+            intent.putExtra("target", "AgendaRoute");
             startService(intent);
-            registerReceiver(broadcastReceiver, new IntentFilter("Agenda"));
+            registerReceiver(routeReceiver, new IntentFilter("AgendaRoute"));
         }
         else{ //transit
             Database database = new Database(this);
@@ -515,65 +513,76 @@ public class Agenda extends FragmentActivity {
     }
 
     /**
-     * Broadcast receiver
+     * Broadcast receiver for route
      */
-    private class broadcastReceiver extends BroadcastReceiver{
-        @Override
+    private class RouteReceiver extends BroadcastReceiver{
         /**
          * On receive
+         * @param context Context
+         * @param intent Intent
          */
+        @Override
         public void onReceive(Context context, Intent intent) {
-            unregisterReceiver(broadcastReceiver);
-            String target = intent.getStringExtra("target");
-            if(target != null && target.equals("Agenda")){ //broadcast from RouteCalculator
-                Log.d("jnnsd", "sduusoid");
-                Database database = new Database(context);
-                ArrayList<String[]> firsts = database.getFirsts();
-                database.close();
-                int duration = intent.getIntExtra("duration", -1);
-                editor.putInt("duration", duration);
-                editor.apply();
-                int prep_time = sharedPreferences.getInt("prep_time", -1);
-                for(String [] infos : firsts){
-                    int hour = Integer.parseInt(infos[1].split(":")[0]);
-                    int minute = Integer.parseInt(infos[1].split(":")[1]);
-                    int total = duration/60 + prep_time;
-                    int diffHour = total/60;
-                    int diffMin = total - diffHour*60;
-                    hour -= diffHour;
-                    minute -= diffMin;
-                    if(minute<0){
-                        minute += 60;
-                        hour--;
-                    }
-                    infos[1] = hour + ":" + minute;
-                    Log.d("alarm hour", infos[1]);
+            unregisterReceiver(routeReceiver);
+            Database database = new Database(context);
+            ArrayList<String[]> firsts = database.getFirsts();
+            database.close();
+            int duration = intent.getIntExtra("duration", -1);
+            editor.putInt("duration", duration);
+            editor.apply();
+            int prep_time = sharedPreferences.getInt("prep_time", -1);
+            for(String [] infos : firsts){
+                int hour = Integer.parseInt(infos[1].split(":")[0]);
+                int minute = Integer.parseInt(infos[1].split(":")[1]);
+                int total = duration/60 + prep_time;
+                int diffHour = total/60;
+                int diffMin = total - diffHour*60;
+                hour -= diffHour;
+                minute -= diffMin;
+                if(minute<0){
+                    minute += 60;
+                    hour--;
                 }
-                Intent intent1 = new Intent(context, AlarmSetter.class);
-                intent1.putExtra("list", firsts);
-                startService(intent1);
+                infos[1] = hour + ":" + minute;
+                Log.d("alarm hour", infos[1]);
             }
-            else{ //broadcast from Login
-                String url = intent.getStringExtra("url");
-                Boolean success = intent.getBooleanExtra("success", false);
-                if(!success){
-                    progressDialog.cancel();
-                    Toast.makeText(context, getString(R.string.login_fail_network), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                WebView webview = new WebView(context);
-                webview.setWebViewClient(new myWebView(Agenda.this));
-                webview.getSettings().setJavaScriptEnabled(true);
-                webview.getSettings().setLoadWithOverviewMode(true);
-                jsi = new JavaScriptInterface();
-                webview.addJavascriptInterface(jsi, "HTMLOUT");
-                HashMap<String, String> cookies = (HashMap<String, String>) intent.getSerializableExtra("cookies");
-                for(Map.Entry<String, String> pair: cookies.entrySet()){
-                    String cookie = pair.getKey() + "=" + pair.getValue() + "; path=/";
-                    CookieManager.getInstance().setCookie(url, cookie);
-                }
-                webview.loadUrl(url);
+            Intent intent1 = new Intent(context, AlarmSetter.class);
+            intent1.putExtra("list", firsts);
+            startService(intent1);
+        }
+    }
+
+    /**
+     * Broadcast receiver for Login
+     */
+    private class LoginReceiver extends BroadcastReceiver{
+        /**
+         * On receive
+         * @param context Context
+         * @param intent Intent
+         */
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            unregisterReceiver(loginReceiver);
+            String url = intent.getStringExtra("url");
+            Boolean success = intent.getBooleanExtra("success", false);
+            if(!success){
+                progressDialog.cancel();
+                Toast.makeText(context, getString(R.string.login_fail_network), Toast.LENGTH_SHORT).show();
+                return;
             }
+            WebView webview = new WebView(context);
+            webview.setWebViewClient(new MyWebView(Agenda.this));
+            webview.getSettings().setJavaScriptEnabled(true);
+            webview.getSettings().setLoadWithOverviewMode(true);
+            jsi = new JavaScriptInterface();
+            webview.addJavascriptInterface(jsi, "HTMLOUT");
+            HashMap<String, String> cookies = (HashMap<String, String>) intent.getSerializableExtra("cookies");
+            for(Map.Entry<String, String> pair: cookies.entrySet()){
+                String cookie = pair.getKey() + "=" + pair.getValue() + "; path=/";
+                CookieManager.getInstance().setCookie(url, cookie);
+            }
+            webview.loadUrl(url);
         }
     }
 
@@ -607,7 +616,7 @@ public class Agenda extends FragmentActivity {
     /**
      * WebView
      */
-    private class myWebView extends WebViewClient {
+    private class MyWebView extends WebViewClient {
         /**
          * Agenda
          */
@@ -621,7 +630,7 @@ public class Agenda extends FragmentActivity {
          * Constructor
          * @param agenda Agenda
          */
-        public myWebView(Agenda agenda){
+        public MyWebView(Agenda agenda){
             this.agenda = agenda;
         }
 
@@ -765,7 +774,7 @@ public class Agenda extends FragmentActivity {
             long time = calendar.getTimeInMillis();
             if(now.getTimeInMillis() < time){
                 String text = row.get(2) + " - " + row.get(3) + "\n" + row.get(4);
-                scheduleNotificationAgenda(context, time, row.get(1), text);
+                scheduleNotificationAgenda(context, time, row.get(1), text.replace(" / ", "\n"));
                 Log.d("new notification", row.get(0) + " at " + heure + ":" + minute);
             }
         }

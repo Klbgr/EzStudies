@@ -135,12 +135,12 @@ public class Overview extends AppCompatActivity {
         }
 
         RecyclerView listAgenda = findViewById(R.id.overview_agenda);
-        recyclerAdapterAgenda recyclerAdapterAgenda = new recyclerAdapterAgenda(dataAgenda);
+        RecyclerAdapterAgenda recyclerAdapterAgenda = new RecyclerAdapterAgenda(dataAgenda);
         listAgenda.setLayoutManager(new LinearLayoutManager(this));
         listAgenda.setAdapter(recyclerAdapterAgenda);
 
         RecyclerView listHomeworks = findViewById(R.id.overview_homeworks);
-        recyclerAdapterHomeworks recyclerAdapterHomeworks = new recyclerAdapterHomeworks(dataHomeworks);
+        RecyclerAdapterHomeworks recyclerAdapterHomeworks = new RecyclerAdapterHomeworks(dataHomeworks);
         listHomeworks.setLayoutManager(new LinearLayoutManager(this));
         listHomeworks.setAdapter(recyclerAdapterHomeworks);
     }
@@ -196,7 +196,7 @@ public class Overview extends AppCompatActivity {
     /**
      * RecyclerView Adapter for agenda
      */
-    public class recyclerAdapterAgenda extends RecyclerView.Adapter<recyclerAdapterAgenda.ViewHolder>{
+    private class RecyclerAdapterAgenda extends RecyclerView.Adapter<RecyclerAdapterAgenda.ViewHolder>{
         /**
          * Data
          */
@@ -206,7 +206,7 @@ public class Overview extends AppCompatActivity {
          * Constructor
          * @param data Data
          */
-        public recyclerAdapterAgenda(ArrayList<ArrayList<String>> data){
+        public RecyclerAdapterAgenda(ArrayList<ArrayList<String>> data){
             this.data = data;
         }
 
@@ -218,10 +218,10 @@ public class Overview extends AppCompatActivity {
          */
         @NonNull
         @Override
-        public recyclerAdapterAgenda.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public RecyclerAdapterAgenda.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
             View listItem= layoutInflater.inflate(R.layout.list_item_course, parent, false);
-            recyclerAdapterAgenda.ViewHolder viewHolder = new recyclerAdapterAgenda.ViewHolder(listItem);
+            RecyclerAdapterAgenda.ViewHolder viewHolder = new RecyclerAdapterAgenda.ViewHolder(listItem);
             return viewHolder;
         }
 
@@ -231,12 +231,16 @@ public class Overview extends AppCompatActivity {
          * @param position Position
          */
         @Override
-        public void onBindViewHolder(@NonNull recyclerAdapterAgenda.ViewHolder holder, int position) {
+        public void onBindViewHolder(@NonNull RecyclerAdapterAgenda.ViewHolder holder, int position) {
             if(!data.get(position).isEmpty()){
-                holder.course.setText(data.get(position).get(0));
-                holder.hour.setText(data.get(position).get(1));
-                holder.place.setText(data.get(position).get(2));
-                holder.info.setText(data.get(position).get(3));
+                try{
+                    holder.course.setText(data.get(position).get(0));
+                    holder.hour.setText(data.get(position).get(1));
+                    holder.place.setText(data.get(position).get(2));
+                    holder.info.setText(data.get(position).get(3));
+                } catch (IndexOutOfBoundsException e){
+                    e.printStackTrace();
+                }
 
                 if(data.get(position).get(0).equals(getString(R.string.no_agenda))){
                     holder.itemView.findViewById(R.id.agenda_img0).setVisibility(View.GONE);
@@ -304,7 +308,7 @@ public class Overview extends AppCompatActivity {
     /**
      * RecyclerView Adapter for homeworks
      */
-    private class recyclerAdapterHomeworks extends RecyclerView.Adapter<recyclerAdapterHomeworks.ViewHolder>{
+    private class RecyclerAdapterHomeworks extends RecyclerView.Adapter<RecyclerAdapterHomeworks.ViewHolder>{
         /**
          * Data
          */
@@ -314,7 +318,7 @@ public class Overview extends AppCompatActivity {
          * Constructor
          * @param data Data
          */
-        public recyclerAdapterHomeworks(ArrayList<ArrayList<String>> data) {
+        public RecyclerAdapterHomeworks(ArrayList<ArrayList<String>> data) {
             this.data = data;
         }
 
@@ -326,10 +330,10 @@ public class Overview extends AppCompatActivity {
          */
         @NonNull
         @Override
-        public recyclerAdapterHomeworks.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        public RecyclerAdapterHomeworks.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
             View listItem= layoutInflater.inflate(R.layout.list_item_homeworks, parent, false);
-            recyclerAdapterHomeworks.ViewHolder viewHolder = new recyclerAdapterHomeworks.ViewHolder(listItem);
+            RecyclerAdapterHomeworks.ViewHolder viewHolder = new RecyclerAdapterHomeworks.ViewHolder(listItem);
             return viewHolder;
         }
 
@@ -339,7 +343,7 @@ public class Overview extends AppCompatActivity {
          * @param p Position
          */
         @Override
-        public void onBindViewHolder(@NonNull recyclerAdapterHomeworks.ViewHolder holder, int p) {
+        public void onBindViewHolder(@NonNull RecyclerAdapterHomeworks.ViewHolder holder, int p) {
             int position = p;
             if(!data.get(position).isEmpty()) {
                 String status;

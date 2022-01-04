@@ -8,8 +8,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
 
-import com.ezstudies.app.activities.Agenda;
-
 import java.util.ArrayList;
 
 /**
@@ -124,9 +122,8 @@ public class Database extends SQLiteOpenHelper {
      * @param newStartingAt new starting hour
      * @param newEndingAt new ending hour
      * @param newDescription new description
-     * @param context context
      */
-    public void editAgenda(String date, String title, String startingAt, String endingAt, String newDate, String newTitle, String newStartingAt, String newEndingAt, String newDescription, Context context){
+    public void editAgenda(String date, String title, String startingAt, String endingAt, String newDate, String newTitle, String newStartingAt, String newEndingAt, String newDescription){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues cv = new ContentValues();
         cv.put(table0_col0, newDate);
@@ -136,8 +133,6 @@ public class Database extends SQLiteOpenHelper {
         cv.put(table0_col4, newDescription);
         db.update(table0, cv, table0_col0 + " = ? AND " + table0_col1 + " = ? AND " + table0_col2 + " = ? AND " + table0_col3 + " = ?", new String[]{date, title, startingAt, endingAt});
         db.close();
-        Agenda.cancelNotificationsAgenda(context);
-        Agenda.setNotificationsAgenda(context);
     }
 
     /**
@@ -146,14 +141,11 @@ public class Database extends SQLiteOpenHelper {
      * @param title original title
      * @param startingAt original starting hour
      * @param endingAt original ending hour
-     * @param context context
      */
-    public void deleteAgenda(String date, String title, String startingAt, String endingAt, Context context){
+    public void deleteAgenda(String date, String title, String startingAt, String endingAt){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(table0, table0_col0 + " = ? AND " + table0_col1 + " = ? AND " + table0_col2 + " = ? AND " + table0_col3 + " = ?", new String[]{date, title, startingAt, endingAt});
         db.close();
-        Agenda.cancelNotificationsAgenda(context);
-        Agenda.setNotificationsAgenda(context);
     }
 
     /**
@@ -255,7 +247,7 @@ public class Database extends SQLiteOpenHelper {
     public ArrayList<ArrayList<String>> toTabHomeworks(){
         ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
 
-        String selectQuery = "SELECT * FROM " + table1 + " ORDER BY " + table1_col3 + " ASC";
+        String selectQuery = "SELECT DISTINCT * FROM " + table1 + " ORDER BY " + table1_col3 + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         while(cursor.moveToNext()){

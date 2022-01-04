@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ezstudies.app">
-
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.ezstudies.app">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -16,10 +14,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.EzStudies">
-        <activity
-            android:name=".activities.EditCourse"
-            android:exported="true" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
@@ -35,7 +29,6 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
@@ -45,25 +38,27 @@
         </activity>
         <activity
             android:name=".activities.Overview"
-            android:label="@string/overview"></activity>
+            android:label="@string/overview" />
         <activity
             android:name=".activities.Agenda"
             android:label="@string/agenda"
             android:screenOrientation="portrait"
-            android:exported="true" >
-        </activity>
-        <activity android:name=".activities.Homeworks"
+            android:exported="true" />
+        <activity
+            android:name=".activities.Homeworks"
             android:label="@string/homeworks"
-            android:exported="true" >
-        </activity>
-        <activity android:name=".activities.Settings"
-            android:label="@string/settings" >
-        </activity>
-        <activity android:name=".activities.myMapView"
-            android:label="@string/map" >
-        </activity>
+            android:exported="true" />
+        <activity
+            android:name=".activities.Settings"
+            android:label="@string/settings" />
+        <activity
+            android:name=".activities.MyMapView"
+            android:label="@string/map" />
+        <activity
+            android:name=".activities.CourseEditor"
+            android:label="@string/course_editor" />
 
-        <service android:name=".services.GpsService" />
+        <service android:name=".services.GPS" />
         <service android:name=".services.Login" />
         <service android:name=".services.RouteCalculator" />
         <service android:name=".services.AlarmSetter" />
@@ -82,5 +77,4 @@
             </intent-filter>
         </receiver>
     </application>
-
 </manifest>

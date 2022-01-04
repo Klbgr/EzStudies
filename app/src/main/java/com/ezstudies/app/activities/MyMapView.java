@@ -22,7 +22,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.ezstudies.app.R;
-import com.ezstudies.app.services.GpsService;
+import com.ezstudies.app.services.GPS;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
@@ -38,15 +38,15 @@ import java.util.Locale;
 /**
  * Activity that displays a MapView and a search bar
  */
-public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
+public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
     /**
      * Intent
      */
     private Intent intent;
     /**
-     * Broadcast receiver
+     * Broadcast receiver for GPS
      */
-    private broadcastReceiver broadcastReceiver;
+    private LocationReceiver locationReceiver;
     /**
      * MapView
      */
@@ -76,7 +76,7 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
         mapView.getMapAsync(this);
         mapView.onCreate(savedInstanceState);
         type = getIntent().getStringExtra("type");
-        broadcastReceiver = new broadcastReceiver();
+        locationReceiver = new LocationReceiver();
     }
 
     /**
@@ -194,9 +194,9 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
      * Get location from GPS
      */
     public void getLocation(){
-        intent = new Intent(this, GpsService.class);
+        intent = new Intent(this, GPS.class);
         startService(intent);
-        registerReceiver(broadcastReceiver, new IntentFilter("GPS"));
+        registerReceiver(locationReceiver, new IntentFilter("MyMapView"));
     }
 
     /**
@@ -274,9 +274,9 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
     }
 
     /**
-     * Broadcast receiver
+     * Broadcast receiver for GPS
      */
-    private class broadcastReceiver extends BroadcastReceiver{
+    private class LocationReceiver extends BroadcastReceiver{
         /**
          * On receive
          * @param context Context
@@ -284,7 +284,7 @@ public class myMapView extends AppCompatActivity implements OnMapReadyCallback{
          */
         @Override
         public void onReceive(Context context, Intent intent) {
-            unregisterReceiver(broadcastReceiver);
+            unregisterReceiver(locationReceiver);
             double longitude = intent.getDoubleExtra("longitude", -1);
             double latitude = intent.getDoubleExtra("latitude", -1);
             setMarker(new LatLng(latitude, longitude), true);

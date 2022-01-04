@@ -14,7 +14,7 @@ import androidx.annotation.Nullable;
 /**
  * Service that gets location from GPS sensor
  */
-public class GpsService extends Service {
+public class GPS extends Service {
     /**
      * On bind
      * @param intent Intent
@@ -52,7 +52,7 @@ public class GpsService extends Service {
          */
         @Override
         public void onLocationChanged(@NonNull Location location) {
-            Intent intent = new Intent("GPS");
+            Intent intent = new Intent("MyMapView");
             intent.putExtra("latitude", location.getLatitude());
             intent.putExtra("longitude", location.getLongitude());
             sendBroadcast(intent);

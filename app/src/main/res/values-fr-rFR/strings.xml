@@ -6,6 +6,7 @@
     <string name="settings">Paramètres</string>
     <string name="overview">Résumé</string>
     <string name="map">Carte</string>
+    <string name="course_editor">Éditeur de cours</string>
     <string name="welcome1"><b>Bienvenue dans EzStudies !</b>\n\nEzStudies est une app <b>faite par des étudiants, pour des étudiants</b>. Le but de cette app est de faciliter la vie des étudiants.\n\n<b>Balayez vers la gauche pour continuer !</b></string>
     <string name="welcome2">Configuration</string>
     <string name="enter">Entrer</string>
@@ -71,6 +72,8 @@
     <string name="homework_tomorrow">Devoir pour demain</string>
     <string name="on_boot">Notifications restaurées</string>
     <string name="address">adresse</string>
+    <string name="save">Enregistrer</string>
+    <string name="invalid_homework">Veuillez remplir tous les champs de texte</string>
 
     <string-array name="travel_array">
         <item>En voiture</item>

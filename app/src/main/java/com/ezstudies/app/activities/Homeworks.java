@@ -47,10 +47,6 @@ public class Homeworks extends AppCompatActivity {
      * Number of pending notifications
      */
     private static int nbNotifPendingHomeworks;
-    /**
-     * Broadcast receiver
-     */
-    private NotificationReceiver notificationReceiver;
 
     /**
      * On create
@@ -67,12 +63,11 @@ public class Homeworks extends AppCompatActivity {
         ArrayList<ArrayList<String>> data = database.toTabHomeworks();
         database.close();
 
-        recyclerAdapter recyclerAdapter = new recyclerAdapter(data);
+        RecyclerAdapterHomeworks recyclerAdapterHomeworks = new RecyclerAdapterHomeworks(data);
         list.setLayoutManager(new LinearLayoutManager(this));
-        list.setAdapter(recyclerAdapter);
+        list.setAdapter(recyclerAdapterHomeworks);
 
         nbNotifPendingHomeworks = 100;
-        notificationReceiver = new NotificationReceiver();
     }
 
     /**
@@ -87,6 +82,7 @@ public class Homeworks extends AppCompatActivity {
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
         DatePicker datePicker = new DatePicker(this);
+        datePicker.setMinDate(Calendar.getInstance().getTimeInMillis()+1000*60*60*24);
 
         EditText title = new EditText(this);
         title.setHint(getString(R.string.title));
@@ -133,15 +129,15 @@ public class Homeworks extends AppCompatActivity {
 
         setNotificationsHomeworks(this);
 
-        recyclerAdapter recyclerAdapter = new recyclerAdapter(data);
+        RecyclerAdapterHomeworks recyclerAdapterHomeworks = new RecyclerAdapterHomeworks(data);
         list.setLayoutManager(new LinearLayoutManager(Homeworks.this));
-        list.setAdapter(recyclerAdapter);
+        list.setAdapter(recyclerAdapterHomeworks);
     }
 
     /**
      * RecyclerView Adapter
      */
-    private class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.ViewHolder>{
+    private class RecyclerAdapterHomeworks extends RecyclerView.Adapter<RecyclerAdapterHomeworks.ViewHolder>{
         /**
          * Data
          */
@@ -151,7 +147,7 @@ public class Homeworks extends AppCompatActivity {
          * Constructor
          * @param data Data
          */
-        public recyclerAdapter(ArrayList<ArrayList<String>> data) {
+        public RecyclerAdapterHomeworks(ArrayList<ArrayList<String>> data) {
             this.data = data;
         }
 
@@ -166,7 +162,7 @@ public class Homeworks extends AppCompatActivity {
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
             View listItem= layoutInflater.inflate(R.layout.list_item_homeworks, parent, false);
-            recyclerAdapter.ViewHolder viewHolder = new recyclerAdapter.ViewHolder(listItem);
+            RecyclerAdapterHomeworks.ViewHolder viewHolder = new RecyclerAdapterHomeworks.ViewHolder(listItem);
             return viewHolder;
         }
 

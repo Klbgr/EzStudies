@@ -1,8 +1,9 @@
 package com.ezstudies.app.activities;
 
-import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,8 +38,14 @@ public class AgendaFragment extends Fragment {
      * List of courses
      */
     private RecyclerView list;
-
-    private Activity activity;
+    /**
+     * Agenda
+     */
+    private Agenda agenda;
+    /**
+     * Broadcast receiver for CourseEditor
+     */
+    private EditorReceiver editorReceiver;
 
     /**
      * Constructor
@@ -50,9 +56,9 @@ public class AgendaFragment extends Fragment {
      * Constructor
      * @param page Requested page
      */
-    public AgendaFragment (int page, Activity activity){
+    public AgendaFragment (int page, Agenda agenda){
         this.page = page;
-        this.activity = activity;
+        this.agenda = agenda;
     }
 
     /**
@@ -112,16 +118,17 @@ public class AgendaFragment extends Fragment {
                 coursList.add(courseData);
             }
         }
-        recyclerAdapter recyclerAdapter = new recyclerAdapter(this.getContext(), coursList);
+        RecyclerAdapterAgenda recyclerAdapter = new RecyclerAdapterAgenda(coursList);
         list.setLayoutManager(new LinearLayoutManager(this.getContext()));
         list.setAdapter(recyclerAdapter);
+        editorReceiver = new EditorReceiver();
         return view;
     }
 
     /**
      * RecyclerView Adapter
      */
-    public class recyclerAdapter extends RecyclerView.Adapter<recyclerAdapter.ViewHolder>{
+    private class RecyclerAdapterAgenda extends RecyclerView.Adapter<RecyclerAdapterAgenda.ViewHolder>{
         /**
          * Data
          */
@@ -129,10 +136,9 @@ public class AgendaFragment extends Fragment {
 
         /**
          * Constructor
-         * @param context Context
          * @param data Data
          */
-        public recyclerAdapter(Context context, ArrayList<ArrayList<String>> data){
+        public RecyclerAdapterAgenda(ArrayList<ArrayList<String>> data){
             this.data = data;
         }
 
@@ -159,23 +165,23 @@ public class AgendaFragment extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
             if(!data.get(position).isEmpty()){ //not null
+                holder.card.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intent = new Intent(getContext(), CourseEditor.class);
+                        intent.putExtra("course", holder.course.getText());
+                        intent.putExtra("hour", holder.hour.getText());
+                        intent.putExtra("place", holder.place.getText());
+                        intent.putExtra("info", holder.info.getText());
+                        startActivity(intent);
+                        agenda.registerReceiver(editorReceiver, new IntentFilter("AgendaEdited"));
+                    }
+                });
                 try{
                     holder.course.setText(data.get(position).get(0));
                     holder.hour.setText(data.get(position).get(1));
                     holder.place.setText(data.get(position).get(2));
                     holder.info.setText(data.get(position).get(3));
-                    holder.card.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            Intent intent = new Intent(getContext(), EditCourse.class);
-                            intent.putExtra("course", holder.course.getText());
-                            intent.putExtra("hour", holder.hour.getText());
-                            intent.putExtra("place", holder.place.getText());
-                            intent.putExtra("info", holder.info.getText());
-                            startActivity(intent);
-                            activity.finish();
-                        }
-                    });
                 } catch (IndexOutOfBoundsException e){
                     e.printStackTrace();
                 }
@@ -228,6 +234,24 @@ public class AgendaFragment extends Fragment {
                 info = itemView.findViewById(R.id.agenda_info);
                 place = itemView.findViewById(R.id.agenda_place);
                 card = itemView.findViewById(R.id.card);
+            }
+        }
+    }
+
+    /**
+     * Broadcast receiver for CourseEditor
+     */
+    private class EditorReceiver extends BroadcastReceiver{
+        /**
+         * On receive
+         * @param context Context
+         * @param intent Intent
+         */
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            agenda.unregisterReceiver(editorReceiver);
+            if (intent.getBooleanExtra("edited", false)){
+                agenda.restart();
             }
         }
     }
