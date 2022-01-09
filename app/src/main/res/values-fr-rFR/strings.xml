@@ -43,7 +43,6 @@
     <string name="connected_as">Connecté en tant que %1$s</string>
     <string name="not_connected">Non connecté</string>
     <string name="invalid_settings">Paramètres invalides</string>
-    <string name="easter_egg_count">%1d clicks supplémentaires requis (Easter Egg)</string>
     <string name="easter_egg_enjoy">YOU GOT RICK ROLLED</string>
     <string name="connecting">Connexion</string>
     <string name="loading">Chargement, veuillez patienter...</string>

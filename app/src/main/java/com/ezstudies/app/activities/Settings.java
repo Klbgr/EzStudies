@@ -68,10 +68,6 @@ public class Settings extends AppCompatActivity {
      */
     private int count = 0;
     /**
-     * Toast
-     */
-    private Toast toast;
-    /**
      * Loading dialog
      */
     private ProgressDialog progressDialog;
@@ -706,16 +702,12 @@ public class Settings extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Date now = Calendar.getInstance().getTime();
-                if(toast != null) {
-                    toast.cancel();
-                }
                 if(date == null || now.getTime() - date.getTime() > 5*1000){ //5s
                     date = Calendar.getInstance().getTime();
                     count = 1;
-                    toast = Toast.makeText(Settings.this, getString(R.string.easter_egg_count, 5-count), Toast.LENGTH_SHORT);
                 }
                 else if(count == 4){
-                    toast = Toast.makeText(Settings.this, getString(R.string.easter_egg_enjoy), Toast.LENGTH_SHORT);
+                    Toast.makeText(Settings.this, getString(R.string.easter_egg_enjoy), Toast.LENGTH_SHORT).show();
                     date = null;
                     count = 0;
                     Uri uri = Uri.parse("https://youtu.be/dQw4w9WgXcQ");
@@ -724,9 +716,7 @@ public class Settings extends AppCompatActivity {
                 }
                 else{
                     count ++;
-                    toast = Toast.makeText(Settings.this, getString(R.string.easter_egg_count, 5-count), Toast.LENGTH_SHORT);
                 }
-                toast.show();
             }
         });
         click9.setOnLongClickListener(new View.OnLongClickListener() {
