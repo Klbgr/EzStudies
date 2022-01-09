@@ -3,6 +3,9 @@ plugins {
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
+def properties = new Properties()
+properties.load(new FileInputStream(rootProject.file("local.properties")))
+
 android {
     compileSdk 31
 
@@ -14,6 +17,8 @@ android {
         versionName "1.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("String", "BING_API_KEY", properties.getProperty("BING_API_KEY"))
     }
 
     buildTypes {

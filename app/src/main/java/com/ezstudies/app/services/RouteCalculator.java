@@ -7,6 +7,8 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.ezstudies.app.BuildConfig;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,10 +23,6 @@ import java.nio.charset.Charset;
  * Service that gets travel time between to location, using Bing Route REST API
  */
 public class RouteCalculator extends Service implements Runnable {
-    /**
-     * API key
-     */
-    private final String KEY = "AnzK_4L_IgHGYge-UleemNLa29Iro40gMPcTPhrI2HX3kZdbw4smKTy434uDNXk5";
     /**
      * JSON
      */
@@ -76,7 +74,7 @@ public class RouteCalculator extends Service implements Runnable {
                 default:
                     break;
             }
-            url = "https://dev.virtualearth.net/REST/v1/Routes/" + travel_mode + "?waypoint.1=" + homeLat + "," + homeLong + "&waypoint.2=" + schoolLat + "," + schoolLong + "&key=" + KEY;
+            url = "https://dev.virtualearth.net/REST/v1/Routes/" + travel_mode + "?waypoint.1=" + homeLat + "," + homeLong + "&waypoint.2=" + schoolLat + "," + schoolLong + "&key=" + BuildConfig.BING_API_KEY;
             Log.d("url", url);
             Thread thread = new Thread(this);
             thread.start();
