@@ -22,15 +22,15 @@ Here are the activities of the app :
 - [Overview.java](./app/src/main/java/com/ezstudies/app/activities/Overview.java)
 - [Agenda.java](./app/src/main/java/com/ezstudies/app/activities/Agenda.java)
 - [AgendaFragment.java](./app/src/main/java/com/ezstudies/app/activities/AgendaFragment.java)
-- [EditCourse.java](./app/src/main/java/com/ezstudies/app/activities/EditCourse.java)
+- [CourseEditor.java](./app/src/main/java/com/ezstudies/app/activities/CourseEditor.java)
 - [Homeworks.java ](./app/src/main/java/com/ezstudies/app/activities/Homeworks.java )
-- [myMapView.java](./app/src/main/java/com/ezstudies/app/activities/myMapView.java)
+- [MyMapView.java](./app/src/main/java/com/ezstudies/app/activities/MyMapView.java)
 
 ## Services
 
 Here are the services of the app :
 
 - [AlarmSetter.java](./app/src/main/java/com/ezstudies/app/services/AlarmSetter.java)
-- [GpsService.java](./app/src/main/java/com/ezstudies/app/services/GpsService.java)
+- [GPS.java](./app/src/main/java/com/ezstudies/app/services/GPS.java)
 - [Login.java](./app/src/main/java/com/ezstudies/app/services/Login.java)
 - [RouteCalculator.java](./app/src/main/java/com/ezstudies/app/services/RouteCalculator.java)
