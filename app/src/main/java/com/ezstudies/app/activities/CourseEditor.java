@@ -164,11 +164,25 @@ public class CourseEditor extends AppCompatActivity {
         String newStartAt = startHour.getText().toString();
         String newEndAt = endHour.getText().toString();
         String newTitle = course.getText().toString();
-        String newDesc = place.getText().toString() + " / " + info.getText().toString();
+        String newPlace = place.getText().toString();
+        String newInfo = info.getText().toString();
+        String newDesc;
+        if(newPlace.isEmpty() && newInfo.isEmpty()){
+            newDesc = null;
+        }
+        else if(newPlace.isEmpty()){
+            newDesc = newInfo;
+        }
+        else if(newInfo.isEmpty()){
+            newDesc = newPlace;
+        }
+        else{
+            newDesc = newPlace + " / " + newInfo;
+        }
         Log.d("new date", newDate);
         Log.d("new startAt", newStartAt);
         Log.d("new endAt", newEndAt);
-        Log.d("new yitle", newTitle);
+        Log.d("new title", newTitle);
 
         Database db = new Database(this);
         db.editAgenda(date, title, startAt, endAt, newDate,newTitle, newStartAt, newEndAt, newDesc);
