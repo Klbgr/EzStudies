@@ -286,6 +286,28 @@ public class Agenda extends FragmentActivity {
                 String startingMinute = startHourSplit[1];
                 String endingHour = endHourSplit[0];
                 String endingMinute = endHourSplit[1];
+                if(startingMinute.contains("AM")){
+                    startingMinute = startingMinute.replace(" AM", "");
+                }
+                else if(startingMinute.contains("PM")){
+                    startingMinute = startingMinute.replace(" PM", "");
+                    int val = Integer.parseInt(startingHour)+12;
+                    if(val == 24){
+                        val = 12;
+                    }
+                    startingHour = String.valueOf(val);
+                }
+                if(endingMinute.contains("AM")){
+                    endingMinute = endingMinute.replace(" AM", "");
+                }
+                else if(endingMinute.contains("PM")){
+                    endingMinute = endingMinute.replace(" PM", "");
+                    int val = Integer.parseInt(endingHour)+12;
+                    if(val == 24){
+                        val = 12;
+                    }
+                    endingHour = String.valueOf(val);
+                }
                 Element eCourse = e.getElementsByClass("fc-list-item-title fc-widget-content").get(0);
                 String course = eCourse.toString();
                 course = course.substring(course.indexOf("</a>")+4, course.indexOf("</td>"));
@@ -772,7 +794,7 @@ public class Agenda extends FragmentActivity {
             }
             calendar.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]), heure, minute);
             long time = calendar.getTimeInMillis();
-            if(now.getTimeInMillis() < time){
+            if(now.getTimeInMillis() < time+1000*60*15){
                 String text = row.get(2) + " - " + row.get(3) + "\n" + row.get(4);
                 scheduleNotificationAgenda(context, time, row.get(1), text.replace(" / ", "\n"));
                 Log.d("new notification", row.get(0) + " at " + heure + ":" + minute);

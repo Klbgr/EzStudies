@@ -14,6 +14,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.FormElement;
 
+import java.util.Calendar;
 import java.util.HashMap;
 
 /**
@@ -97,7 +98,13 @@ public class Login extends Service implements Runnable{
             Log.d("cookie", cookies.toString());
             url = responseUrl.replace("Unknown", "List");
             url = url.replace("month", "listWeek");
-            //url = url.replace("01%2F01%2F0001", "01%2F03%2F2022"); // change la date pour test
+            Calendar now = Calendar.getInstance();
+            if(now.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){ //sunday
+                int day = now.get(Calendar.DAY_OF_MONTH);
+                int month = now.get(Calendar.MONTH)+1;
+                int year = now.get(Calendar.YEAR);
+                url = url.replace("01%2F01%2F0001", month + "%2F" + (day+1) + "%2F" + year); // change date to load next week
+            }
             Log.d("url replace", url);
         }
         else{
