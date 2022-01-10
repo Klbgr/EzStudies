@@ -34,3 +34,13 @@ Here are the services of the app :
 - [GPS.java](./app/src/main/java/com/ezstudies/app/services/GPS.java)
 - [Login.java](./app/src/main/java/com/ezstudies/app/services/Login.java)
 - [RouteCalculator.java](./app/src/main/java/com/ezstudies/app/services/RouteCalculator.java)
+- [UpdateChecker.java](./app/src/main/java/com/ezstudies/app/services/UpdateChecker.java)
+- [UpdateDownloader.java](./app/src/main/java/com/ezstudies/app/services/UpdateDownloader.java)
+
+## External resources
+
+Here are the external resources used for the app :
+
+- [Jsoup library](https://jsoup.org/)
+- [Route REST API by Bing Maps](https://docs.microsoft.com/en-us/bingmaps/rest-services/routes/calculate-a-route)
+- [Get JSON object from url](https://stackoverflow.com/questions/4308554/simplest-way-to-read-json-from-a-url-in-java)
