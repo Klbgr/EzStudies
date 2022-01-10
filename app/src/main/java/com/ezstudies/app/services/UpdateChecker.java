@@ -46,7 +46,7 @@ public class UpdateChecker extends Service{
             String currentVersion = BuildConfig.VERSION_NAME;
             String remoteVersion = json.getString("name");
             Intent intent1 = new Intent(intent.getStringExtra("target"));
-            if(isGreater(remoteVersion, "1.0")){
+            if(isGreater(remoteVersion, currentVersion)){
                 JSONArray array = json.getJSONArray("assets");
                 for(int i = 0 ; i < array.length() ; i++){
                     String type = array.getJSONObject(0).getString("content_type");
