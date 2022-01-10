@@ -206,6 +206,7 @@ public class Homeworks extends AppCompatActivity {
                     public void onClick(View v) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
                         builder.setTitle(v.getContext().getString(R.string.action));
+                        builder.setMessage(getString(R.string.action_message));
 
                         builder.setNegativeButton(getString(R.string.remove), new DialogInterface.OnClickListener() {
                             @Override

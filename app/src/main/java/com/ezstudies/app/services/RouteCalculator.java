@@ -8,16 +8,10 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import com.ezstudies.app.BuildConfig;
+import com.ezstudies.app.JSONFromURL;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.nio.charset.Charset;
 
 /**
  * Service that gets travel time between to location, using Bing Route REST API
@@ -86,22 +80,17 @@ public class RouteCalculator extends Service implements Runnable {
      * Start
      */
     public void run(){
-        json = null;
+        JSONFromURL jsonFromURL = new JSONFromURL(url);
+        jsonFromURL.start();
+        try {
+            jsonFromURL.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        json = jsonFromURL.getJson();
         int duration = 0;
         try {
-            InputStream inputStream = new URL(url).openStream();
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream, Charset.forName("UTF-8")));
-            String line;
-            String jsonText = "";
-            while ((line = bufferedReader.readLine()) != null) {
-                jsonText += line + "\n";
-            }
-            json = new JSONObject(jsonText);
-            inputStream.close();
-
             duration = json.getJSONArray("resourceSets").getJSONObject(0).getJSONArray("resources").getJSONObject(0).getInt("travelDuration");
-        } catch (IOException e) {
-            e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
         }

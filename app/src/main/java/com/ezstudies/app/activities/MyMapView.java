@@ -40,10 +40,6 @@ import java.util.Locale;
  */
 public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
     /**
-     * Intent
-     */
-    private Intent intent;
-    /**
      * Broadcast receiver for GPS
      */
     private LocationReceiver locationReceiver;
@@ -76,7 +72,6 @@ public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
         mapView.getMapAsync(this);
         mapView.onCreate(savedInstanceState);
         type = getIntent().getStringExtra("type");
-        locationReceiver = new LocationReceiver();
     }
 
     /**
@@ -194,9 +189,10 @@ public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
      * Get location from GPS
      */
     public void getLocation(){
-        intent = new Intent(this, GPS.class);
-        startService(intent);
+        locationReceiver = new LocationReceiver();
         registerReceiver(locationReceiver, new IntentFilter("MyMapView"));
+        Intent intent = new Intent(this, GPS.class);
+        startService(intent);
     }
 
     /**

@@ -121,7 +121,6 @@ public class AgendaFragment extends Fragment {
         RecyclerAdapterAgenda recyclerAdapter = new RecyclerAdapterAgenda(coursList);
         list.setLayoutManager(new LinearLayoutManager(this.getContext()));
         list.setAdapter(recyclerAdapter);
-        editorReceiver = new EditorReceiver();
         return view;
     }
 
@@ -168,13 +167,14 @@ public class AgendaFragment extends Fragment {
                 holder.card.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        editorReceiver = new EditorReceiver();
+                        agenda.registerReceiver(editorReceiver, new IntentFilter("AgendaEdited"));
                         Intent intent = new Intent(getContext(), CourseEditor.class);
                         intent.putExtra("course", holder.course.getText());
                         intent.putExtra("hour", holder.hour.getText());
                         intent.putExtra("place", holder.place.getText());
                         intent.putExtra("info", holder.info.getText());
                         startActivity(intent);
-                        agenda.registerReceiver(editorReceiver, new IntentFilter("AgendaEdited"));
                     }
                 });
                 try{

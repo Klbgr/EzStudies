@@ -240,9 +240,6 @@ public class Settings extends AppCompatActivity {
 
         setOnClickListeners();
 
-        loginReceiver = new LoginReceiver();
-        routeReceiver = new RouteReceiver();
-
         loadPrefs();
     }
 
@@ -258,6 +255,9 @@ public class Settings extends AppCompatActivity {
 
         if(homeLat != null && homeLong != null && schoolLat != null && schoolLong != null){
             wait = true;
+
+            routeReceiver = new RouteReceiver();
+            registerReceiver(routeReceiver, new IntentFilter("SettingsRoute"));
             Intent intent = new Intent(Settings.this, RouteCalculator.class);
             intent.putExtra("mode", mode);
             intent.putExtra("homeLat", homeLat);
@@ -266,7 +266,6 @@ public class Settings extends AppCompatActivity {
             intent.putExtra("schoolLong", schoolLong);
             intent.putExtra("target", "SettingsRoute");
             startService(intent);
-            registerReceiver(routeReceiver, new IntentFilter("SettingsRoute"));
         }
     }
 
@@ -499,12 +498,14 @@ public class Settings extends AppCompatActivity {
                         progressDialog = ProgressDialog.show(Settings.this, getString(R.string.connecting), getString(R.string.loading), true);
                         String nameText = name.getText().toString();
                         String passwordText = password.getText().toString();
+
+                        loginReceiver = new LoginReceiver();
+                        registerReceiver(loginReceiver, new IntentFilter("SettingsLogin"));
                         Intent intent = new Intent(Settings.this, Login.class);
                         intent.putExtra("name", nameText);
                         intent.putExtra("password", passwordText);
                         intent.putExtra("target", "SettingsLogin");
                         startService(intent);
-                        registerReceiver(loginReceiver, new IntentFilter("SettingsLogin"));
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {

@@ -94,7 +94,6 @@ public class Welcome extends FragmentActivity {
             finish();
             startActivity(new Intent(this, Overview.class));
         }
-        routeReceiver = new RouteReceiver();
     }
 
     /**
@@ -126,6 +125,9 @@ public class Welcome extends FragmentActivity {
                 prep_time = sharedPreferences.getInt("prep_time", -1);
                 if(home_latitude != null && home_longitude != null && school_latitude != null && school_longitude != null && prep_time != -1) {
                     condition1 = true;
+
+                    routeReceiver = new RouteReceiver();
+                    registerReceiver(routeReceiver, new IntentFilter("WelcomeRoute"));
                     Intent intent = new Intent(this, RouteCalculator.class);
                     intent.putExtra("mode", mode);
                     intent.putExtra("homeLat", home_latitude);
@@ -134,7 +136,6 @@ public class Welcome extends FragmentActivity {
                     intent.putExtra("schoolLong", school_longitude);
                     intent.putExtra("target", "WelcomeRoute");
                     startService(intent);
-                    registerReceiver(routeReceiver, new IntentFilter("WelcomeRoute"));
                 }
                 break;
             case 2: // transit

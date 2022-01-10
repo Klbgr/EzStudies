@@ -191,8 +191,6 @@ public class Agenda extends FragmentActivity {
         if(weekDay != 7){
             viewPager.setCurrentItem(getIntent().getIntExtra("weekday", weekDay));
         }
-        routeReceiver = new RouteReceiver();
-        loginReceiver = new LoginReceiver();
         nbNotifPendingAgenda = 0;
     }
 
@@ -252,12 +250,14 @@ public class Agenda extends FragmentActivity {
         progressDialog = ProgressDialog.show(this, getString(R.string.connecting), getString(R.string.loading), true);
         String name = sharedPreferences.getString("name", null);
         String password = sharedPreferences.getString("password", null);
+
+        loginReceiver = new LoginReceiver();
+        registerReceiver(loginReceiver, new IntentFilter("AgendaLogin"));
         Intent intent = new Intent(this, Login.class);
         intent.putExtra("name", name);
         intent.putExtra("password", password);
         intent.putExtra("target", "AgendaLogin");
         startService(intent);
-        registerReceiver(loginReceiver, new IntentFilter("AgendaLogin"));
     }
 
     /**
@@ -402,7 +402,7 @@ public class Agenda extends FragmentActivity {
     /**
      * Handle when an activity finishes
      */
-    ActivityResultLauncher<Intent> ActivityResultLauncher = registerForActivityResult(
+    private ActivityResultLauncher<Intent> ActivityResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 /**
@@ -498,6 +498,8 @@ public class Agenda extends FragmentActivity {
             String schoolLat = sharedPreferences.getString("school_latitude", null);
             String schoolLong = sharedPreferences.getString("school_longitude", null);
 
+            routeReceiver = new RouteReceiver();
+            registerReceiver(routeReceiver, new IntentFilter("AgendaRoute"));
             Intent intent = new Intent(this, RouteCalculator.class);
             intent.putExtra("mode", mode);
             intent.putExtra("homeLat", homeLat);
@@ -506,7 +508,6 @@ public class Agenda extends FragmentActivity {
             intent.putExtra("schoolLong", schoolLong);
             intent.putExtra("target", "AgendaRoute");
             startService(intent);
-            registerReceiver(routeReceiver, new IntentFilter("AgendaRoute"));
         }
         else{ //transit
             Database database = new Database(this);

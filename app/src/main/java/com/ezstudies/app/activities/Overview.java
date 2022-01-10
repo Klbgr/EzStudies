@@ -1,6 +1,12 @@
 package com.ezstudies.app.activities;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Build;
@@ -15,12 +21,17 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ezstudies.app.BuildConfig;
 import com.ezstudies.app.Database;
 import com.ezstudies.app.R;
+import com.ezstudies.app.services.UpdateChecker;
+import com.ezstudies.app.services.UpdateDownloader;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -32,6 +43,18 @@ public class Overview extends AppCompatActivity {
      * Shared preferences
      */
     private SharedPreferences sharedPreferences;
+    /**
+     * Broadcast receiver for UpdateChecker
+     */
+    private UpdateCheckerReceiver updateCheckerReceiver;
+    /**
+     * Broadcast receiver for UpdateDownloader
+     */
+    private UpdateDownloaderReceiver updateDownloaderReceiver;
+    /**
+     * Loading dialog
+     */
+    private ProgressDialog progressDialog;
 
     /**
      * On create
@@ -42,6 +65,18 @@ public class Overview extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.overview_layout);
         sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
+        checkUpdate();
+    }
+
+    /**
+     * Start UpdateChecker service
+     */
+    public void checkUpdate(){
+        updateCheckerReceiver = new UpdateCheckerReceiver();
+        registerReceiver(updateCheckerReceiver, new IntentFilter("OverviewUpdateChecker"));
+        Intent intent = new Intent(this, UpdateChecker.class);
+        intent.putExtra("target", "OverviewUpdateChecker");
+        startService(intent);
     }
 
     /**
@@ -417,6 +452,82 @@ public class Overview extends AppCompatActivity {
                 date = itemView.findViewById(R.id.homeworks_date);
                 description = itemView.findViewById(R.id.homeworks_description);
             }
+        }
+    }
+
+    /**
+     * Broadcast receiver for UpdateChecker
+     */
+    private class UpdateCheckerReceiver extends BroadcastReceiver {
+        /**
+         * On receive
+         * @param context Context
+         * @param intent Intent
+         */
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            unregisterReceiver(updateCheckerReceiver);
+            Boolean update = intent.getBooleanExtra("update", false);
+            if(update){
+                String url = intent.getStringExtra("url");
+                String path = intent.getStringExtra("path");
+                String changelog = intent.getStringExtra("changelog");
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setTitle(getString(R.string.update));
+                builder.setMessage(getString(R.string.update_message, changelog));
+                builder.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+                    /**
+                     * On click
+                     * @param dialog DialogInterface
+                     * @param which ID of DialogInterface
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        progressDialog = ProgressDialog.show(context, getString(R.string.downloading), getString(R.string.loading), true);
+
+                        updateDownloaderReceiver = new UpdateDownloaderReceiver();
+                        registerReceiver(updateDownloaderReceiver, new IntentFilter("OverviewUpdateDownloader"));
+                        Intent intent1 = new Intent(context, UpdateDownloader.class);
+                        intent1.putExtra("url", url);
+                        intent1.putExtra("path", path);
+                        intent1.putExtra("target", "OverviewUpdateDownloader");
+                        startService(intent1);
+                    }
+                });
+                builder.setNegativeButton(R.string.later, new DialogInterface.OnClickListener() {
+                    /**
+                     * On click
+                     * @param dialog DialogInterface
+                     * @param which ID of DialogInterface
+                     */
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+                builder.show();
+            }
+        }
+    }
+
+    /**
+     * Broadcast receiver for UpdateDownloader
+     */
+    private class UpdateDownloaderReceiver extends BroadcastReceiver{
+        /**
+         * On receive
+         * @param context Context
+         * @param intent Intent
+         */
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            unregisterReceiver(updateDownloaderReceiver);
+            progressDialog.cancel();
+            String path = intent.getStringExtra("path");
+            Intent intent1 = new Intent(Intent.ACTION_VIEW);
+            intent1.setDataAndType(FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", new File(path)), "application/vnd.android.package-archive");
+            intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent1);
         }
     }
 }

@@ -254,8 +254,6 @@ public class WelcomeFragment extends Fragment {
 
                 setOnClickListeners();
 
-                loginReceiver = new LoginReceiver();
-
                 loadPrefs();
                 break;
             default:
@@ -421,12 +419,14 @@ public class WelcomeFragment extends Fragment {
                         progressDialog = ProgressDialog.show(getContext(), getString(R.string.connecting), getString(R.string.loading), true);
                         String nameText = name.getText().toString();
                         String passwordText = password.getText().toString();
+
+                        loginReceiver = new LoginReceiver();
+                        getContext().registerReceiver(loginReceiver, new IntentFilter("WelcomeLogin"));
                         Intent intent = new Intent(getContext(), Login.class);
                         intent.putExtra("name", nameText);
                         intent.putExtra("password", passwordText);
                         intent.putExtra("target", "WelcomeLogin");
-                        getActivity().startService(intent);
-                        getActivity().registerReceiver(loginReceiver, new IntentFilter("WelcomeLogin"));
+                        getContext().startService(intent);
                     }
                 });
                 builder.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
