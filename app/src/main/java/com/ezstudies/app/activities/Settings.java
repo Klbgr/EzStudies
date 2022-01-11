@@ -702,6 +702,7 @@ public class Settings extends AppCompatActivity {
              */
             @Override
             public void onClick(View view) {
+                Toast.makeText(Settings.this, getString(R.string.source), Toast.LENGTH_SHORT).show();
                 Date now = Calendar.getInstance().getTime();
                 if(date == null || now.getTime() - date.getTime() > 5*1000){ //5s
                     date = Calendar.getInstance().getTime();

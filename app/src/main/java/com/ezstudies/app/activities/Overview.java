@@ -79,6 +79,7 @@ public class Overview extends AppCompatActivity {
         }
         else{
             setContentView(R.layout.overview_layout);
+            getSupportActionBar().setTitle(getString(R.string.overview));
             checkUpdate();
         }
     }

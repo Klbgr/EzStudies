@@ -78,6 +78,7 @@
     <string name="yes">Yes</string>
     <string name="later">Later</string>
     <string name="downloading">Downloading</string>
+    <string name="source">Long press to get to source code</string>
 
     <string-array name="travel_array">
         <item>Driving</item>

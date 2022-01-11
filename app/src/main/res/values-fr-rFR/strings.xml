@@ -79,6 +79,7 @@
     <string name="yes">Oui</string>
     <string name="later">Plus tard</string>
     <string name="downloading">Téléchargement</string>
+    <string name="source">Appui long pour voir le code source</string>
 
     <string-array name="travel_array">
         <item>En voiture</item>

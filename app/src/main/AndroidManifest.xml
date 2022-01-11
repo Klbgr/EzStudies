@@ -46,7 +46,6 @@
         </activity>
         <activity
             android:name=".activities.Welcome"
-            android:label="@string/overview"
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Agenda"
