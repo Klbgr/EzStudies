@@ -44,5 +44,3 @@ Here are the external resources used for the app :
 - [Jsoup library](https://jsoup.org/)
 - [Route REST API by Bing Maps](https://docs.microsoft.com/en-us/bingmaps/rest-services/routes/calculate-a-route)
 - [Get JSON object from url](https://stackoverflow.com/questions/4308554/simplest-way-to-read-json-from-a-url-in-java)
-
-[Releases](./releases)
