@@ -2,7 +2,6 @@ package com.ezstudies.app.services;
 
 import android.app.Service;
 import android.content.Intent;
-import android.os.Environment;
 import android.os.IBinder;
 
 import androidx.annotation.Nullable;
@@ -51,12 +50,12 @@ public class UpdateChecker extends Service{
                 for(int i = 0 ; i < array.length() ; i++){
                     String type = array.getJSONObject(0).getString("content_type");
                     if(type.equals("application/vnd.android.package-archive")){ //contains apk
-                        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + array.getJSONObject(0).getString("name");
+                        String name = array.getJSONObject(0).getString("name");
                         String url = array.getJSONObject(0).getString("browser_download_url");
                         String changelog = json.getString("body");
                         intent1.putExtra("update", true);
                         intent1.putExtra("url", url);
-                        intent1.putExtra("path", path);
+                        intent1.putExtra("name", name);
                         intent1.putExtra("changelog", changelog);
                         break;
                     }

@@ -1,6 +1,7 @@
 package com.ezstudies.app.activities;
 
 import android.app.AlertDialog;
+import android.app.DownloadManager;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -8,9 +9,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,7 +33,6 @@ import com.ezstudies.app.BuildConfig;
 import com.ezstudies.app.Database;
 import com.ezstudies.app.R;
 import com.ezstudies.app.services.UpdateChecker;
-import com.ezstudies.app.services.UpdateDownloader;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -48,13 +51,21 @@ public class Overview extends AppCompatActivity {
      */
     private UpdateCheckerReceiver updateCheckerReceiver;
     /**
-     * Broadcast receiver for UpdateDownloader
+     * Broadcast receiver for DownloadManager
      */
-    private UpdateDownloaderReceiver updateDownloaderReceiver;
+    private DownloadManagerReceiver downloadManagerReceiver;
     /**
      * Loading dialog
      */
     private ProgressDialog progressDialog;
+    /**
+     * File name
+     */
+    private String name;
+    /**
+     * ID of download
+     */
+    private long DOWNLOAD_ID;
 
     /**
      * On create
@@ -470,7 +481,7 @@ public class Overview extends AppCompatActivity {
             Boolean update = intent.getBooleanExtra("update", false);
             if(update){
                 String url = intent.getStringExtra("url");
-                String path = intent.getStringExtra("path");
+                name = intent.getStringExtra("name");
                 String changelog = intent.getStringExtra("changelog");
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(getString(R.string.update));
@@ -483,15 +494,57 @@ public class Overview extends AppCompatActivity {
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        progressDialog = ProgressDialog.show(context, getString(R.string.downloading), getString(R.string.loading), true);
+                        progressDialog = new ProgressDialog(context);
+                        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                        progressDialog.setTitle(getString(R.string.downloading));
+                        progressDialog.setMessage(getString(R.string.loading));
+                        progressDialog.setCanceledOnTouchOutside(false);
+                        progressDialog.setCancelable(false);
+                        progressDialog.show();
 
-                        updateDownloaderReceiver = new UpdateDownloaderReceiver();
-                        registerReceiver(updateDownloaderReceiver, new IntentFilter("OverviewUpdateDownloader"));
-                        Intent intent1 = new Intent(context, UpdateDownloader.class);
-                        intent1.putExtra("url", url);
-                        intent1.putExtra("path", path);
-                        intent1.putExtra("target", "OverviewUpdateDownloader");
-                        startService(intent1);
+                        downloadManagerReceiver = new DownloadManagerReceiver();
+                        registerReceiver(downloadManagerReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
+
+                        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), name);
+                        if(file.exists()){
+                            file.delete();
+                        }
+
+                        DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                        DOWNLOAD_ID = downloadManager.enqueue(new DownloadManager.Request(Uri.parse(url))
+                                .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                                .setTitle("Demo")
+                                .setDescription("Something useful. No, really.")
+                                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name));
+
+                        //download progress
+                        Thread thread = new Thread(new Runnable() {
+                            /**
+                             * Start
+                             */
+                            @Override
+                            public void run() {
+                                Boolean running = true;
+                                long total;
+                                long downloaded;
+                                while(running) {
+                                    Cursor cursor = downloadManager.query(new DownloadManager.Query().setFilterById(DOWNLOAD_ID));
+                                    cursor.moveToFirst();
+                                    total = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
+                                    downloaded = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
+                                    progressDialog.setProgress((int) ((downloaded*100)/total));
+                                    try {
+                                        Thread.sleep(100);
+                                    } catch (InterruptedException e) {
+                                        e.printStackTrace();
+                                    }
+                                    if (downloaded >= total && total != -1){
+                                        running = false;
+                                    }
+                                }
+                            }
+                        });
+                        thread.start();
                     }
                 });
                 builder.setNegativeButton(R.string.later, new DialogInterface.OnClickListener() {
@@ -511,9 +564,9 @@ public class Overview extends AppCompatActivity {
     }
 
     /**
-     * Broadcast receiver for UpdateDownloader
+     * Broadcast receiver for DownloadManager
      */
-    private class UpdateDownloaderReceiver extends BroadcastReceiver{
+    private class DownloadManagerReceiver extends BroadcastReceiver{
         /**
          * On receive
          * @param context Context
@@ -521,11 +574,10 @@ public class Overview extends AppCompatActivity {
          */
         @Override
         public void onReceive(Context context, Intent intent) {
-            unregisterReceiver(updateDownloaderReceiver);
+            unregisterReceiver(downloadManagerReceiver);
             progressDialog.cancel();
-            String path = intent.getStringExtra("path");
             Intent intent1 = new Intent(Intent.ACTION_VIEW);
-            intent1.setDataAndType(FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", new File(path)), "application/vnd.android.package-archive");
+            intent1.setDataAndType(FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), name)), "application/vnd.android.package-archive");
             intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent1);
         }
