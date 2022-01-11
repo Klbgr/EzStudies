@@ -35,7 +35,6 @@ Here are the services of the app :
 - [Login.java](./app/src/main/java/com/ezstudies/app/services/Login.java)
 - [RouteCalculator.java](./app/src/main/java/com/ezstudies/app/services/RouteCalculator.java)
 - [UpdateChecker.java](./app/src/main/java/com/ezstudies/app/services/UpdateChecker.java)
-- [UpdateDownloader.java](./app/src/main/java/com/ezstudies/app/services/UpdateDownloader.java)
 
 ## External resources
 

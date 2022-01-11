@@ -1,5 +1,6 @@
 package com.ezstudies.app.activities;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
@@ -62,10 +63,6 @@ public class Overview extends AppCompatActivity {
      * File name
      */
     private String name;
-    /**
-     * ID of download
-     */
-    private long DOWNLOAD_ID;
 
     /**
      * On create
@@ -74,9 +71,16 @@ public class Overview extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.overview_layout);
         sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
-        checkUpdate();
+        Boolean firstTime = sharedPreferences.getBoolean("first_time", true);
+        if(firstTime) {
+            finish();
+            startActivity(new Intent(this, Welcome.class));
+        }
+        else{
+            setContentView(R.layout.overview_layout);
+            checkUpdate();
+        }
     }
 
     /**
@@ -511,17 +515,18 @@ public class Overview extends AppCompatActivity {
                         }
 
                         DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                        DOWNLOAD_ID = downloadManager.enqueue(new DownloadManager.Request(Uri.parse(url))
-                                .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                                .setTitle("Demo")
-                                .setDescription("Something useful. No, really.")
-                                .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name));
+                        long DOWNLOAD_ID = downloadManager.enqueue(new DownloadManager.Request(Uri.parse(url))
+                            .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
+                            .setTitle(getString(R.string.downloading))
+                            .setDescription(getString(R.string.loading))
+                            .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name));
 
                         //download progress
                         Thread thread = new Thread(new Runnable() {
                             /**
                              * Start
                              */
+                            @SuppressLint("Range")
                             @Override
                             public void run() {
                                 Boolean running = true;

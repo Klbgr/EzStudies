@@ -34,21 +34,20 @@
         </provider>
 
         <activity
-            android:name=".activities.Welcome"
-            android:exported="true"
-            android:screenOrientation="portrait">
+            android:name=".activities.Overview"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <meta-data
                 android:name="android.app.shortcuts"
                 android:resource="@xml/shortcuts" />
         </activity>
         <activity
-            android:name=".activities.Overview"
-            android:label="@string/overview" />
+            android:name=".activities.Welcome"
+            android:label="@string/overview"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Agenda"
             android:label="@string/agenda"

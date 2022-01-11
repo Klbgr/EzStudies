@@ -56,43 +56,33 @@ public class Welcome extends FragmentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
-
-        Boolean firstTime = sharedPreferences.getBoolean("first_time", true);
-
-        if(firstTime){
-            setContentView(R.layout.welcome_layout);
-            viewPager = findViewById(R.id.welcome_viewpager);
-            FragmentStateAdapterWelcome fragmentAdapter = new FragmentStateAdapterWelcome(this);
-            viewPager.setAdapter(fragmentAdapter);
-            viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-                @Override
-                public void onPageSelected(int position) {
-                    super.onPageSelected(position);
-                    ImageView dot0 = findViewById(R.id.welcome_dot0);
-                    ImageView dot1 = findViewById(R.id.welcome_dot1);
-                    switch (position){
-                        case 0:
-                            dot0.setImageDrawable(getDrawable(R.drawable.dot_selected));
-                            dot1.setImageDrawable(getDrawable(R.drawable.dot));
-                            break;
-                        case 1:
-                            dot0.setImageDrawable(getDrawable(R.drawable.dot));
-                            dot1.setImageDrawable(getDrawable(R.drawable.dot_selected));
-                            break;
-                    }
+        setContentView(R.layout.welcome_layout);
+        viewPager = findViewById(R.id.welcome_viewpager);
+        FragmentStateAdapterWelcome fragmentAdapter = new FragmentStateAdapterWelcome(this);
+        viewPager.setAdapter(fragmentAdapter);
+        viewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                ImageView dot0 = findViewById(R.id.welcome_dot0);
+                ImageView dot1 = findViewById(R.id.welcome_dot1);
+                switch (position){
+                    case 0:
+                        dot0.setImageDrawable(getDrawable(R.drawable.dot_selected));
+                        dot1.setImageDrawable(getDrawable(R.drawable.dot));
+                        break;
+                    case 1:
+                        dot0.setImageDrawable(getDrawable(R.drawable.dot));
+                        dot1.setImageDrawable(getDrawable(R.drawable.dot_selected));
+                        break;
                 }
-            });
-            if(savedInstanceState != null){ //set current page
-                int current_page = savedInstanceState.getInt("current_page", 0);
-                viewPager.setCurrentItem(current_page);
             }
-        }
-        else {
-            finish();
-            startActivity(new Intent(this, Overview.class));
+        });
+        if(savedInstanceState != null){ //set current page
+            int current_page = savedInstanceState.getInt("current_page", 0);
+            viewPager.setCurrentItem(current_page);
         }
     }
 

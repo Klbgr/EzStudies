@@ -1,5 +1,6 @@
 package com.ezstudies.app.services;
 
+import android.annotation.SuppressLint;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +34,7 @@ public class GPS extends Service {
      * @param startId ID
      * @return Success
      */
+    @SuppressLint("MissingPermission")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
