@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.EzStudies">
+        android:theme="@style/Theme.EzStudies" >
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
@@ -73,7 +73,6 @@
         <service android:name=".services.RouteCalculator" />
         <service android:name=".services.AlarmSetter" />
         <service android:name=".services.UpdateChecker" />
-        <service android:name=".services.UpdateDownloader" />
 
         <receiver
             android:name=".activities.Agenda$NotificationReceiver"
@@ -86,6 +85,7 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
     </application>
