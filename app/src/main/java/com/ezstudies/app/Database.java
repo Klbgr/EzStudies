@@ -64,7 +64,7 @@ public class Database extends SQLiteOpenHelper {
      * @param context Context
      */
     public Database(@Nullable Context context) {
-        super(context, "Database", null, 1);
+        super(context, "Database", null, BuildConfig.VERSION_CODE);
     }
 
     /**
@@ -73,8 +73,8 @@ public class Database extends SQLiteOpenHelper {
      */
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE "+table0+"("+table0_col0+" TEXT, "+table0_col1+" TEXT, "+table0_col2+" TEXT, "+table0_col3+" TEXT, "+table0_col4 +" TEXT);");
-        sqLiteDatabase.execSQL("CREATE TABLE "+table1+"("+table1_col0+" TEXT, "+table1_col1+" TEXT, "+table1_col2+" TEXT, "+table1_col3+" TEXT);");
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS "+table0+"("+table0_col0+" TEXT, "+table0_col1+" TEXT, "+table0_col2+" TEXT, "+table0_col3+" TEXT, "+table0_col4 +" TEXT);");
+        sqLiteDatabase.execSQL("CREATE TABLE IF NOT EXISTS "+table1+"("+table1_col0+" TEXT, "+table1_col1+" TEXT, "+table1_col2+" TEXT, "+table1_col3+" TEXT);");
     }
 
     /**
@@ -85,8 +85,6 @@ public class Database extends SQLiteOpenHelper {
      */
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table0);
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + table1);
         onCreate(sqLiteDatabase);
     }
 
