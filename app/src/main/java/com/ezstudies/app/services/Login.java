@@ -7,8 +7,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.ezstudies.app.activities.Welcome;
-
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Element;
@@ -22,13 +20,13 @@ import java.util.HashMap;
  */
 public class Login extends Service implements Runnable{
     /**
-     * URL of login
-     */
-    private final String login_url = Welcome.LOGIN_FORM_URL;
-    /**
      * User agent of WebView
      */
-    private final String user_agent = Welcome.USER_AGENT;
+    private static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36";
+    /**
+     * URL of login
+     */
+    private static final String LOGIN_FORM_URL  = "https://services-web.u-cergy.fr/calendar/LdapLogin";
     /**
      * Intent
      */
@@ -73,9 +71,9 @@ public class Login extends Service implements Runnable{
         HashMap<String, String> cookies = null;
         String url = null;
         try {
-            Connection.Response loginFormResponse = Jsoup.connect(login_url)
+            Connection.Response loginFormResponse = Jsoup.connect(LOGIN_FORM_URL)
                     .method(Connection.Method.GET)
-                    .userAgent(user_agent)
+                    .userAgent(USER_AGENT)
                     .execute();
             FormElement loginForm = (FormElement)loginFormResponse.parse().getElementsByTag("form").get(0);
             Element nameInput = loginForm.getElementById("Name");
@@ -84,7 +82,7 @@ public class Login extends Service implements Runnable{
             passwordInput.val(password);
             Connection.Response loginActionResponse = loginForm.submit()
                     .cookies(loginFormResponse.cookies())
-                    .userAgent(user_agent)
+                    .userAgent(USER_AGENT)
                     .execute();
             Log.d("url response", loginActionResponse.url().toString());
             responseUrl = loginActionResponse.url().toString();

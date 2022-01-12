@@ -40,6 +40,10 @@ import java.util.Locale;
  */
 public class Settings extends AppCompatActivity {
     /**
+     * Name of shared preferences
+     */
+    public static final String SHARED_PREFERENCES_NAME = "prefs";
+    /**
      * Travel mode spinner
      */
     private Spinner travel_spinner;
@@ -97,7 +101,7 @@ public class Settings extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_layout);
 
-        sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(Settings.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         editor = sharedPreferences.edit();
 
         LinearLayout group0 = findViewById(R.id.settings_group0);

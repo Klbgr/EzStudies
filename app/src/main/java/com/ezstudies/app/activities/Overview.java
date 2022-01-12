@@ -71,7 +71,7 @@ public class Overview extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(Settings.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         Boolean firstTime = sharedPreferences.getBoolean("first_time", true);
         if(firstTime) {
             finish();

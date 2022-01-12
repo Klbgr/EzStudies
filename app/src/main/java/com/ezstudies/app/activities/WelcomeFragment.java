@@ -107,7 +107,7 @@ public class WelcomeFragment extends Fragment {
             case 2:
                 view = inflater.inflate(R.layout.welcome_page2, container, false);
 
-                sharedPreferences = getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+                sharedPreferences = getActivity().getSharedPreferences(Settings.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
                 editor = sharedPreferences.edit();
 
                 LinearLayout group0 = view.findViewById(R.id.settings_group0);

@@ -25,14 +25,6 @@ import com.ezstudies.app.services.RouteCalculator;
  */
 public class Welcome extends FragmentActivity {
     /**
-     * User agent of WebView
-     */
-    public static final String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36";
-    /**
-     * URL of login
-     */
-    public static final String LOGIN_FORM_URL  = "https://services-web.u-cergy.fr/calendar/LdapLogin";
-    /**
      * Shared preferences
      */
     private SharedPreferences sharedPreferences;
@@ -56,7 +48,7 @@ public class Welcome extends FragmentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sharedPreferences = getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(Settings.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
         setContentView(R.layout.welcome_layout);
         viewPager = findViewById(R.id.welcome_viewpager);

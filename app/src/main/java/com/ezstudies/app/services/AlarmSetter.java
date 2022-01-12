@@ -10,6 +10,7 @@ import android.provider.AlarmClock;
 import androidx.annotation.Nullable;
 
 import com.ezstudies.app.R;
+import com.ezstudies.app.activities.Settings;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -115,7 +116,7 @@ public class AlarmSetter extends Service implements Runnable{
      * @param minute Minute
      */
     public void setAlarm(int day, int hour, int minute){
-        int alarm = getApplicationContext().getSharedPreferences("prefs", MODE_PRIVATE).getInt("alarm_ringtone", 0)+1;
+        int alarm = getApplicationContext().getSharedPreferences(Settings.SHARED_PREFERENCES_NAME, MODE_PRIVATE).getInt("alarm_ringtone", 0)+1;
         ArrayList<Integer> days = new ArrayList<>();
         days.add(day);
         Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);

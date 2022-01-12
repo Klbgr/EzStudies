@@ -116,7 +116,7 @@ public class Agenda extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.agenda_layout);
         createNotificationChannelAgenda();
-        sharedPreferences = getSharedPreferences("prefs", MODE_PRIVATE);
+        sharedPreferences = getSharedPreferences(Settings.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         editor = sharedPreferences.edit();
         viewPager = findViewById(R.id.agenda_viewpager);
         FragmentManager fm = getSupportFragmentManager();
