@@ -15,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.ezstudies.app.Database;
 import com.ezstudies.app.R;
@@ -121,6 +122,18 @@ public class AgendaFragment extends Fragment {
         RecyclerAdapterAgenda recyclerAdapter = new RecyclerAdapterAgenda(coursList);
         list.setLayoutManager(new LinearLayoutManager(this.getContext()));
         list.setAdapter(recyclerAdapter);
+
+        SwipeRefreshLayout swipeRefreshLayout = view.findViewById(R.id.agenda_swiperefresh);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            /**
+             * On refresh
+             */
+            @Override
+            public void onRefresh() {
+                swipeRefreshLayout.setRefreshing(false);
+                agenda.refresh(null);
+            }
+        });
         return view;
     }
 
