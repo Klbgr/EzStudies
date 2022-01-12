@@ -17,6 +17,15 @@ import androidx.annotation.Nullable;
  */
 public class GPS extends Service {
     /**
+     * Location manager
+     */
+    private LocationManager locationManager;
+    /**
+     * Location listener
+     */
+    private MyLocationListener myLocationListener;
+
+    /**
      * On bind
      * @param intent Intent
      * @return IBinder
@@ -37,23 +46,24 @@ public class GPS extends Service {
     @SuppressLint("MissingPermission")
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        LocationListener locationListener = new GpsListener();
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, locationListener);
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 10, locationListener);
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        myLocationListener = new MyLocationListener();
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 10, myLocationListener);
         return super.onStartCommand(intent, flags, startId);
     }
 
     /**
      * LocationListener
      */
-    private class GpsListener implements LocationListener{
+    private class MyLocationListener implements LocationListener{
         /**
          * On location changed
          * @param location Location
          */
+        @SuppressLint("MissingPermission")
         @Override
         public void onLocationChanged(@NonNull Location location) {
+            locationManager.removeUpdates(myLocationListener);
             Intent intent = new Intent("MyMapView");
             intent.putExtra("latitude", location.getLatitude());
             intent.putExtra("longitude", location.getLongitude());
