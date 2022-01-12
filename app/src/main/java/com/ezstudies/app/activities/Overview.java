@@ -500,9 +500,10 @@ public class Overview extends AppCompatActivity {
                 String url = intent.getStringExtra("url");
                 name = intent.getStringExtra("name");
                 String changelog = intent.getStringExtra("changelog");
+                String version = intent.getStringExtra("version");
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle(getString(R.string.update));
-                builder.setMessage(getString(R.string.update_message, changelog));
+                builder.setMessage(getString(R.string.update_message, BuildConfig.VERSION_NAME + " -> " + version, changelog));
                 builder.setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
                     /**
                      * On click

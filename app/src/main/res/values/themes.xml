@@ -43,8 +43,6 @@
         <!-- Customize your theme here. -->
         <item name="android:background">@color/grey</item>
         <item name="android:textColor">@android:color/secondary_text_dark</item>
-        <item name="android:ambientShadowAlpha">1</item>
-        <item name="android:spotShadowAlpha">1</item>
     </style>
     <style name="cardview">
         <item name="cardBackgroundColor">@color/white</item>

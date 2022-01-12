@@ -74,7 +74,7 @@
     <string name="save">Save</string>
     <string name="invalid_homework">Please fill in all text fields</string>
     <string name="update">New update available</string>
-    <string name="update_message">Do you want to update ?\n\nChangelog :\n%1$s</string>
+    <string name="update_message">Do you want to update ?\n\nVersion : %1$s\nChangelog :\n%2$s</string>
     <string name="yes">Yes</string>
     <string name="later">Later</string>
     <string name="downloading">Downloading</string>

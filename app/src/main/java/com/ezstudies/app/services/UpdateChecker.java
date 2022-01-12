@@ -57,6 +57,7 @@ public class UpdateChecker extends Service{
                         intent1.putExtra("url", url);
                         intent1.putExtra("name", name);
                         intent1.putExtra("changelog", changelog);
+                        intent1.putExtra("version", remoteVersion);
                         break;
                     }
                 }

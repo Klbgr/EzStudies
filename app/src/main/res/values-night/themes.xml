@@ -13,8 +13,6 @@
         <item name="android:statusBarColor">@color/black</item>
         <!-- Customize your theme here. -->
         <item name="android:windowBackground">@color/grey</item>
-        <item name="android:ambientShadowAlpha">1</item>
-        <item name="android:spotShadowAlpha">1</item>
     </style>
     <style name="cardview">
         <item name="cardBackgroundColor">@color/grey</item>

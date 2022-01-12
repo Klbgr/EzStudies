@@ -75,7 +75,7 @@
     <string name="save">Enregistrer</string>
     <string name="invalid_homework">Veuillez remplir tous les champs de texte</string>
     <string name="update">Nouvelle mise à jour disponible</string>
-    <string name="update_message">Voulez-vous faire la mise à jour ?\n\nJournal des modifications :\n%1$s</string>
+    <string name="update_message">Voulez-vous faire la mise à jour ?\n\nVersion : %1$s\nJournal des modifications :\n%2$s</string>
     <string name="yes">Oui</string>
     <string name="later">Plus tard</string>
     <string name="downloading">Téléchargement</string>
