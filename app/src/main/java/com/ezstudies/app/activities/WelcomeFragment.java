@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.Fragment;
 
@@ -64,6 +65,10 @@ public class WelcomeFragment extends Fragment {
      * Alarm ringtone spinner
      */
     private Spinner alarm_spinner;
+    /**
+     * Theme spinner
+     */
+    private Spinner theme_spinner;
     /**
      * Loading dialog
      */
@@ -115,9 +120,48 @@ public class WelcomeFragment extends Fragment {
                 LinearLayout group2 = view.findViewById(R.id.settings_group2);
                 LinearLayout group3 = view.findViewById(R.id.settings_group3);
                 LinearLayout group4 = view.findViewById(R.id.settings_group4);
-                LinearLayout group5 = view.findViewById(R.id.settings_click9);
+                LinearLayout group5 = view.findViewById(R.id.settings_click10);
                 group4.setVisibility(View.GONE);
                 group5.setVisibility(View.GONE);
+
+                //theme
+                theme_spinner = view.findViewById(R.id.settings_theme_spinner);
+                ArrayAdapter<CharSequence> theme_spinner_adapter = ArrayAdapter.createFromResource(getActivity(), R.array.theme_array, android.R.layout.simple_spinner_item);
+                theme_spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                theme_spinner.setAdapter(theme_spinner_adapter);
+                theme_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    /**
+                     * On item selected
+                     * @param parent AdapterView
+                     * @param view View
+                     * @param position Position
+                     * @param id ID
+                     */
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        editor.putInt("theme", position);
+                        editor.apply();
+                        switch(position){
+                            case 0:
+                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                                break;
+                            case 1:
+                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                                break;
+                            case 2:
+                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                                break;
+                        }
+                    }
+
+                    /**
+                     * On nothing selected
+                     * @param parent AdapterView
+                     */
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                    }
+                });
 
                 //agenda
                 agenda_spinner = view.findViewById(R.id.settings_agenda_spinner);
@@ -340,6 +384,10 @@ public class WelcomeFragment extends Fragment {
         }
         textView.setText(travel_time);
 
+        //theme
+        int theme = sharedPreferences.getInt("theme", 0);
+        theme_spinner.setSelection(theme);
+
         //travel mode
         int travel_mode = sharedPreferences.getInt("travel_mode", 0);
         travel_spinner.setSelection(travel_mode);
@@ -384,16 +432,25 @@ public class WelcomeFragment extends Fragment {
      * Set OnClickListeners
      */
     public void setOnClickListeners() {
-        LinearLayout click0 = view.findViewById(R.id.settings_click0);
-        click0.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.settings_click0).setOnClickListener(new View.OnClickListener() {
+            /**
+             * On click
+             * @param view View
+             */
+            @Override
+            public void onClick(View view) {
+                theme_spinner.performClick();
+            }
+        });
+
+        view.findViewById(R.id.settings_click1).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 agenda_spinner.performClick();
             }
         });
 
-        LinearLayout click1 = view.findViewById(R.id.settings_click1);
-        click1.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.settings_click2).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
@@ -440,16 +497,14 @@ public class WelcomeFragment extends Fragment {
             }
         });
 
-        LinearLayout click2 = view.findViewById(R.id.settings_click2);
-        click2.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.settings_click3).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 travel_spinner.performClick();
             }
         });
 
-        LinearLayout click3 = view.findViewById(R.id.settings_click3);
-        click3.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.settings_click4).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(WelcomeFragment.this.getActivity(), MyMapView.class);
@@ -458,8 +513,7 @@ public class WelcomeFragment extends Fragment {
             }
         });
 
-        LinearLayout click4 = view.findViewById(R.id.settings_click4);
-        click4.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.settings_click5).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(WelcomeFragment.this.getActivity(), MyMapView.class);
@@ -468,8 +522,7 @@ public class WelcomeFragment extends Fragment {
             }
         });
 
-        LinearLayout click5 = view.findViewById(R.id.settings_click5);
-        click5.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.settings_click6).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(WelcomeFragment.this.getActivity());
@@ -505,8 +558,7 @@ public class WelcomeFragment extends Fragment {
             }
         });
 
-        LinearLayout click6 = view.findViewById(R.id.settings_click6);
-        click6.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.settings_click7).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(WelcomeFragment.this.getActivity());
@@ -543,16 +595,14 @@ public class WelcomeFragment extends Fragment {
             }
         });
 
-        LinearLayout click7 = view.findViewById(R.id.settings_click7);
-        click7.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.settings_click8).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 s.toggle();
             }
         });
 
-        LinearLayout click8 = view.findViewById(R.id.settings_click8);
-        click8.setOnClickListener(new View.OnClickListener() {
+        view.findViewById(R.id.settings_click9).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 alarm_spinner.performClick();

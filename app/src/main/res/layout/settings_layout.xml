@@ -58,6 +58,70 @@
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:text="@string/theme"
+                            android:textStyle="bold" />
+
+                        <Spinner
+                            android:id="@+id/settings.theme_spinner"
+                            android:layout_width="match_parent"
+                            android:layout_height="48dp" />
+
+                    </LinearLayout>
+
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
+
+                </LinearLayout>
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/settings_spacing" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/settings.click1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:minHeight="48dp"
+                    android:orientation="horizontal">
+
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent"
+                        android:layout_weight="0" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="0"
+                        android:src="@android:drawable/ic_menu_preferences" />
+
+                    <Space
+                        android:layout_width="@dimen/logo_spacing"
+                        android:layout_height="match_parent" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="right"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
                             android:text="@string/import_mode"
                             android:textStyle="bold" />
 
@@ -88,7 +152,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/settings.click1"
+                    android:id="@+id/settings.click2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
@@ -152,7 +216,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/settings.click2"
+                    android:id="@+id/settings.click3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
@@ -217,7 +281,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/settings.click3"
+                    android:id="@+id/settings.click4"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
@@ -283,7 +347,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/settings.click4"
+                    android:id="@+id/settings.click5"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
@@ -349,7 +413,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/settings.click5"
+                    android:id="@+id/settings.click6"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
@@ -413,7 +477,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/settings.click6"
+                    android:id="@+id/settings.click7"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
@@ -477,7 +541,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/settings.click7"
+                    android:id="@+id/settings.click8"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
@@ -552,7 +616,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
-                    android:id="@+id/settings.click8"
+                    android:id="@+id/settings.click9"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="?attr/selectableItemBackground"
@@ -611,7 +675,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/settings.click9"
+                android:id="@+id/settings.click10"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="?attr/selectableItemBackground"

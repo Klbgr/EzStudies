@@ -114,10 +114,20 @@ public class Agenda extends FragmentActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.agenda_layout);
-        createNotificationChannelAgenda();
         sharedPreferences = getSharedPreferences(Settings.SHARED_PREFERENCES_NAME, MODE_PRIVATE);
         editor = sharedPreferences.edit();
+        switch(sharedPreferences.getInt("theme", 0)){
+            case 0:
+                break;
+            case 1:
+                setTheme(R.style.Theme_EzStudies_Light);
+                break;
+            case 2:
+                setTheme(R.style.Theme_EzStudies_Dark);
+                break;
+        }
+        setContentView(R.layout.agenda_layout);
+        createNotificationChannelAgenda();
         viewPager = findViewById(R.id.agenda_viewpager);
         FragmentManager fm = getSupportFragmentManager();
         adapter = new FragmentStateAdapterAgenda(fm, getLifecycle());

@@ -80,6 +80,7 @@
     <string name="later">Plus tard</string>
     <string name="downloading">Téléchargement</string>
     <string name="source">Appui long pour voir le code source</string>
+    <string name="theme">Thème</string>
 
     <string-array name="travel_array">
         <item>En voiture</item>
@@ -89,5 +90,10 @@
     <string-array name="agenda_array">
         <item>Depuis Celcat</item>
         <item>Depuis un fichier ICS</item>
+    </string-array>
+    <string-array name="theme_array">
+        <item>Système</item>
+        <item>Clair</item>
+        <item>Sombre</item>
     </string-array>
 </resources>

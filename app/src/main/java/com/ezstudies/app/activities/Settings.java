@@ -24,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.ezstudies.app.R;
@@ -55,6 +56,10 @@ public class Settings extends AppCompatActivity {
      * Alarm ringtone spinner
      */
     private Spinner alarm_spinner;
+    /**
+     * Theme spinner
+     */
+    private Spinner theme_spinner;
     /**
      * Shared preferences
      */
@@ -109,6 +114,45 @@ public class Settings extends AppCompatActivity {
         LinearLayout group2 = findViewById(R.id.settings_group2);
         LinearLayout group3 = findViewById(R.id.settings_group3);
         LinearLayout group4 = findViewById(R.id.settings_group4);
+
+        //theme
+        theme_spinner = findViewById(R.id.settings_theme_spinner);
+        ArrayAdapter<CharSequence> theme_spinner_adapter = ArrayAdapter.createFromResource(this, R.array.theme_array, android.R.layout.simple_spinner_item);
+        theme_spinner_adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        theme_spinner.setAdapter(theme_spinner_adapter);
+        theme_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            /**
+             * On item selected
+             * @param parent AdapterView
+             * @param view View
+             * @param position Position
+             * @param id ID
+             */
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                editor.putInt("theme", position);
+                editor.apply();
+                switch(position){
+                    case 0:
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
+                        break;
+                    case 1:
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
+                        break;
+                    case 2:
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+                        break;
+                }
+            }
+
+            /**
+             * On nothing selected
+             * @param parent AdapterView
+             */
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         //agenda
         agenda_spinner = findViewById(R.id.settings_agenda_spinner);
@@ -409,6 +453,10 @@ public class Settings extends AppCompatActivity {
         }
         textView.setText(travel_time);
 
+        //theme
+        int theme = sharedPreferences.getInt("theme", 0);
+        theme_spinner.setSelection(theme);
+
         //travel mode
         int travel_mode = sharedPreferences.getInt("travel_mode", 0);
         travel_spinner.setSelection(travel_mode);
@@ -454,8 +502,18 @@ public class Settings extends AppCompatActivity {
      * Set OnClickListeners
      */
     public void setOnClickListeners(){
-        LinearLayout click0 = findViewById(R.id.settings_click0);
-        click0.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.settings_click0).setOnClickListener(new View.OnClickListener() {
+            /**
+             * On click
+             * @param view View
+             */
+            @Override
+            public void onClick(View view) {
+                theme_spinner.performClick();
+            }
+        });
+
+        findViewById(R.id.settings_click1).setOnClickListener(new View.OnClickListener() {
             /**
              * On click
              * @param view View
@@ -466,8 +524,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        LinearLayout click1 = findViewById(R.id.settings_click1);
-        click1.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.settings_click2).setOnClickListener(new View.OnClickListener() {
             /**
              * On click
              * @param view View
@@ -528,8 +585,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        LinearLayout click2 = findViewById(R.id.settings_click2);
-        click2.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.settings_click3).setOnClickListener(new View.OnClickListener() {
             /**
              * On click
              * @param view View
@@ -540,8 +596,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        LinearLayout click3 = findViewById(R.id.settings_click3);
-        click3.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.settings_click4).setOnClickListener(new View.OnClickListener() {
             /**
              * On click
              * @param view View
@@ -554,8 +609,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        LinearLayout click4 = findViewById(R.id.settings_click4);
-        click4.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.settings_click5).setOnClickListener(new View.OnClickListener() {
             /**
              * On click
              * @param view View
@@ -568,8 +622,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        LinearLayout click5 = findViewById(R.id.settings_click5);
-        click5.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.settings_click6).setOnClickListener(new View.OnClickListener() {
             /**
              * On click
              * @param view View
@@ -621,8 +674,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        LinearLayout click6 = findViewById(R.id.settings_click6);
-        click6.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.settings_click7).setOnClickListener(new View.OnClickListener() {
             /**
              * On click
              * @param view View
@@ -674,8 +726,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        LinearLayout click7 = findViewById(R.id.settings_click7);
-        click7.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.settings_click8).setOnClickListener(new View.OnClickListener() {
             /**
              * On click
              * @param view View
@@ -686,8 +737,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        LinearLayout click8 = findViewById(R.id.settings_click8);
-        click8.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.settings_click9).setOnClickListener(new View.OnClickListener() {
             /**
              * On click
              * @param view View
@@ -698,8 +748,7 @@ public class Settings extends AppCompatActivity {
             }
         });
 
-        LinearLayout click9 = findViewById(R.id.settings_click9);
-        click9.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.settings_click10).setOnClickListener(new View.OnClickListener() {
             /**
              * On click
              * @param view View
@@ -725,7 +774,7 @@ public class Settings extends AppCompatActivity {
                 }
             }
         });
-        click9.setOnLongClickListener(new View.OnLongClickListener() {
+        findViewById(R.id.settings_click10).setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 Uri uri = Uri.parse("https://github.com/Klbgr/EzStudies");

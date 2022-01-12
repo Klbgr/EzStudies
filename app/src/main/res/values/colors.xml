@@ -6,4 +6,5 @@
     <color name="green_dark">#00AA56</color>
     <color name="homework_green">#4CAF50</color>
     <color name="homework_red">#F44336</color>
+    <color name="grey">#121212</color>
 </resources>

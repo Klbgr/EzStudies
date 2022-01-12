@@ -79,6 +79,7 @@
     <string name="later">Later</string>
     <string name="downloading">Downloading</string>
     <string name="source">Long press to get to source code</string>
+    <string name="theme">Theme</string>
 
     <string-array name="travel_array">
         <item>Driving</item>
@@ -93,5 +94,10 @@
         <item>EzStudies1</item>
         <item>EzStudies2</item>
         <item>EzStudies3</item>
+    </string-array>
+    <string-array name="theme_array">
+        <item>System</item>
+        <item>Light</item>
+        <item>Dark</item>
     </string-array>
 </resources>
