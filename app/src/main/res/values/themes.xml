@@ -47,4 +47,10 @@
     <style name="cardview">
         <item name="cardBackgroundColor">@color/white</item>
     </style>
+    <style name="widget">
+        <item name="android:background">@drawable/widget_background_light</item>
+    </style>
+    <style name="widgetText">
+        <item name="android:textColor">@android:color/secondary_text_light</item>
+    </style>
 </resources>

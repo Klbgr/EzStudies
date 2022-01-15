@@ -245,7 +245,7 @@ public class Database extends SQLiteOpenHelper {
     public ArrayList<ArrayList<String>> toTabHomeworks(){
         ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
 
-        String selectQuery = "SELECT DISTINCT * FROM " + table1 + " ORDER BY " + table1_col3 + " ASC";
+        String selectQuery = "SELECT DISTINCT * FROM " + table1 + " ORDER BY " + table1_col3 + " ASC, " + table1_col1 + " ASC" ;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         while(cursor.moveToNext()){
@@ -326,7 +326,7 @@ public class Database extends SQLiteOpenHelper {
      * @param description Description
      */
     public void removeHomework(String title, String date, String description){
-        String deleteQuery = "DELETE FROM " + table1 + " WHERE " + table1_col0 + "='" + title + "' AND " + table1_col1 + "='" + date + "' AND " + table1_col2 + "='" + description + "'";
+        String deleteQuery = "DELETE FROM " + table1 + " WHERE " + table1_col0 + "=\"" + title + "\" AND " + table1_col1 + "=\"" + date + "\" AND " + table1_col2 + "=\"" + description + "\"";
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(deleteQuery);
         db.close();
@@ -340,7 +340,7 @@ public class Database extends SQLiteOpenHelper {
      * @param done Done
      */
     public void setHomeworkDone(String title, String date, String description, String done){
-        String updateQuery = "UPDATE " + table1 + " SET " + table1_col3 + " = '" + done + "' WHERE " + table1_col0 + "='" + title + "' AND " + table1_col1 + "='" + date + "' AND " + table1_col2 + "='" + description + "'";
+        String updateQuery = "UPDATE " + table1 + " SET " + table1_col3 + " = \"" + done + "\" WHERE " + table1_col0 + "=\"" + title + "\" AND " + table1_col1 + "=\"" + date + "\" AND " + table1_col2 + "=\"" + description + "\"";
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL(updateQuery);
         db.close();
@@ -356,7 +356,7 @@ public class Database extends SQLiteOpenHelper {
     public ArrayList<ArrayList<String>> toTabAgendaDay(int day, int month, int year){
         ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
         String date = format(String.valueOf(day), 2) + "/" + format(String.valueOf(month), 2) + "/" + format(String.valueOf(year), 4);
-        String selectQuery = "SELECT * FROM " + table0 + " WHERE " + table0_col0 + "='" + date + "'";
+        String selectQuery = "SELECT * FROM " + table0 + " WHERE " + table0_col0 + "=\"" + date + "\"";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         while(cursor.moveToNext()){

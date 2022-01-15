@@ -80,6 +80,10 @@
     <string name="downloading">Downloading</string>
     <string name="source">Long press to get to source code</string>
     <string name="theme">Theme</string>
+    <string name="next_course">Next course</string>
+    <string name="next_homework">Next homework</string>
+    <string name="no_coming_course">No coming course</string>
+    <string name="no_coming_homework">No coming homework</string>
 
     <string-array name="travel_array">
         <item>Driving</item>

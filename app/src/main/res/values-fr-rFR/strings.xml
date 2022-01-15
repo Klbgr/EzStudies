@@ -81,6 +81,10 @@
     <string name="downloading">Téléchargement</string>
     <string name="source">Appui long pour voir le code source</string>
     <string name="theme">Thème</string>
+    <string name="next_course">Prochain cours</string>
+    <string name="next_homework">Prochain devoir"</string>
+    <string name="no_coming_course">Pas de cours à venir</string>
+    <string name="no_coming_homework">Pas de devoir à venir</string>
 
     <string-array name="travel_array">
         <item>En voiture</item>

@@ -1,0 +1,4 @@
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:targetCellWidth="5"
+    android:targetCellHeight="2"
+    android:resizeMode="horizontal|vertical" />

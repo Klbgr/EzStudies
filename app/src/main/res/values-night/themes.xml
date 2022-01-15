@@ -17,4 +17,10 @@
     <style name="cardview">
         <item name="cardBackgroundColor">@color/grey</item>
     </style>
+    <style name="widget">
+        <item name="android:background">@drawable/widget_background_dark</item>
+    </style>
+    <style name="widgetText">
+        <item name="android:textColor">@android:color/secondary_text_dark</item>
+    </style>
 </resources>

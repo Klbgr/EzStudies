@@ -86,5 +86,23 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".AgendaWidget"
+            android:exported="true"
+            android:label="@string/agenda">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/agenda_widget" />
+        </receiver>
+        <receiver android:name=".HomeworksWidget"
+            android:exported="true"
+            android:label="@string/homeworks">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/homeworks_widget" />
+        </receiver>
     </application>
 </manifest>
