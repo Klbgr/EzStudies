@@ -18,7 +18,7 @@ import java.util.HashMap;
 /**
  * Service that logs into Celcat
  */
-public class Login extends Service implements Runnable{
+public class Login extends Service implements Runnable {
     /**
      * User agent of WebView
      */
@@ -26,7 +26,7 @@ public class Login extends Service implements Runnable{
     /**
      * URL of login
      */
-    private static final String LOGIN_FORM_URL  = "https://services-web.u-cergy.fr/calendar/LdapLogin";
+    private static final String LOGIN_FORM_URL = "https://services-web.u-cergy.fr/calendar/LdapLogin";
     /**
      * Intent
      */
@@ -34,6 +34,7 @@ public class Login extends Service implements Runnable{
 
     /**
      * On bind
+     *
      * @param intent Intent
      * @return IBinder
      */
@@ -45,14 +46,15 @@ public class Login extends Service implements Runnable{
 
     /**
      * On start command
-     * @param intent Intent
-     * @param flags Flags
+     *
+     * @param intent  Intent
+     * @param flags   Flags
      * @param startId ID
      * @return Success
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent != null){
+        if (intent != null) {
             this.intent = intent;
             Thread thread = new Thread(this);
             thread.start();
@@ -75,7 +77,7 @@ public class Login extends Service implements Runnable{
                     .method(Connection.Method.GET)
                     .userAgent(USER_AGENT)
                     .execute();
-            FormElement loginForm = (FormElement)loginFormResponse.parse().getElementsByTag("form").get(0);
+            FormElement loginForm = (FormElement) loginFormResponse.parse().getElementsByTag("form").get(0);
             Element nameInput = loginForm.getElementById("Name");
             Element passwordInput = loginForm.getElementById("Password");
             nameInput.val(name);
@@ -87,25 +89,24 @@ public class Login extends Service implements Runnable{
             Log.d("url response", loginActionResponse.url().toString());
             responseUrl = loginActionResponse.url().toString();
             cookies = (HashMap<String, String>) loginActionResponse.cookies();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Boolean success;
-        if(responseUrl != null && !responseUrl.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
+        if (responseUrl != null && !responseUrl.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
             success = true;
             Log.d("cookie", cookies.toString());
             url = responseUrl.replace("Unknown", "List");
             url = url.replace("month", "listWeek");
             Calendar now = Calendar.getInstance();
-            if(now.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){ //sunday
+            if (now.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) { //sunday
                 int day = now.get(Calendar.DAY_OF_MONTH);
-                int month = now.get(Calendar.MONTH)+1;
+                int month = now.get(Calendar.MONTH) + 1;
                 int year = now.get(Calendar.YEAR);
-                url = url.replace("01%2F01%2F0001", month + "%2F" + (day+1) + "%2F" + year); // change date to load next week
+                url = url.replace("01%2F01%2F0001", month + "%2F" + (day + 1) + "%2F" + year); // change date to load next week
             }
             Log.d("url replace", url);
-        }
-        else{
+        } else {
             success = false;
             Log.d("error", "connection error");
         }

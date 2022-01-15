@@ -27,6 +27,7 @@ public class GPS extends Service {
 
     /**
      * On bind
+     *
      * @param intent Intent
      * @return IBinder
      */
@@ -38,8 +39,9 @@ public class GPS extends Service {
 
     /**
      * On start command
-     * @param intent Intent
-     * @param flags Flags
+     *
+     * @param intent  Intent
+     * @param flags   Flags
      * @param startId ID
      * @return Success
      */
@@ -55,9 +57,10 @@ public class GPS extends Service {
     /**
      * LocationListener
      */
-    private class MyLocationListener implements LocationListener{
+    private class MyLocationListener implements LocationListener {
         /**
          * On location changed
+         *
          * @param location Location
          */
         @SuppressLint("MissingPermission")

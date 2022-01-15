@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
     <shortcut
-        android:shortcutId="agenda"
         android:enabled="true"
         android:icon="@mipmap/ic_launcher"
-        android:shortcutShortLabel="@string/agenda"
-        android:shortcutLongLabel="@string/agenda" >
+        android:shortcutId="agenda"
+        android:shortcutLongLabel="@string/agenda"
+        android:shortcutShortLabel="@string/agenda">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="com.ezstudies.app"
-            android:targetClass="com.ezstudies.app.activities.Agenda" />
+            android:targetClass="com.ezstudies.app.activities.Agenda"
+            android:targetPackage="com.ezstudies.app" />
     </shortcut>
     <shortcut
-        android:shortcutId="homeworks"
         android:enabled="true"
         android:icon="@mipmap/ic_launcher"
-        android:shortcutShortLabel="@string/homeworks"
-        android:shortcutLongLabel="@string/homeworks" >
+        android:shortcutId="homeworks"
+        android:shortcutLongLabel="@string/homeworks"
+        android:shortcutShortLabel="@string/homeworks">
         <intent
             android:action="android.intent.action.VIEW"
-            android:targetPackage="com.ezstudies.app"
-            android:targetClass="com.ezstudies.app.activities.Homeworks" />
+            android:targetClass="com.ezstudies.app.activities.Homeworks"
+            android:targetPackage="com.ezstudies.app" />
     </shortcut>
 </shortcuts>

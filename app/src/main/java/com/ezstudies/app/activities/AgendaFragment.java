@@ -51,28 +51,31 @@ public class AgendaFragment extends Fragment {
     /**
      * Constructor
      */
-    public AgendaFragment(){}
+    public AgendaFragment() {
+    }
 
     /**
      * Constructor
+     *
      * @param page Requested page
      */
-    public AgendaFragment (int page, Agenda agenda){
+    public AgendaFragment(int page, Agenda agenda) {
         this.page = page;
         this.agenda = agenda;
     }
 
     /**
      * On create View
-     * @param inflater LayoutInflater
-     * @param container ViewGroup
+     *
+     * @param inflater           LayoutInflater
+     * @param container          ViewGroup
      * @param savedInstanceState Bundle
      * @return View
      */
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.agenda_page, container, false);
         TextView day = view.findViewById(R.id.agenda_day);
-        switch (page){
+        switch (page) {
             case 1: //monday
                 day.setText(getString(R.string.monday));
                 break;
@@ -99,24 +102,22 @@ public class AgendaFragment extends Fragment {
         ArrayList<ArrayList<String>> data = database.toTabAgenda();
         database.close();
         ArrayList<ArrayList<String>> coursList = new ArrayList<>();
-        for(ArrayList<String> row : data){ //for each courses of the week
+        for (ArrayList<String> row : data) { //for each courses of the week
             String[] dateTab = row.get(0).split("/");
             Calendar cal = Calendar.getInstance();
             cal.setFirstDayOfWeek(Calendar.MONDAY);
-            cal.set(Integer.parseInt(dateTab[2]), Integer.parseInt(dateTab[1])-1, Integer.parseInt(dateTab[0]));
-            int weekDay = cal.get(Calendar.DAY_OF_WEEK)-1;
-            if (weekDay == page){ //correct day
+            cal.set(Integer.parseInt(dateTab[2]), Integer.parseInt(dateTab[1]) - 1, Integer.parseInt(dateTab[0]));
+            int weekDay = cal.get(Calendar.DAY_OF_WEEK) - 1;
+            if (weekDay == page) { //correct day
                 ArrayList<String> courseData = new ArrayList<String>();
                 courseData.add(row.get(1));
                 courseData.add(row.get(0) + " : " + row.get(2) + " - " + row.get(3));
-                if(row.get(4) == null){
+                if (row.get(4) == null) {
                     courseData.add("");
-                }
-                else if (row.get(4).contains(" / ")){ //if multiple infos
+                } else if (row.get(4).contains(" / ")) { //if multiple infos
                     courseData.add(row.get(4).split(" / ")[0]);
                     courseData.add(row.get(4).split(" / ")[1]);
-                }
-                else{
+                } else {
                     courseData.add(row.get(4));
                 }
                 coursList.add(courseData);
@@ -143,7 +144,7 @@ public class AgendaFragment extends Fragment {
     /**
      * RecyclerView Adapter
      */
-    private class RecyclerAdapterAgenda extends RecyclerView.Adapter<RecyclerAdapterAgenda.ViewHolder>{
+    private class RecyclerAdapterAgenda extends RecyclerView.Adapter<RecyclerAdapterAgenda.ViewHolder> {
         /**
          * Data
          */
@@ -151,15 +152,17 @@ public class AgendaFragment extends Fragment {
 
         /**
          * Constructor
+         *
          * @param data Data
          */
-        public RecyclerAdapterAgenda(ArrayList<ArrayList<String>> data){
+        public RecyclerAdapterAgenda(ArrayList<ArrayList<String>> data) {
             this.data = data;
         }
 
         /**
          * On create ViewHolder
-         * @param parent ViewGroup
+         *
+         * @param parent   ViewGroup
          * @param viewType Type of view
          * @return viewHolder
          */
@@ -167,19 +170,20 @@ public class AgendaFragment extends Fragment {
         @Override
         public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-            View listItem= layoutInflater.inflate(R.layout.list_item_course, parent, false);
+            View listItem = layoutInflater.inflate(R.layout.list_item_course, parent, false);
             ViewHolder viewHolder = new ViewHolder(listItem);
             return viewHolder;
         }
 
         /**
          * On bind ViewHolder
-         * @param holder ViewHolder
+         *
+         * @param holder   ViewHolder
          * @param position Position
          */
         @Override
         public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-            if(!data.get(position).isEmpty()){ //not null
+            if (!data.get(position).isEmpty()) { //not null
                 holder.card.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -193,12 +197,12 @@ public class AgendaFragment extends Fragment {
                         startActivity(intent);
                     }
                 });
-                try{
+                try {
                     holder.course.setText(data.get(position).get(0));
                     holder.hour.setText(data.get(position).get(1));
                     holder.place.setText(data.get(position).get(2));
                     holder.info.setText(data.get(position).get(3));
-                } catch (IndexOutOfBoundsException e){
+                } catch (IndexOutOfBoundsException e) {
                     e.printStackTrace();
                 }
             }
@@ -206,6 +210,7 @@ public class AgendaFragment extends Fragment {
 
         /**
          * Get number of items
+         *
          * @return NUmber of items
          */
         @Override
@@ -241,6 +246,7 @@ public class AgendaFragment extends Fragment {
 
             /**
              * Constructor
+             *
              * @param itemView View
              */
             public ViewHolder(View itemView) {
@@ -257,16 +263,17 @@ public class AgendaFragment extends Fragment {
     /**
      * Broadcast receiver for CourseEditor
      */
-    private class EditorReceiver extends BroadcastReceiver{
+    private class EditorReceiver extends BroadcastReceiver {
         /**
          * On receive
+         *
          * @param context Context
-         * @param intent Intent
+         * @param intent  Intent
          */
         @Override
         public void onReceive(Context context, Intent intent) {
             agenda.unregisterReceiver(editorReceiver);
-            if (intent.getBooleanExtra("edited", false)){
+            if (intent.getBooleanExtra("edited", false)) {
                 agenda.restart();
             }
         }

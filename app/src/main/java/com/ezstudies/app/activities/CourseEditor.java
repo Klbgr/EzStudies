@@ -22,27 +22,27 @@ import java.util.Calendar;
  */
 public class CourseEditor extends AppCompatActivity {
     /**
-     *  EditText to display the start hour
+     * EditText to display the start hour
      */
     private EditText startHour;
     /**
-     *  EditText to display the end hour
+     * EditText to display the end hour
      */
     private EditText endHour;
     /**
-     *  EditText to display the date
+     * EditText to display the date
      */
     private EditText date;
     /**
-     *  EditText to display the place
+     * EditText to display the place
      */
     private EditText place;
     /**
-     *  EditText to display the info
+     * EditText to display the info
      */
     private EditText info;
     /**
-     *  EditText to display the title of the course
+     * EditText to display the title of the course
      */
     private EditText course;
     /**
@@ -52,6 +52,7 @@ public class CourseEditor extends AppCompatActivity {
 
     /**
      * Initiate the activity
+     *
      * @param savedInstanceState Bundle
      */
     @Override
@@ -85,7 +86,7 @@ public class CourseEditor extends AppCompatActivity {
                         startHour.setText(hourOfDay + ":" + minute);
                     }
                 }, Integer.parseInt(String.valueOf(startHour.getText()).split(":")[0]), Integer.parseInt(String.valueOf(startHour.getText()).split(":")[1]), true);
-            tp.show();
+                tp.show();
             }
         });
 
@@ -116,11 +117,10 @@ public class CourseEditor extends AppCompatActivity {
                 DatePickerDialog dp = new DatePickerDialog(CourseEditor.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-                        if (dayOfMonth < 10){
-                            date.setText("0" + dayOfMonth + "/" + month+1 + "/" + year);
-                        }
-                        else{
-                            date.setText(dayOfMonth + "/" + month+1 + "/" + year);
+                        if (dayOfMonth < 10) {
+                            date.setText("0" + dayOfMonth + "/" + month + 1 + "/" + year);
+                        } else {
+                            date.setText(dayOfMonth + "/" + month + 1 + "/" + year);
                         }
 
                     }
@@ -148,9 +148,10 @@ public class CourseEditor extends AppCompatActivity {
 
     /**
      * Save the changes on the course
+     *
      * @param view view
      */
-    public void save(View view){
+    public void save(View view) {
         String date = getIntent().getStringExtra("hour").split(" : ")[0];
         String startAt = getIntent().getStringExtra("hour").substring(getIntent().getStringExtra("hour").indexOf(" : ") + 3, getIntent().getStringExtra("hour").indexOf(" - "));
         String endAt = getIntent().getStringExtra("hour").substring(getIntent().getStringExtra("hour").indexOf(" - ") + 3);
@@ -167,16 +168,13 @@ public class CourseEditor extends AppCompatActivity {
         String newPlace = place.getText().toString();
         String newInfo = info.getText().toString();
         String newDesc;
-        if(newPlace.isEmpty() && newInfo.isEmpty()){
+        if (newPlace.isEmpty() && newInfo.isEmpty()) {
             newDesc = null;
-        }
-        else if(newPlace.isEmpty()){
+        } else if (newPlace.isEmpty()) {
             newDesc = newInfo;
-        }
-        else if(newInfo.isEmpty()){
+        } else if (newInfo.isEmpty()) {
             newDesc = newPlace;
-        }
-        else{
+        } else {
             newDesc = newPlace + " / " + newInfo;
         }
         Log.d("new date", newDate);
@@ -185,7 +183,7 @@ public class CourseEditor extends AppCompatActivity {
         Log.d("new title", newTitle);
 
         Database db = new Database(this);
-        db.editAgenda(date, title, startAt, endAt, newDate,newTitle, newStartAt, newEndAt, newDesc);
+        db.editAgenda(date, title, startAt, endAt, newDate, newTitle, newStartAt, newEndAt, newDesc);
         db.close();
 
         edited = true;
@@ -195,9 +193,10 @@ public class CourseEditor extends AppCompatActivity {
 
     /**
      * Delete a course
+     *
      * @param view view
      */
-    public void delete(View view){
+    public void delete(View view) {
         String date = getIntent().getStringExtra("hour").split(" : ")[0];
         String startAt = getIntent().getStringExtra("hour").substring(getIntent().getStringExtra("hour").indexOf(" : ") + 3, getIntent().getStringExtra("hour").indexOf(" - "));
         String endAt = getIntent().getStringExtra("hour").substring(getIntent().getStringExtra("hour").indexOf(" - ") + 3);

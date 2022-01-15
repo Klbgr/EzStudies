@@ -99,6 +99,7 @@ public class Settings extends AppCompatActivity {
 
     /**
      * On create
+     *
      * @param savedInstanceState Bundle
      */
     @Override
@@ -132,7 +133,7 @@ public class Settings extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 editor.putInt("theme", position);
                 editor.apply();
-                switch(position){
+                switch (position) {
                     case 0:
                         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                         break;
@@ -172,7 +173,7 @@ public class Settings extends AppCompatActivity {
                 editor.putInt("import_mode", position);
                 editor.apply();
 
-                switch (position){
+                switch (position) {
                     case 0:
                         group0.setVisibility(View.VISIBLE);
                         break;
@@ -187,7 +188,8 @@ public class Settings extends AppCompatActivity {
              * @param parent AdapterView
              */
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         //travel
@@ -208,7 +210,7 @@ public class Settings extends AppCompatActivity {
                 editor.putInt("travel_mode", position);
                 editor.apply();
 
-                switch (position){
+                switch (position) {
                     case 0:
                     case 1:
                         group1.setVisibility(View.VISIBLE);
@@ -230,7 +232,8 @@ public class Settings extends AppCompatActivity {
              * @param parent AdapterView
              */
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         //alarm
@@ -257,7 +260,8 @@ public class Settings extends AppCompatActivity {
              * @param parent AdapterView
              */
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {}
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
         });
 
         //switch
@@ -274,11 +278,10 @@ public class Settings extends AppCompatActivity {
                 editor.apply();
                 TextView textView = findViewById(R.id.settings_alarm);
                 String text;
-                if(isChecked){
+                if (isChecked) {
                     text = getString(R.string.enabled);
                     group4.setVisibility(View.VISIBLE);
-                }
-                else{
+                } else {
                     text = getString(R.string.disabled);
                     group4.setVisibility(View.GONE);
                 }
@@ -294,14 +297,14 @@ public class Settings extends AppCompatActivity {
     /**
      * Refresh time of travel
      */
-    public void refreshRoute(){
+    public void refreshRoute() {
         String homeLat = sharedPreferences.getString("home_latitude", null);
         String homeLong = sharedPreferences.getString("home_longitude", null);
         String schoolLat = sharedPreferences.getString("school_latitude", null);
         String schoolLong = sharedPreferences.getString("school_longitude", null);
         int mode = sharedPreferences.getInt("travel_mode", 0);
 
-        if(homeLat != null && homeLong != null && schoolLat != null && schoolLong != null){
+        if (homeLat != null && homeLong != null && schoolLat != null && schoolLong != null) {
             wait = true;
 
             routeReceiver = new RouteReceiver();
@@ -335,7 +338,7 @@ public class Settings extends AppCompatActivity {
         Boolean condition2 = false;
         int prep_time;
         int mode = sharedPreferences.getInt("travel_mode", -1);
-        switch (mode){
+        switch (mode) {
             case 0: //driving
             case 1: //walking
                 String home_latitude = sharedPreferences.getString("home_latitude", null);
@@ -343,14 +346,14 @@ public class Settings extends AppCompatActivity {
                 String school_latitude = sharedPreferences.getString("school_latitude", null);
                 String school_longitude = sharedPreferences.getString("school_longitude", null);
                 prep_time = sharedPreferences.getInt("prep_time", -1);
-                if(home_latitude != null && home_longitude != null && school_latitude != null && school_longitude != null && prep_time != -1) {
+                if (home_latitude != null && home_longitude != null && school_latitude != null && school_longitude != null && prep_time != -1) {
                     condition1 = true;
                 }
                 break;
             case 2: // transit
                 prep_time = sharedPreferences.getInt("prep_time", -1);
                 int travel_time = sharedPreferences.getInt("travel_time", -1);
-                if (prep_time != -1 && travel_time != -1){
+                if (prep_time != -1 && travel_time != -1) {
                     condition1 = true;
                 }
                 break;
@@ -358,13 +361,12 @@ public class Settings extends AppCompatActivity {
                 break;
         }
         int import_mode = sharedPreferences.getInt("import_mode", -1);
-        switch (import_mode){
+        switch (import_mode) {
             case 0: //celcat
                 Boolean connected = sharedPreferences.getBoolean("connected", false);
-                if(connected){
+                if (connected) {
                     condition2 = true;
-                }
-                else {
+                } else {
                     condition2 = false;
                 }
                 break;
@@ -376,10 +378,9 @@ public class Settings extends AppCompatActivity {
         }
 
         Boolean conditions = condition1 && condition2 && !wait;
-        if(conditions){
+        if (conditions) {
             super.onBackPressed();
-        }
-        else{
+        } else {
             Toast.makeText(this, R.string.invalid_settings, Toast.LENGTH_SHORT).show();
         }
     }
@@ -387,18 +388,18 @@ public class Settings extends AppCompatActivity {
     /**
      * Update location names
      */
-    public void updateLocation(){
+    public void updateLocation() {
         //home
         String home_longitude = sharedPreferences.getString("home_longitude", null);
         String home_latitude = sharedPreferences.getString("home_latitude", null);
-        if(home_longitude != null && home_latitude != null){
+        if (home_longitude != null && home_latitude != null) {
             TextView textView = findViewById(R.id.settings_home);
             String address = home_latitude + "\n" + home_longitude;
             try {
                 address = new Geocoder(this, Locale.getDefault()).getFromLocation(Double.parseDouble(home_latitude), Double.parseDouble(home_longitude), 1).get(0).getAddressLine(0);
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (IndexOutOfBoundsException e){
+            } catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
             }
             textView.setText(address);
@@ -407,14 +408,14 @@ public class Settings extends AppCompatActivity {
         //school
         String school_longitude = sharedPreferences.getString("school_longitude", null);
         String school_latitude = sharedPreferences.getString("school_latitude", null);
-        if(school_longitude != null && school_latitude != null){
+        if (school_longitude != null && school_latitude != null) {
             TextView textView = findViewById(R.id.settings_school);
             String address = school_latitude + "\n" + school_longitude;
             try {
                 address = new Geocoder(this, Locale.getDefault()).getFromLocation(Double.parseDouble(school_latitude), Double.parseDouble(school_longitude), 1).get(0).getAddressLine(0);
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (IndexOutOfBoundsException e){
+            } catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
             }
             textView.setText(address);
@@ -424,15 +425,14 @@ public class Settings extends AppCompatActivity {
     /**
      * Load preferences
      */
-    public void loadPrefs(){
+    public void loadPrefs() {
         //preparation time
         int ptime = sharedPreferences.getInt("prep_time", -1);
         TextView textView = findViewById(R.id.settings_prep_time);
         String prep_time;
-        if(ptime != -1){
+        if (ptime != -1) {
             prep_time = getString(R.string.minutes, ptime);
-        }
-        else{
+        } else {
             editor.putInt("prep_time", 30);
             editor.apply();
             prep_time = getString(R.string.minutes, 30);
@@ -443,10 +443,9 @@ public class Settings extends AppCompatActivity {
         int ttime = sharedPreferences.getInt("travel_time", -1);
         textView = findViewById(R.id.settings_travel_time);
         String travel_time;
-        if(ttime != -1){
+        if (ttime != -1) {
             travel_time = getString(R.string.minutes, ttime);
-        }
-        else{
+        } else {
             editor.putInt("travel_time", 30);
             editor.apply();
             travel_time = getString(R.string.minutes, 30);
@@ -473,11 +472,10 @@ public class Settings extends AppCompatActivity {
         boolean connected = sharedPreferences.getBoolean("connected", false);
         textView = findViewById(R.id.settings_status);
         String text;
-        if(connected){
+        if (connected) {
             String name = sharedPreferences.getString("name", null);
             text = getString(R.string.connected_as, name);
-        }
-        else{
+        } else {
             text = getString(R.string.not_connected);
         }
         textView.setText(text);
@@ -487,11 +485,10 @@ public class Settings extends AppCompatActivity {
         s.setChecked(alarm);
         textView = findViewById(R.id.settings_alarm);
         LinearLayout group4 = findViewById(R.id.settings_group4);
-        if(alarm){
+        if (alarm) {
             text = getString(R.string.enabled);
             group4.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             text = getString(R.string.disabled);
             group4.setVisibility(View.GONE);
         }
@@ -501,7 +498,7 @@ public class Settings extends AppCompatActivity {
     /**
      * Set OnClickListeners
      */
-    public void setOnClickListeners(){
+    public void setOnClickListeners() {
         findViewById(R.id.settings_click0).setOnClickListener(new View.OnClickListener() {
             /**
              * On click
@@ -645,14 +642,13 @@ public class Settings extends AppCompatActivity {
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        try{
+                        try {
                             int time = Integer.parseInt(editText.getText().toString().replace(" ", ""));
                             editor.putInt("travel_time", time);
                             editor.apply();
                             TextView textView = findViewById(R.id.settings_travel_time);
                             textView.setText(getString(R.string.minutes, time));
-                        }
-                        catch (NumberFormatException e){
+                        } catch (NumberFormatException e) {
                             Toast.makeText(Settings.this, R.string.invalid_input, Toast.LENGTH_SHORT).show();
                         }
 
@@ -697,14 +693,13 @@ public class Settings extends AppCompatActivity {
                      */
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        try{
+                        try {
                             int time = Integer.parseInt(editText.getText().toString().replace(" ", ""));
                             editor.putInt("prep_time", time);
                             editor.apply();
                             TextView textView = findViewById(R.id.settings_prep_time);
                             textView.setText(getString(R.string.minutes, time));
-                        }
-                        catch (NumberFormatException e){
+                        } catch (NumberFormatException e) {
                             Toast.makeText(Settings.this, R.string.invalid_input, Toast.LENGTH_SHORT).show();
                         }
 
@@ -757,20 +752,18 @@ public class Settings extends AppCompatActivity {
             public void onClick(View view) {
                 Toast.makeText(Settings.this, getString(R.string.source), Toast.LENGTH_SHORT).show();
                 Date now = Calendar.getInstance().getTime();
-                if(date == null || now.getTime() - date.getTime() > 5*1000){ //5s
+                if (date == null || now.getTime() - date.getTime() > 5 * 1000) { //5s
                     date = Calendar.getInstance().getTime();
                     count = 1;
-                }
-                else if(count == 4){
+                } else if (count == 4) {
                     Toast.makeText(Settings.this, getString(R.string.easter_egg_enjoy), Toast.LENGTH_SHORT).show();
                     date = null;
                     count = 0;
                     Uri uri = Uri.parse("https://youtu.be/dQw4w9WgXcQ");
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
-                }
-                else{
-                    count ++;
+                } else {
+                    count++;
                 }
             }
         });
@@ -791,8 +784,9 @@ public class Settings extends AppCompatActivity {
     private class RouteReceiver extends BroadcastReceiver {
         /**
          * On receive
+         *
          * @param context Context
-         * @param intent Intent
+         * @param intent  Intent
          */
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -807,11 +801,12 @@ public class Settings extends AppCompatActivity {
     /**
      * Broadcast receiver for Login
      */
-    private class LoginReceiver extends BroadcastReceiver{
+    private class LoginReceiver extends BroadcastReceiver {
         /**
          * On receive
+         *
          * @param context Context
-         * @param intent Intent
+         * @param intent  Intent
          */
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -821,7 +816,7 @@ public class Settings extends AppCompatActivity {
             String name = intent.getStringExtra("name");
             String password = intent.getStringExtra("password");
             String responseUrl = intent.getStringExtra("responseUrl");
-            if(success) {
+            if (success) {
                 editor.putString("name", name);
                 editor.putString("password", password);
                 editor.putBoolean("connected", true);
@@ -831,14 +826,12 @@ public class Settings extends AppCompatActivity {
 
                 TextView textView = findViewById(R.id.settings_status);
                 textView.setText(getString(R.string.connected_as, name));
-            }
-            else{
+            } else {
                 String response = responseUrl;
                 String text;
                 if (response != null && response.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {
                     text = getString(R.string.login_fail_credentials);
-                }
-                else {
+                } else {
                     text = getString(R.string.login_fail_network);
                 }
                 Toast.makeText(context, text, Toast.LENGTH_SHORT).show();

@@ -13,7 +13,7 @@ import java.nio.charset.Charset;
 /**
  * Get a JSON Object from an URL
  */
-public class JSONFromURL extends Thread{
+public class JSONFromURL extends Thread {
     /**
      * URL of JSON stream
      */
@@ -25,9 +25,10 @@ public class JSONFromURL extends Thread{
 
     /**
      * Constructor
+     *
      * @param url URL
      */
-    public JSONFromURL(String url){
+    public JSONFromURL(String url) {
         this.url = url;
     }
 
@@ -55,9 +56,10 @@ public class JSONFromURL extends Thread{
 
     /**
      * Get JSONObject
+     *
      * @return JSONObject
      */
-    public JSONObject getJson(){
+    public JSONObject getJson() {
         return json;
     }
 }

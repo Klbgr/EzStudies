@@ -90,6 +90,7 @@ public class WelcomeFragment extends Fragment {
 
     /**
      * Constructor
+     *
      * @param page Requested page
      */
     public WelcomeFragment(int page) {
@@ -98,8 +99,9 @@ public class WelcomeFragment extends Fragment {
 
     /**
      * On create view
-     * @param inflater LayoutInflater
-     * @param container ViewGroup
+     *
+     * @param inflater           LayoutInflater
+     * @param container          ViewGroup
      * @param savedInstanceState Bundle
      * @return View
      */
@@ -141,7 +143,7 @@ public class WelcomeFragment extends Fragment {
                     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         editor.putInt("theme", position);
                         editor.apply();
-                        switch(position){
+                        switch (position) {
                             case 0:
                                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM);
                                 break;
@@ -284,11 +286,10 @@ public class WelcomeFragment extends Fragment {
                         editor.apply();
                         TextView textView = view.findViewById(R.id.settings_alarm);
                         String text;
-                        if(isChecked){
+                        if (isChecked) {
                             text = getString(R.string.enabled);
                             group4.setVisibility(View.VISIBLE);
-                        }
-                        else{
+                        } else {
                             text = getString(R.string.disabled);
                             group4.setVisibility(View.GONE);
                         }
@@ -320,7 +321,7 @@ public class WelcomeFragment extends Fragment {
     /**
      * Update location names
      */
-    public void updateLocation(){
+    public void updateLocation() {
         //home
         String home_longitude = sharedPreferences.getString("home_longitude", null);
         String home_latitude = sharedPreferences.getString("home_latitude", null);
@@ -331,7 +332,7 @@ public class WelcomeFragment extends Fragment {
                 address = new Geocoder(getActivity(), Locale.getDefault()).getFromLocation(Double.parseDouble(home_latitude), Double.parseDouble(home_longitude), 1).get(0).getAddressLine(0);
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (IndexOutOfBoundsException e){
+            } catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
             }
             textView.setText(address);
@@ -347,7 +348,7 @@ public class WelcomeFragment extends Fragment {
                 address = new Geocoder(getActivity(), Locale.getDefault()).getFromLocation(Double.parseDouble(school_latitude), Double.parseDouble(school_longitude), 1).get(0).getAddressLine(0);
             } catch (IOException e) {
                 e.printStackTrace();
-            } catch (IndexOutOfBoundsException e){
+            } catch (IndexOutOfBoundsException e) {
                 e.printStackTrace();
             }
             textView.setText(address);
@@ -417,11 +418,10 @@ public class WelcomeFragment extends Fragment {
         s.setChecked(alarm);
         textView = view.findViewById(R.id.settings_alarm);
         LinearLayout group4 = view.findViewById(R.id.settings_group4);
-        if(alarm){
+        if (alarm) {
             text = getString(R.string.enabled);
             group4.setVisibility(View.VISIBLE);
-        }
-        else{
+        } else {
             text = getString(R.string.disabled);
             group4.setVisibility(View.GONE);
         }
@@ -616,8 +616,9 @@ public class WelcomeFragment extends Fragment {
     private class LoginReceiver extends BroadcastReceiver {
         /**
          * On receive
+         *
          * @param context Context
-         * @param intent Intent
+         * @param intent  Intent
          */
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -637,8 +638,7 @@ public class WelcomeFragment extends Fragment {
 
                 TextView textView = view.findViewById(R.id.settings_status);
                 textView.setText(getString(R.string.connected_as, name));
-            }
-            else {
+            } else {
                 String response = responseUrl;
                 String text;
                 if (response != null && response.equals("https://services-web.u-cergy.fr/calendar/LdapLogin/Logon")) {

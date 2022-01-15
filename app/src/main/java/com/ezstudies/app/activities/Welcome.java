@@ -43,6 +43,7 @@ public class Welcome extends FragmentActivity {
 
     /**
      * On create
+     *
      * @param savedInstanceState Bundle
      */
     @Override
@@ -60,7 +61,7 @@ public class Welcome extends FragmentActivity {
                 super.onPageSelected(position);
                 ImageView dot0 = findViewById(R.id.welcome_dot0);
                 ImageView dot1 = findViewById(R.id.welcome_dot1);
-                switch (position){
+                switch (position) {
                     case 0:
                         dot0.setImageDrawable(getDrawable(R.drawable.dot_selected));
                         dot1.setImageDrawable(getDrawable(R.drawable.dot));
@@ -72,7 +73,7 @@ public class Welcome extends FragmentActivity {
                 }
             }
         });
-        if(savedInstanceState != null){ //set current page
+        if (savedInstanceState != null) { //set current page
             int current_page = savedInstanceState.getInt("current_page", 0);
             viewPager.setCurrentItem(current_page);
         }
@@ -80,6 +81,7 @@ public class Welcome extends FragmentActivity {
 
     /**
      * On save instance state
+     *
      * @param outState Bundle
      */
     @Override
@@ -90,14 +92,15 @@ public class Welcome extends FragmentActivity {
 
     /**
      * Finish setup
+     *
      * @param view View
      */
-    public void enter(View view){
+    public void enter(View view) {
         Boolean condition1 = false;
         Boolean condition2 = false;
         int prep_time;
         int mode = sharedPreferences.getInt("travel_mode", -1);
-        switch (mode){
+        switch (mode) {
             case 0: //driving
             case 1: //walking
                 String home_latitude = sharedPreferences.getString("home_latitude", null);
@@ -105,7 +108,7 @@ public class Welcome extends FragmentActivity {
                 String school_latitude = sharedPreferences.getString("school_latitude", null);
                 String school_longitude = sharedPreferences.getString("school_longitude", null);
                 prep_time = sharedPreferences.getInt("prep_time", -1);
-                if(home_latitude != null && home_longitude != null && school_latitude != null && school_longitude != null && prep_time != -1) {
+                if (home_latitude != null && home_longitude != null && school_latitude != null && school_longitude != null && prep_time != -1) {
                     condition1 = true;
 
                     routeReceiver = new RouteReceiver();
@@ -123,7 +126,7 @@ public class Welcome extends FragmentActivity {
             case 2: // transit
                 prep_time = sharedPreferences.getInt("prep_time", -1);
                 int travel_time = sharedPreferences.getInt("travel_time", -1);
-                if (prep_time != -1 && travel_time != -1){
+                if (prep_time != -1 && travel_time != -1) {
                     condition1 = true;
                 }
                 break;
@@ -131,13 +134,12 @@ public class Welcome extends FragmentActivity {
                 break;
         }
         int import_mode = sharedPreferences.getInt("import_mode", -1);
-        switch (import_mode){
+        switch (import_mode) {
             case 0: //celcat
                 Boolean connected = sharedPreferences.getBoolean("connected", false);
-                if(connected){
+                if (connected) {
                     condition2 = true;
-                }
-                else {
+                } else {
                     condition2 = false;
                 }
                 break;
@@ -149,15 +151,14 @@ public class Welcome extends FragmentActivity {
         }
 
         Boolean conditions = condition1 && condition2;
-        if(conditions){
+        if (conditions) {
             editor.putBoolean("first_time", false);
             editor.apply();
-            if(mode == 2){
+            if (mode == 2) {
                 finish();
                 startActivity(new Intent(this, Overview.class));
             }
-        }
-        else{
+        } else {
             Toast.makeText(this, R.string.finish_setup, Toast.LENGTH_SHORT).show();
         }
     }
@@ -168,6 +169,7 @@ public class Welcome extends FragmentActivity {
     private class FragmentStateAdapterWelcome extends FragmentStateAdapter {
         /**
          * Constructor
+         *
          * @param fragmentActivity FragmentActivity
          */
         public FragmentStateAdapterWelcome(FragmentActivity fragmentActivity) {
@@ -176,18 +178,19 @@ public class Welcome extends FragmentActivity {
 
         /**
          * Create fragment
+         *
          * @param position Position
          * @return Fragment
          */
         @Override
         public Fragment createFragment(int position) {
             Fragment page = null;
-            switch (position){
+            switch (position) {
                 case 0:
-                    page =  new WelcomeFragment(1);
+                    page = new WelcomeFragment(1);
                     break;
                 case 1:
-                    page =  new WelcomeFragment(2);
+                    page = new WelcomeFragment(2);
                     break;
                 default:
                     break;
@@ -197,6 +200,7 @@ public class Welcome extends FragmentActivity {
 
         /**
          * Get number of pages
+         *
          * @return Number of pages
          */
         @Override
@@ -208,11 +212,12 @@ public class Welcome extends FragmentActivity {
     /**
      * Broadcast receiver for RouteCalculator
      */
-    private class RouteReceiver extends BroadcastReceiver{
+    private class RouteReceiver extends BroadcastReceiver {
         /**
          * On receive
+         *
          * @param context Context
-         * @param intent Intent
+         * @param intent  Intent
          */
         @Override
         public void onReceive(Context context, Intent intent) {

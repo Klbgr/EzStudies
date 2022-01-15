@@ -16,9 +16,10 @@ import org.json.JSONObject;
 /**
  * Check for updates from GitHub
  */
-public class UpdateChecker extends Service{
+public class UpdateChecker extends Service {
     /**
      * On bind
+     *
      * @param intent Intent
      * @return IBinder
      */
@@ -30,8 +31,9 @@ public class UpdateChecker extends Service{
 
     /**
      * On start command
-     * @param intent Intent
-     * @param flags Flags
+     *
+     * @param intent  Intent
+     * @param flags   Flags
      * @param startId ID
      * @return Success
      */
@@ -45,11 +47,11 @@ public class UpdateChecker extends Service{
             String currentVersion = BuildConfig.VERSION_NAME;
             String remoteVersion = json.getString("name");
             Intent intent1 = new Intent(intent.getStringExtra("target"));
-            if(isGreater(remoteVersion, currentVersion)){
+            if (isGreater(remoteVersion, currentVersion)) {
                 JSONArray array = json.getJSONArray("assets");
-                for(int i = 0 ; i < array.length() ; i++){
+                for (int i = 0; i < array.length(); i++) {
                     String type = array.getJSONObject(0).getString("content_type");
-                    if(type.equals("application/vnd.android.package-archive")){ //contains apk
+                    if (type.equals("application/vnd.android.package-archive")) { //contains apk
                         String name = array.getJSONObject(0).getString("name");
                         String url = array.getJSONObject(0).getString("browser_download_url");
                         String changelog = json.getString("body");
@@ -67,7 +69,7 @@ public class UpdateChecker extends Service{
             e.printStackTrace();
         } catch (JSONException e) {
             e.printStackTrace();
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             e.printStackTrace();
         }
         return super.onStartCommand(intent, flags, startId);
@@ -75,48 +77,44 @@ public class UpdateChecker extends Service{
 
     /**
      * Check if one version is greater than another version
+     *
      * @param version1 Version 1
      * @param version2 Version 2
      * @return Is greater
      */
-    public boolean isGreater(String version1, String version2){
+    public boolean isGreater(String version1, String version2) {
         int[] v1 = stringToInt(version1.split("\\."));
         int[] v2 = stringToInt(version2.split("\\."));
-        if(v1[0] > v2[0]){
+        if (v1[0] > v2[0]) {
             return true;
-        }
-        else if(v1[0] == v2[0]){
-            if(v1[1] > v2[1]){
+        } else if (v1[0] == v2[0]) {
+            if (v1[1] > v2[1]) {
                 return true;
-            }
-            else if(v1[1] == v2[1]){
-                if(v1[2] > v2[2]){
+            } else if (v1[1] == v2[1]) {
+                if (v1[2] > v2[2]) {
                     return true;
-                }
-                else if(v1[2] == v2[2]){
+                } else if (v1[2] == v2[2]) {
+                    return false;
+                } else {
                     return false;
                 }
-                else{
-                    return false;
-                }
-            }
-            else{
+            } else {
                 return false;
             }
-        }
-        else{
+        } else {
             return false;
         }
     }
 
     /**
      * Convert an array of String of an array of Integer
+     *
      * @param string Array of String
      * @return Array of Integer
      */
-    public int[] stringToInt(String[] string){
+    public int[] stringToInt(String[] string) {
         int[] integer = new int[3];
-        for(int i = 0 ; i < string.length ; i++){
+        for (int i = 0; i < string.length; i++) {
             integer[i] = Integer.parseInt(string[i]);
         }
         return integer;

@@ -18,7 +18,7 @@ import java.util.Calendar;
 /**
  * Service that sets alarms
  */
-public class AlarmSetter extends Service implements Runnable{
+public class AlarmSetter extends Service implements Runnable {
     /**
      * List of times
      */
@@ -26,6 +26,7 @@ public class AlarmSetter extends Service implements Runnable{
 
     /**
      * On bind
+     *
      * @param intent Intent
      * @return IBinder
      */
@@ -37,8 +38,9 @@ public class AlarmSetter extends Service implements Runnable{
 
     /**
      * On start command
-     * @param intent Intent
-     * @param flags Flags
+     *
+     * @param intent  Intent
+     * @param flags   Flags
      * @param startId ID
      * @return Success
      */
@@ -53,8 +55,8 @@ public class AlarmSetter extends Service implements Runnable{
     /**
      * Start
      */
-    public void run(){
-        for(String infos[] : list){
+    public void run() {
+        for (String infos[] : list) {
             int day = Integer.parseInt(infos[0].split("/")[0]);
             int month = Integer.parseInt(infos[0].split("/")[1]);
             int year = Integer.parseInt(infos[0].split("/")[2]);
@@ -63,12 +65,12 @@ public class AlarmSetter extends Service implements Runnable{
             long now = Calendar.getInstance().getTimeInMillis();
             Calendar calendar = Calendar.getInstance();
             calendar.set(Calendar.DAY_OF_MONTH, day);
-            calendar.set(Calendar.MONTH, month-1);
+            calendar.set(Calendar.MONTH, month - 1);
             calendar.set(Calendar.YEAR, year);
             calendar.set(Calendar.HOUR_OF_DAY, hour);
             calendar.set(Calendar.MINUTE, minute);
             long then = calendar.getTimeInMillis();
-            if(then >= now){
+            if (then >= now) {
                 setAlarm(calendar.get(Calendar.DAY_OF_WEEK), hour, minute);
                 try {
                     sleep(1000);
@@ -81,12 +83,13 @@ public class AlarmSetter extends Service implements Runnable{
 
     /**
      * Get name of a day
+     *
      * @param d Day
      * @return Name of a day
      */
-    public String getDayName(int d){
+    public String getDayName(int d) {
         String name = null;
-        switch (d){
+        switch (d) {
             case 2:
                 name = getString(R.string.monday);
                 break;
@@ -111,12 +114,13 @@ public class AlarmSetter extends Service implements Runnable{
 
     /**
      * Set an alarm
-     * @param day Day
-     * @param hour Hour
+     *
+     * @param day    Day
+     * @param hour   Hour
      * @param minute Minute
      */
-    public void setAlarm(int day, int hour, int minute){
-        int alarm = getApplicationContext().getSharedPreferences(Settings.SHARED_PREFERENCES_NAME, MODE_PRIVATE).getInt("alarm_ringtone", 0)+1;
+    public void setAlarm(int day, int hour, int minute) {
+        int alarm = getApplicationContext().getSharedPreferences(Settings.SHARED_PREFERENCES_NAME, MODE_PRIVATE).getInt("alarm_ringtone", 0) + 1;
         ArrayList<Integer> days = new ArrayList<>();
         days.add(day);
         Intent intent = new Intent(AlarmClock.ACTION_SET_ALARM);

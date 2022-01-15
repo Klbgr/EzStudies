@@ -15,8 +15,9 @@ import com.ezstudies.app.activities.Overview;
 public class AlarmRestorer extends BroadcastReceiver {
     /**
      * On receive
+     *
      * @param context Context
-     * @param intent Intent
+     * @param intent  Intent
      */
     @Override
     public void onReceive(Context context, Intent intent) {

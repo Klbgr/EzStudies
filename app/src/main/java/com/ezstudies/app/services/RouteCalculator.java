@@ -32,6 +32,7 @@ public class RouteCalculator extends Service implements Runnable {
 
     /**
      * On bind
+     *
      * @param intent Intent
      * @return IBinder
      */
@@ -43,14 +44,15 @@ public class RouteCalculator extends Service implements Runnable {
 
     /**
      * On start command
-     * @param intent Intent
-     * @param flags Flags
+     *
+     * @param intent  Intent
+     * @param flags   Flags
      * @param startId ID
      * @return Success
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if(intent != null){
+        if (intent != null) {
             this.intent = intent;
             int mode = intent.getIntExtra("mode", -1);
             String homeLat = intent.getStringExtra("homeLat");
@@ -58,7 +60,7 @@ public class RouteCalculator extends Service implements Runnable {
             String schoolLat = intent.getStringExtra("schoolLat");
             String schoolLong = intent.getStringExtra("schoolLong");
             String travel_mode = null;
-            switch (mode){
+            switch (mode) {
                 case 0: //driving
                     travel_mode = "driving";
                     break;
@@ -79,7 +81,7 @@ public class RouteCalculator extends Service implements Runnable {
     /**
      * Start
      */
-    public void run(){
+    public void run() {
         JSONFromURL jsonFromURL = new JSONFromURL(url);
         jsonFromURL.start();
         try {

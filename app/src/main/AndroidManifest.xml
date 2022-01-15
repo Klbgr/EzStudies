@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.ezstudies.app">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.ezstudies.app">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -14,7 +16,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.EzStudies" >
+        android:theme="@style/Theme.EzStudies">
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAPS_API_KEY}" />
@@ -23,11 +25,11 @@
             android:value="@integer/google_play_services_version" />
 
         <uses-library android:name="com.google.android.maps" />
-        
+
         <provider
-            android:authorities="${applicationId}.provider"
             android:name="androidx.core.content.FileProvider"
-            android:grantUriPermissions="true" >
+            android:authorities="${applicationId}.provider"
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
@@ -35,7 +37,7 @@
 
         <activity
             android:name=".activities.Overview"
-            android:exported="true" >
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -49,13 +51,13 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Agenda"
+            android:exported="true"
             android:label="@string/agenda"
-            android:screenOrientation="portrait"
-            android:exported="true" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.Homeworks"
-            android:label="@string/homeworks"
-            android:exported="true" />
+            android:exported="true"
+            android:label="@string/homeworks" />
         <activity
             android:name=".activities.Settings"
             android:label="@string/settings" />
@@ -78,7 +80,8 @@
         <receiver
             android:name=".activities.Homeworks$NotificationReceiver"
             android:enabled="true" />
-        <receiver android:name=".activities.Overview$NotificationReceiver"
+        <receiver
+            android:name=".activities.Overview$NotificationReceiver"
             android:enabled="true" />
         <receiver
             android:name=".AlarmRestorer"
@@ -88,22 +91,26 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".widgets.AgendaWidget"
+        <receiver
+            android:name=".widgets.AgendaWidget"
             android:exported="true"
             android:label="@string/agenda">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
+            <meta-data
+                android:name="android.appwidget.provider"
                 android:resource="@xml/agenda_widget" />
         </receiver>
-        <receiver android:name=".widgets.HomeworksWidget"
+        <receiver
+            android:name=".widgets.HomeworksWidget"
             android:exported="true"
             android:label="@string/homeworks">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
+            <meta-data
+                android:name="android.appwidget.provider"
                 android:resource="@xml/homeworks_widget" />
         </receiver>
     </application>

@@ -38,7 +38,7 @@ import java.util.Locale;
 /**
  * Activity that displays a MapView and a search bar
  */
-public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
+public class MyMapView extends AppCompatActivity implements OnMapReadyCallback {
     /**
      * Broadcast receiver for GPS
      */
@@ -62,6 +62,7 @@ public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
 
     /**
      * On create
+     *
      * @param savedInstanceState Bundle
      */
     @Override
@@ -76,6 +77,7 @@ public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
 
     /**
      * On map ready
+     *
      * @param googleMap GoogleMap
      */
     @Override
@@ -141,6 +143,7 @@ public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
 
     /**
      * On save instance state
+     *
      * @param outState Bundle
      */
     @Override
@@ -160,8 +163,9 @@ public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
 
     /**
      * Set marker on MapView
+     *
      * @param latLng Coordinates
-     * @param zoom Level of zoom
+     * @param zoom   Level of zoom
      */
     public void setMarker(LatLng latLng, boolean zoom) {
         MarkerOptions markerOptions = new MarkerOptions();
@@ -170,7 +174,7 @@ public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
             label = new Geocoder(this, Locale.getDefault()).getFromLocation(latLng.latitude, latLng.longitude, 1).get(0).getAddressLine(0);
         } catch (IOException e) {
             e.printStackTrace();
-        } catch (IndexOutOfBoundsException e){
+        } catch (IndexOutOfBoundsException e) {
             label = getString(R.string.unknown);
         }
         markerOptions.title(label);
@@ -180,7 +184,7 @@ public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
         }
         marker = googleMap.addMarker(markerOptions);
         marker.showInfoWindow();
-        if(zoom) {
+        if (zoom) {
             googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
         }
     }
@@ -188,7 +192,7 @@ public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
     /**
      * Get location from GPS
      */
-    public void getLocation(){
+    public void getLocation() {
         locationReceiver = new LocationReceiver();
         registerReceiver(locationReceiver, new IntentFilter("MyMapView"));
         Intent intent = new Intent(this, GPS.class);
@@ -197,15 +201,16 @@ public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
 
     /**
      * Search for a location
+     *
      * @param view View
      */
-    public void searchLocation(View view){
+    public void searchLocation(View view) {
         EditText editText = findViewById(R.id.mymapview_input);
         String address = editText.getText().toString();
         try {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
             List<Address> coords = geocoder.getFromLocationName(address, 1);
-            if(coords.isEmpty())
+            if (coords.isEmpty())
                 Toast.makeText(this, R.string.address_not_found, Toast.LENGTH_SHORT).show();
             else
                 setMarker(new LatLng(coords.get(0).getLatitude(), coords.get(0).getLongitude()), true);
@@ -216,23 +221,24 @@ public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
 
     /**
      * Check for permissions
+     *
      * @param view View
      */
-    public void locate(View view){
-        if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+    public void locate(View view) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             getLocation();
-        }
-        else{
-            ActivityCompat.requestPermissions(this, new String[] { Manifest.permission.ACCESS_FINE_LOCATION }, 101);
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
         }
     }
 
     /**
      * Select a location
+     *
      * @param view View
      */
-    public void ok(View view){
-        if(marker != null){
+    public void ok(View view) {
+        if (marker != null) {
             Double longitude = marker.getPosition().longitude;
             Double latitude = marker.getPosition().latitude;
             SharedPreferences sharedPreferences = getSharedPreferences(Settings.SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
@@ -241,16 +247,16 @@ public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
             editor.putString(type + "_latitude", String.valueOf(latitude));
             editor.apply();
             finish();
-        }
-        else {
+        } else {
             Toast.makeText(this, R.string.please_select_location, Toast.LENGTH_SHORT).show();
         }
     }
 
     /**
      * On request permission result
-     * @param requestCode Request code
-     * @param permissions Permissions
+     *
+     * @param requestCode  Request code
+     * @param permissions  Permissions
      * @param grantResults Grant results
      */
     @Override
@@ -261,8 +267,7 @@ public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, R.string.perm_granted, Toast.LENGTH_SHORT).show();
                     getLocation();
-                }
-                else {
+                } else {
                     Toast.makeText(this, R.string.perm_denied, Toast.LENGTH_SHORT).show();
                 }
                 return;
@@ -272,11 +277,12 @@ public class MyMapView extends AppCompatActivity implements OnMapReadyCallback{
     /**
      * Broadcast receiver for GPS
      */
-    private class LocationReceiver extends BroadcastReceiver{
+    private class LocationReceiver extends BroadcastReceiver {
         /**
          * On receive
+         *
          * @param context Context
-         * @param intent Intent
+         * @param intent  Intent
          */
         @Override
         public void onReceive(Context context, Intent intent) {
