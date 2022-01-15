@@ -78,6 +78,8 @@
         <receiver
             android:name=".activities.Homeworks$NotificationReceiver"
             android:enabled="true" />
+        <receiver android:name=".activities.Overview$NotificationReceiver"
+            android:enabled="true" />
         <receiver
             android:name=".AlarmRestorer"
             android:exported="false">
@@ -86,7 +88,7 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
-        <receiver android:name=".AgendaWidget"
+        <receiver android:name=".widgets.AgendaWidget"
             android:exported="true"
             android:label="@string/agenda">
             <intent-filter>
@@ -95,7 +97,7 @@
             <meta-data android:name="android.appwidget.provider"
                 android:resource="@xml/agenda_widget" />
         </receiver>
-        <receiver android:name=".HomeworksWidget"
+        <receiver android:name=".widgets.HomeworksWidget"
             android:exported="true"
             android:label="@string/homeworks">
             <intent-filter>

@@ -1,8 +1,12 @@
 package com.ezstudies.app.activities;
 
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.DownloadManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -16,6 +20,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,6 +32,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,6 +51,10 @@ import java.util.Calendar;
  * Activity that displays important information
  */
 public class Overview extends AppCompatActivity {
+    /**
+     * ID of notification channel
+     */
+    private static final String CHANNEL_ID_OVERVIEW = "EzStudies_Overview";
     /**
      * Shared preferences
      */
@@ -93,6 +104,8 @@ public class Overview extends AppCompatActivity {
             setContentView(R.layout.overview_layout);
             getSupportActionBar().setTitle(getString(R.string.overview));
             checkUpdate();
+            createNotificationChannelOverview();
+            setNotificationsOverview(this);
         }
     }
 
@@ -175,7 +188,10 @@ public class Overview extends AppCompatActivity {
                 ArrayList<String> courseData = new ArrayList<String>();
                 courseData.add(row.get(1));
                 courseData.add(row.get(0) + " : " + row.get(2) + " - " + row.get(3));
-                if (row.get(4).contains(" / ")){
+                if (row.get(4) == null){
+                    courseData.add("");
+                }
+                else if (row.get(4).contains(" / ")){
                     courseData.add(row.get(4).split(" / ")[0]);
                     courseData.add(row.get(4).split(" / ")[1]);
                 }
@@ -599,6 +615,105 @@ public class Overview extends AppCompatActivity {
             intent1.setDataAndType(FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider", new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), name)), "application/vnd.android.package-archive");
             intent1.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent1);
+        }
+    }
+
+    /**
+     * Broadcast receiver for notifications
+     */
+    public static class NotificationReceiver extends BroadcastReceiver {
+        /**
+         * On receive
+         * @param context Context
+         * @param intent Intent
+         */
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("receiver", "received ! id = 300");
+            Intent agenda = new Intent(context, Agenda.class);
+            agenda.putExtra("refresh", true);
+            agenda.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, agenda, PendingIntent.FLAG_IMMUTABLE | PendingIntent.FLAG_UPDATE_CURRENT);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID_OVERVIEW)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                    .setStyle(new NotificationCompat.BigTextStyle()
+                            .bigText(intent.getStringExtra("text")))
+                    .setContentTitle(intent.getStringExtra("title"))
+                    .setContentText(intent.getStringExtra("text"))
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+            notificationManager.notify(300, builder.build());
+        }
+    }
+
+    /**
+     * Schedule a notification
+     * @param context Context
+     * @param time Time
+     * @param title Title
+     * @param text Text
+     */
+    public static void scheduleNotificationOverview(Context context, long time, String title, String text) {
+        Intent intent = new Intent(context, NotificationReceiver.class);
+        intent.putExtra("title", title);
+        intent.putExtra("text", text);
+        PendingIntent pending = PendingIntent.getBroadcast(context, 300, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        // Schedule notification
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        manager.setExact(AlarmManager.RTC_WAKEUP, time, pending);
+        Log.d("overview notification", "created notification");
+    }
+
+    /**
+     * Cancel a notification
+     * @param context Context
+     */
+    public static void cancelNotificationsOverview(Context context) {
+        Intent intent = new Intent(context, NotificationReceiver.class);
+        intent.putExtra("title", "title");
+        intent.putExtra("text", "text");
+        PendingIntent pending = PendingIntent.getBroadcast(context, 300, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        // Cancel notification
+        AlarmManager manager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        manager.cancel(pending);
+    }
+
+    /**
+     * Create a notification channel
+     */
+    public void createNotificationChannelOverview() {
+        // Create the NotificationChannel, but only on API 26+ because
+        // the NotificationChannel class is new and not in the support library
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.app_name) + " " + getString(R.string.refresh);
+            String description = getString(R.string.reminders);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID_OVERVIEW, name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
+    }
+
+    /**
+     * Set notifications
+     * @param context Context
+     */
+    public static void setNotificationsOverview(Context context){
+        cancelNotificationsOverview(context);
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        calendar.set(Calendar.HOUR_OF_DAY, 19);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        long time = calendar.getTimeInMillis();
+        if(Calendar.getInstance().getTimeInMillis() < time){
+            scheduleNotificationOverview(context, time, context.getString(R.string.refresh), context.getString(R.string.refresh_text));
+            Log.d("new notification", context.getString(R.string.refresh) + " at " + "19:00");
         }
     }
 }

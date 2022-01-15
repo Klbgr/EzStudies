@@ -85,6 +85,8 @@
     <string name="next_homework">Prochain devoir"</string>
     <string name="no_coming_course">Pas de cours à venir</string>
     <string name="no_coming_homework">Pas de devoir à venir</string>
+    <string name="refresh">Actualiser l\'agenda</string>
+    <string name="refresh_text">Veuillez actualiser l\'agenda</string>
 
     <string-array name="travel_array">
         <item>En voiture</item>

@@ -369,7 +369,7 @@ public class Homeworks extends AppCompatActivity {
     /**
      * Create a notification channel
      */
-    private void createNotificationChannelHomeworks() {
+    public void createNotificationChannelHomeworks() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -402,7 +402,7 @@ public class Homeworks extends AppCompatActivity {
         for (ArrayList<String> row : data){
             String date[] = row.get(1).split("/");
             Calendar calendar = Calendar.getInstance();
-            calendar.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]), 0, 0);
+            calendar.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]), 0, 0, 0);
             if(now.getTimeInMillis() < calendar.getTimeInMillis() && row.get(3).equals("f")){ //do not notify if due date exceeded or if it's already done
                 calendar.set(Calendar.HOUR_OF_DAY, 19);
                 calendar.setTimeInMillis(calendar.getTimeInMillis()-(1000*60*60*24));

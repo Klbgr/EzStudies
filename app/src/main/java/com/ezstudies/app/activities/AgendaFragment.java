@@ -109,7 +109,10 @@ public class AgendaFragment extends Fragment {
                 ArrayList<String> courseData = new ArrayList<String>();
                 courseData.add(row.get(1));
                 courseData.add(row.get(0) + " : " + row.get(2) + " - " + row.get(3));
-                if (row.get(4).contains(" / ")){ //if multiple infos
+                if(row.get(4) == null){
+                    courseData.add("");
+                }
+                else if (row.get(4).contains(" / ")){ //if multiple infos
                     courseData.add(row.get(4).split(" / ")[0]);
                     courseData.add(row.get(4).split(" / ")[1]);
                 }

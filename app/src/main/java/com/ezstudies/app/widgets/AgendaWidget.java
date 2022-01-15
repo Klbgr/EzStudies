@@ -1,4 +1,4 @@
-package com.ezstudies.app;
+package com.ezstudies.app.widgets;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+import com.ezstudies.app.Database;
+import com.ezstudies.app.R;
 import com.ezstudies.app.activities.Agenda;
 
 import java.util.ArrayList;
@@ -25,7 +27,7 @@ public class AgendaWidget extends AppWidgetProvider {
         for (int i=0; i < appWidgetIds.length; i++) {
             int appWidgetId = appWidgetIds[i];
             Intent intent = new Intent(context, Agenda.class);
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE);
 
 
             Calendar now = Calendar.getInstance();

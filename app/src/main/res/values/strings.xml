@@ -84,6 +84,8 @@
     <string name="next_homework">Next homework</string>
     <string name="no_coming_course">No coming course</string>
     <string name="no_coming_homework">No coming homework</string>
+    <string name="refresh">Refresh agenda</string>
+    <string name="refresh_text">Please refresh agenda</string>
 
     <string-array name="travel_array">
         <item>Driving</item>

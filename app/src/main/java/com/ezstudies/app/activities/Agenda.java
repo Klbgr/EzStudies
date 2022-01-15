@@ -202,6 +202,10 @@ public class Agenda extends FragmentActivity {
             viewPager.setCurrentItem(getIntent().getIntExtra("weekday", weekDay));
         }
         nbNotifPendingAgenda = 0;
+        if(getIntent().getBooleanExtra("refresh", false)){ //from refresh notification
+            getIntent().putExtra("refresh", false);
+            refresh(null);
+        }
     }
 
     /**
@@ -327,7 +331,9 @@ public class Agenda extends FragmentActivity {
                 for(int i = 2 ; i<courseInfo.length ; i++){
                     description += courseInfo[i] + " / ";
                 }
-                description = description.substring(0, description.length()-3);
+                if(courseInfo.length > 2){ //description
+                    description = description.substring(0, description.length()-3);
+                }
                 String newDate = dateElements[2] + "/" + dateElements[1] + "/" + dateElements[0];
                 database.addAgenda(newDate, title, startingHour + ":" + startingMinute, endingHour + ":" + endingMinute, description);
             }
@@ -766,7 +772,7 @@ public class Agenda extends FragmentActivity {
     /**
      * Create a notification channel
      */
-    private void createNotificationChannelAgenda() {
+    public void createNotificationChannelAgenda() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -803,7 +809,7 @@ public class Agenda extends FragmentActivity {
                 heure --;
                 minute = 60 + minute;
             }
-            calendar.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]), heure, minute);
+            calendar.set(Integer.parseInt(date[2]), Integer.parseInt(date[1])-1, Integer.parseInt(date[0]), heure, minute, 0);
             long time = calendar.getTimeInMillis();
             if(now.getTimeInMillis() < time+1000*60*15){
                 String text = row.get(2) + " - " + row.get(3) + "\n" + row.get(4);
