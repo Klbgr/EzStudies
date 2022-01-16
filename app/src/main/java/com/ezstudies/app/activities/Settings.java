@@ -77,6 +77,10 @@ public class Settings extends AppCompatActivity {
      */
     private int count = 0;
     /**
+     * Toast for easter egg
+     */
+    private Toast toast;
+    /**
      * Loading dialog
      */
     private ProgressDialog progressDialog;
@@ -364,11 +368,7 @@ public class Settings extends AppCompatActivity {
         switch (import_mode) {
             case 0: //celcat
                 Boolean connected = sharedPreferences.getBoolean("connected", false);
-                if (connected) {
-                    condition2 = true;
-                } else {
-                    condition2 = false;
-                }
+                condition2 = connected;
                 break;
             case 1: //ics
                 condition2 = true;
@@ -750,21 +750,26 @@ public class Settings extends AppCompatActivity {
              */
             @Override
             public void onClick(View view) {
-                Toast.makeText(Settings.this, getString(R.string.source), Toast.LENGTH_SHORT).show();
                 Date now = Calendar.getInstance().getTime();
+                if (toast != null) {
+                    toast.cancel();
+                }
                 if (date == null || now.getTime() - date.getTime() > 5 * 1000) { //5s
+                    toast = Toast.makeText(Settings.this, getString(R.string.source), Toast.LENGTH_SHORT);
                     date = Calendar.getInstance().getTime();
                     count = 1;
                 } else if (count == 4) {
-                    Toast.makeText(Settings.this, getString(R.string.easter_egg_enjoy), Toast.LENGTH_SHORT).show();
+                    toast = Toast.makeText(Settings.this, getString(R.string.easter_egg_enjoy), Toast.LENGTH_SHORT);
                     date = null;
                     count = 0;
                     Uri uri = Uri.parse("https://youtu.be/dQw4w9WgXcQ");
                     Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                     startActivity(intent);
                 } else {
+                    toast = Toast.makeText(Settings.this, getString(R.string.source), Toast.LENGTH_SHORT);
                     count++;
                 }
+                toast.show();
             }
         });
         findViewById(R.id.settings_click10).setOnLongClickListener(new View.OnLongClickListener() {
