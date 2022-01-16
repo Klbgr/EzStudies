@@ -9,7 +9,7 @@
 ## Collaborators
 
 Here are all the collaborators of this repository :
-- [@Klgbr](https://github.com/Klbgr)
+- [@Klbgr](https://github.com/Klbgr)
 - [@Malinx95](https://github.com/Malinx95)
 - [@IIyn](https://github.com/IIyn)
 
