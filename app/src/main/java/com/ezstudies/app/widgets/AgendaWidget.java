@@ -52,7 +52,7 @@ public class AgendaWidget extends AppWidgetProvider {
 
             if (next != null) {
                 views.setTextViewText(R.id.agenda_course, next.get(1));
-                views.setTextViewText(R.id.agenda_hour, next.get(2) + " - " + next.get(3));
+                views.setTextViewText(R.id.agenda_hour, next.get(0) + " : " + next.get(2) + " - " + next.get(3));
                 String description = next.get(4);
                 if (description.contains(" / ")) { //if multiple infos
                     views.setTextViewText(R.id.agenda_place, description.split(" / ")[0]);
