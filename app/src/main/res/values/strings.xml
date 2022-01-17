@@ -82,8 +82,8 @@
     <string name="theme">Theme</string>
     <string name="next_course">Next course</string>
     <string name="next_homework">Next homework</string>
-    <string name="no_coming_course">No coming course</string>
-    <string name="no_coming_homework">No coming homework</string>
+    <string name="no_coming_course">No coming courses</string>
+    <string name="no_coming_homework">No coming homeworks</string>
     <string name="refresh">Refresh agenda</string>
     <string name="refresh_text">Please refresh agenda</string>
 

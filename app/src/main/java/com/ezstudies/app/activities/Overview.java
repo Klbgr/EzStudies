@@ -378,7 +378,7 @@ public class Overview extends AppCompatActivity {
         /**
          * Data
          */
-        private ArrayList<ArrayList<String>> data;
+        private final ArrayList<ArrayList<String>> data;
 
         /**
          * Constructor
@@ -495,7 +495,7 @@ public class Overview extends AppCompatActivity {
         /**
          * Data
          */
-        private ArrayList<ArrayList<String>> data;
+        private final ArrayList<ArrayList<String>> data;
 
         /**
          * Constructor
@@ -646,16 +646,9 @@ public class Overview extends AppCompatActivity {
                         downloadManagerReceiver = new DownloadManagerReceiver();
                         registerReceiver(downloadManagerReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
 
-                        File file = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), name);
-                        if (file.exists()) {
-                            file.delete();
-                        }
-
                         DownloadManager downloadManager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
                         long DOWNLOAD_ID = downloadManager.enqueue(new DownloadManager.Request(Uri.parse(url))
                                 .setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE)
-                                .setTitle(getString(R.string.downloading))
-                                .setDescription(getString(R.string.loading))
                                 .setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, name));
 
                         //download progress
@@ -675,6 +668,9 @@ public class Overview extends AppCompatActivity {
                                     total = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_TOTAL_SIZE_BYTES));
                                     downloaded = cursor.getLong(cursor.getColumnIndex(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR));
                                     progressDialog.setProgress((int) ((downloaded * 100) / total));
+                                    if (cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS)) == DownloadManager.STATUS_SUCCESSFUL) {
+                                        name = cursor.getString(cursor.getColumnIndex(DownloadManager.COLUMN_TITLE));
+                                    }
                                     try {
                                         Thread.sleep(100);
                                     } catch (InterruptedException e) {
