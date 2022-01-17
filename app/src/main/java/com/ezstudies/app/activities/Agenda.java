@@ -336,7 +336,7 @@ public class Agenda extends FragmentActivity {
      */
     public void parseCelcat() {
         Database database = new Database(this);
-        database.clearAgenda();
+        database.clearAgendaTemp();
 
         String source = jsi.getSource();
         Log.d("html source", source);
@@ -390,15 +390,56 @@ public class Agenda extends FragmentActivity {
                     description = description.substring(0, description.length() - 3);
                 }
                 String newDate = dateElements[2] + "/" + dateElements[1] + "/" + dateElements[0];
-                database.addAgenda(newDate, title, startingHour + ":" + startingMinute, endingHour + ":" + endingMinute, description);
+                database.addAgendaTemp(newDate, title, startingHour + ":" + startingMinute, endingHour + ":" + endingMinute, description);
             }
         }
-        Log.d("database agenda", database.toStringAgenda());
+        Log.d("agendaTemp", database.toStringAgendaTemp());
+        Log.d("agenda", database.toStringAgenda());
+        Log.d("agendaOriginal", database.toStringAgendaOriginal());
         database.close();
+        manageAgenda();
 
         progressDialog.cancel();
         Toast.makeText(this, getString(R.string.celcat_success), Toast.LENGTH_SHORT).show();
         restart();
+    }
+
+    /**
+     * Manage the database to update the agenda
+     */
+    public void manageAgenda(){
+        Database database = new Database(this);
+        ArrayList<ArrayList<String>> temp = database.toTabAgendaTemp();
+        ArrayList<ArrayList<String>> og = database.toTabAgendaOriginal();
+        if (og.isEmpty()){
+            Log.d("manage agenda", "og empty");
+            database.copyTempToOriginal();
+            database.copyOriginalToAgenda();
+        }
+        else{
+            Log.d("manage agenda", "og not empty");
+            Calendar calendar = Calendar.getInstance();
+            calendar.setFirstDayOfWeek(Calendar.MONDAY);
+            String[] dateOg = og.get(0).get(0).split("/");
+            calendar.set(Integer.parseInt(dateOg[2]), Integer.parseInt(dateOg[1])-1, Integer.parseInt(dateOg[0]));
+            int weekOg = calendar.get(Calendar.WEEK_OF_YEAR);
+            String[] dateTemp = temp.get(0).get(0).split("/");
+            calendar.set(Integer.parseInt(dateTemp[2]), Integer.parseInt(dateTemp[1])-1, Integer.parseInt(dateTemp[0]));
+            int weekTemp = calendar.get(Calendar.WEEK_OF_YEAR);
+            if (weekTemp > weekOg){
+                Log.d("manage agenda", "temp is next week");
+                database.copyTempToOriginal();
+                database.copyOriginalToAgenda();
+            }
+            if (weekTemp == weekOg){
+                Log.d("manage agenda", "temp is same week");
+                if (!database.equalsTempOriginal()){
+                    Log.d("manage agenda", "not equals");
+                    database.copyTempToOriginal();
+                    database.copyOriginalToAgenda();
+                }
+            }
+        }
     }
 
     /**
