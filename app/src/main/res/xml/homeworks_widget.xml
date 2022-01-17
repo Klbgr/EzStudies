@@ -1,4 +1,5 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:previewLayout="@layout/homeworks_widget_layout"
     android:resizeMode="horizontal|vertical"
     android:targetCellWidth="5"
     android:targetCellHeight="1"
