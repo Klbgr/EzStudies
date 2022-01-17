@@ -87,6 +87,8 @@
     <string name="no_coming_homework">Pas de devoirs à venir</string>
     <string name="refresh">Actualiser l\'agenda</string>
     <string name="refresh_text">Veuillez actualiser l\'agenda</string>
+    <string name="feedback">Envoyer un commentaire / Signaler un bug</string>
+    <string name="version">Version : %1$s</string>
 
     <string-array name="travel_array">
         <item>En voiture</item>

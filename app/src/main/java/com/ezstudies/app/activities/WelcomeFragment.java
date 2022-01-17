@@ -122,9 +122,12 @@ public class WelcomeFragment extends Fragment {
                 LinearLayout group2 = view.findViewById(R.id.settings_group2);
                 LinearLayout group3 = view.findViewById(R.id.settings_group3);
                 LinearLayout group4 = view.findViewById(R.id.settings_group4);
-                LinearLayout group5 = view.findViewById(R.id.settings_click10);
+                LinearLayout group5 = view.findViewById(R.id.settings_group5);
+                LinearLayout click11 = view.findViewById(R.id.settings_click11);
+
                 group4.setVisibility(View.GONE);
                 group5.setVisibility(View.GONE);
+                click11.setVisibility(View.GONE);
 
                 //theme
                 theme_spinner = view.findViewById(R.id.settings_theme_spinner);

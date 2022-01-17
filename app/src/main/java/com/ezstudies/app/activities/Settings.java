@@ -27,6 +27,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.SwitchCompat;
 
+import com.ezstudies.app.BuildConfig;
 import com.ezstudies.app.R;
 import com.ezstudies.app.services.Login;
 import com.ezstudies.app.services.RouteCalculator;
@@ -292,6 +293,9 @@ public class Settings extends AppCompatActivity {
                 textView.setText(text);
             }
         });
+
+        TextView version = findViewById(R.id.settings_version);
+        version.setText(getString(R.string.version, BuildConfig.VERSION_NAME));
 
         setOnClickListeners();
 
@@ -750,6 +754,19 @@ public class Settings extends AppCompatActivity {
              */
             @Override
             public void onClick(View view) {
+                Uri uri = Uri.parse("https://docs.google.com/forms/d/e/1FAIpQLSeEDjP8qGxxHHmIadZYaxhaDkZw1_4rqaNBbegskcjbTUlxiQ/viewform?usp=pp_url");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+
+        findViewById(R.id.settings_click11).setOnClickListener(new View.OnClickListener() {
+            /**
+             * On click
+             * @param view View
+             */
+            @Override
+            public void onClick(View view) {
                 Date now = Calendar.getInstance().getTime();
                 if (toast != null) {
                     toast.cancel();
@@ -772,7 +789,7 @@ public class Settings extends AppCompatActivity {
                 toast.show();
             }
         });
-        findViewById(R.id.settings_click10).setOnLongClickListener(new View.OnLongClickListener() {
+        findViewById(R.id.settings_click11).setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 Uri uri = Uri.parse("https://github.com/Klbgr/EzStudies");
