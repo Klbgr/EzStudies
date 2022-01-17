@@ -407,33 +407,32 @@ public class Agenda extends FragmentActivity {
     /**
      * Manage the database to update the agenda
      */
-    public void manageAgenda(){
+    public void manageAgenda() {
         Database database = new Database(this);
         ArrayList<ArrayList<String>> temp = database.toTabAgendaTemp();
-        ArrayList<ArrayList<String>> og = database.toTabAgendaOriginal();
-        if (og.isEmpty()){
+        ArrayList<ArrayList<String>> original = database.toTabAgendaOriginal();
+        if (original.isEmpty()) {
             Log.d("manage agenda", "og empty");
             database.copyTempToOriginal();
             database.copyOriginalToAgenda();
-        }
-        else{
+        } else {
             Log.d("manage agenda", "og not empty");
             Calendar calendar = Calendar.getInstance();
             calendar.setFirstDayOfWeek(Calendar.MONDAY);
-            String[] dateOg = og.get(0).get(0).split("/");
-            calendar.set(Integer.parseInt(dateOg[2]), Integer.parseInt(dateOg[1])-1, Integer.parseInt(dateOg[0]));
-            int weekOg = calendar.get(Calendar.WEEK_OF_YEAR);
+            String[] dateOg = original.get(0).get(0).split("/");
+            calendar.set(Integer.parseInt(dateOg[2]), Integer.parseInt(dateOg[1]) - 1, Integer.parseInt(dateOg[0]));
+            int weekOriginal = calendar.get(Calendar.WEEK_OF_YEAR);
             String[] dateTemp = temp.get(0).get(0).split("/");
-            calendar.set(Integer.parseInt(dateTemp[2]), Integer.parseInt(dateTemp[1])-1, Integer.parseInt(dateTemp[0]));
+            calendar.set(Integer.parseInt(dateTemp[2]), Integer.parseInt(dateTemp[1]) - 1, Integer.parseInt(dateTemp[0]));
             int weekTemp = calendar.get(Calendar.WEEK_OF_YEAR);
-            if (weekTemp > weekOg){
+            if (weekTemp > weekOriginal) {
                 Log.d("manage agenda", "temp is next week");
                 database.copyTempToOriginal();
                 database.copyOriginalToAgenda();
             }
-            if (weekTemp == weekOg){
+            if (weekTemp == weekOriginal) {
                 Log.d("manage agenda", "temp is same week");
-                if (!database.equalsTempOriginal()){
+                if (!database.equalsTempOriginal()) {
                     Log.d("manage agenda", "not equals");
                     database.copyTempToOriginal();
                     database.copyOriginalToAgenda();
