@@ -212,6 +212,28 @@ public class Database extends SQLiteOpenHelper {
     }
 
     /**
+     * Check if original equals agenda
+     *
+     * @return Temp equals original
+     */
+    public boolean equalsOriginalAgenda() {
+        ArrayList<ArrayList<String>> agenda = toTabAgenda();
+        ArrayList<ArrayList<String>> original = toTabAgendaOriginal();
+        if (agenda.size() == original.size()) {
+            for (int i = 0; i < agenda.size(); i++) {
+                for (int y = 0; y <= 4; y++) {
+                    if (!agenda.get(i).get(y).equals(original.get(i).get(y))) {
+                        return false;
+                    }
+                }
+            }
+        } else {
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Register the changes on the courses
      *
      * @param date           original date

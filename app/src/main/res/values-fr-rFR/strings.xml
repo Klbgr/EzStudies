@@ -77,6 +77,7 @@
     <string name="update">Nouvelle mise à jour disponible</string>
     <string name="update_message">Voulez-vous faire la mise à jour ?\n\nVersion : %1$s\nJournal des modifications :\n%2$s</string>
     <string name="yes">Oui</string>
+    <string name="no">non</string>
     <string name="later">Plus tard</string>
     <string name="downloading">Téléchargement</string>
     <string name="source">Appui long pour voir le code source</string>
@@ -89,6 +90,8 @@
     <string name="refresh_text">Veuillez actualiser l\'agenda</string>
     <string name="feedback">Envoyer un commentaire / Signaler un bug</string>
     <string name="version">Version : %1$s</string>
+    <string name="force_reset">Voulez vous remplacer les changement locaux de l\'agenda ? (Les changement locaux seront quand meme remplacer si des changement sont detecter sur l\'agenda en ligne.)</string>
+
 
     <string-array name="travel_array">
         <item>En voiture</item>

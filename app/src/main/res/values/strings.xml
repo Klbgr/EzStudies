@@ -76,6 +76,7 @@
     <string name="update">New update available</string>
     <string name="update_message">Do you want to update ?\n\nVersion : %1$s\nChangelog :\n%2$s</string>
     <string name="yes">Yes</string>
+    <string name="no">no</string>
     <string name="later">Later</string>
     <string name="downloading">Downloading</string>
     <string name="source">Long press to get to source code</string>
@@ -88,6 +89,7 @@
     <string name="refresh_text">Please refresh agenda</string>
     <string name="feedback">Send feedback / Report a bug</string>
     <string name="version">Version : %1$s</string>
+    <string name="force_reset">Do you want to reset the local changes on the agenda ? (Local changes will be discarded anyway if there are changes on the online agenda)</string>
 
     <string-array name="travel_array">
         <item>Driving</item>

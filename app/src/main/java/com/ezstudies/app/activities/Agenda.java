@@ -2,12 +2,14 @@ package com.ezstudies.app.activities;
 
 import android.app.Activity;
 import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -57,10 +59,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Scanner;
 
 /**
  * Activity that displays an agenda
@@ -106,6 +111,11 @@ public class Agenda extends FragmentActivity {
      * Broadcast receiver for Login
      */
     private LoginReceiver loginReceiver;
+    /**
+     * Boolean for force reset of agenda
+     */
+    private boolean forceReset;
+
     /**
      * Handle when an activity finishes
      */
@@ -312,6 +322,7 @@ public class Agenda extends FragmentActivity {
             getIntent().putExtra("refresh", false);
             refresh(null);
         }
+        forceReset = false;
     }
 
     /**
@@ -339,6 +350,7 @@ public class Agenda extends FragmentActivity {
         database.clearAgendaTemp();
 
         String source = jsi.getSource();
+
         Log.d("html source", source);
         Document document = Jsoup.parse(source, "UTF-8");
         Elements days = document.getElementsByClass("fc-list-heading");
@@ -411,6 +423,11 @@ public class Agenda extends FragmentActivity {
         Database database = new Database(this);
         ArrayList<ArrayList<String>> temp = database.toTabAgendaTemp();
         ArrayList<ArrayList<String>> original = database.toTabAgendaOriginal();
+        if (forceReset){
+            database.copyTempToOriginal();
+            database.copyOriginalToAgenda();
+            forceReset = false;
+        }
         if (original.isEmpty()) {
             Log.d("manage agenda", "og empty");
             database.copyTempToOriginal();
@@ -543,7 +560,28 @@ public class Agenda extends FragmentActivity {
         int import_mode = sharedPreferences.getInt("import_mode", -1);
         switch (import_mode) {
             case 0: //celcat
-                import_celcat();
+                Database database = new Database(this);
+                if (!database.equalsOriginalAgenda()){
+                    Log.d("different", "yes");
+                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which){
+                                case DialogInterface.BUTTON_POSITIVE:
+                                    forceReset = true;
+                                    import_celcat();
+                                    break;
+
+                                case DialogInterface.BUTTON_NEGATIVE:
+                                    forceReset = false;
+                                    import_celcat();
+                                    break;
+                            }
+                        }
+                    };
+                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    builder.setMessage(R.string.force_reset).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
+                }
                 break;
             case 1: //ics
                 importICS();
