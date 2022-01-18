@@ -90,6 +90,7 @@
     <string name="feedback">Send feedback / Report a bug</string>
     <string name="version">Version : %1$s</string>
     <string name="force_reset">Do you want to reset the local changes on the agenda ? (Local changes will be discarded anyway if there are changes on the online agenda)</string>
+    <string name="duplicate">Duplicate detected ! Select to delete</string>
 
     <string-array name="travel_array">
         <item>Driving</item>

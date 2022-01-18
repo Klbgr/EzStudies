@@ -91,6 +91,7 @@
     <string name="feedback">Envoyer un commentaire / Signaler un bug</string>
     <string name="version">Version : %1$s</string>
     <string name="force_reset">Voulez vous remplacer les changement locaux de l\'agenda ? (Les changement locaux seront quand meme remplacer si des changement sont detecter sur l\'agenda en ligne.)</string>
+    <string name="duplicate">Doublons détectés ! Sélectionnez pour supprimer</string>
 
 
     <string-array name="travel_array">

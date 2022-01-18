@@ -410,10 +410,127 @@ public class Agenda extends FragmentActivity {
         Log.d("agendaOriginal", database.toStringAgendaOriginal());
         database.close();
         manageAgenda();
+        showDuplicateDialogue(checkDuplicates());
 
-        progressDialog.cancel();
         Toast.makeText(this, getString(R.string.celcat_success), Toast.LENGTH_SHORT).show();
-        restart();
+        //restart();
+    }
+
+    /**
+     * Check for course that are at the same hours
+     */
+    public ArrayList<ArrayList<ArrayList<String>>> checkDuplicates(){
+        Database database = new Database(this);
+        ArrayList<ArrayList<String>> courses = database.toTabAgenda();
+        ArrayList<ArrayList<ArrayList<String>>> duplicates = new ArrayList<>();
+        for(ArrayList<String> course : courses){
+            if (!inDuplicates(course, duplicates)){
+                ArrayList<ArrayList<String>> duplicate = new ArrayList<>();
+                duplicate.add(course);
+                for (ArrayList<String> course2 : courses){
+                    if (!equalsCourse(course, course2)){
+                        if (course.get(0).equals(course2.get(0))){
+                            if (course.get(2).equals(course2.get(2))){
+                                if (course.get(3).equals(course2.get(3))){
+                                    duplicate.add(course2);
+                                }
+                            }
+                        }
+                    }
+                }
+                if (duplicate.size()>1){
+                    duplicates.add(duplicate);
+                }
+            }
+        }
+        progressDialog.cancel();
+        return duplicates;
+    }
+
+    public void showDuplicateDialogue(ArrayList<ArrayList<ArrayList<String>>> duplicates){
+        if (duplicates.size() > 0){
+            ArrayList<String> items = new ArrayList<>();
+            for (ArrayList<String> course : duplicates.get(0)){
+                items.add(course.get(1));
+            }
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            ArrayList<Integer> selectedItems = new ArrayList();
+            builder.setTitle(R.string.duplicate).setMultiChoiceItems(items.toArray(new String[0]), null, new DialogInterface.OnMultiChoiceClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                    if (isChecked){
+                        selectedItems.add(which);
+                    } else if (selectedItems.contains(which)) {
+                        selectedItems.remove(which);
+                    }
+                }
+            }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Database database = new Database(Agenda.this);
+                    for (int i : selectedItems){
+                        database.deleteAgenda(duplicates.get(0).get(i).get(0), duplicates.get(0).get(i).get(1), duplicates.get(0).get(i).get(2), duplicates.get(0).get(i).get(3));
+                    }
+                    database.close();
+                    duplicates.remove(0);
+                    showDuplicateDialogue(duplicates);
+
+                }
+            }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    restart();
+                }
+            }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    restart();
+                }
+            }).show();
+        }else {
+            restart();
+        }
+    }
+
+    /**
+     * check if course is in duplicate
+     * @param course
+     * @param duplicates
+     * @return true or false
+     */
+    public boolean inDuplicates(ArrayList<String> course, ArrayList<ArrayList<ArrayList<String>>> duplicates){
+        if (duplicates.size()>0){
+            for (ArrayList<ArrayList<String>> duplicate : duplicates){
+                for (ArrayList<String> course2 : duplicate){
+                    if (equalsCourse(course, course2)){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * test if course are equals
+     * @param course1
+     * @param course2
+     * @return true or false
+     */
+    public boolean equalsCourse(ArrayList<String> course1, ArrayList<String> course2){
+        for (int i = 0; i<course1.size(); i++){
+            if (course1.get(i) == null){
+                if (course2.get(i) != null){
+                    return false;
+                }
+            }
+            else {
+                if (!course1.get(i).equals(course2.get(i))){
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
@@ -581,6 +698,8 @@ public class Agenda extends FragmentActivity {
                     };
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
                     builder.setMessage(R.string.force_reset).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
+                }else {
+                    import_celcat();
                 }
                 break;
             case 1: //ics
