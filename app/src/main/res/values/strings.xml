@@ -76,7 +76,7 @@
     <string name="update">New update available</string>
     <string name="update_message">Do you want to update ?\n\nVersion : %1$s\nChangelog :\n%2$s</string>
     <string name="yes">Yes</string>
-    <string name="no">no</string>
+    <string name="no">No</string>
     <string name="later">Later</string>
     <string name="downloading">Downloading</string>
     <string name="source">Long press to get to source code</string>

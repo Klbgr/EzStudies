@@ -115,6 +115,7 @@ public class Agenda extends FragmentActivity {
      * Boolean for force reset of agenda
      */
     private boolean forceReset;
+
     /**
      * Handle when an activity finishes
      */
@@ -460,6 +461,7 @@ public class Agenda extends FragmentActivity {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             ArrayList<Integer> selectedItems = new ArrayList();
             builder.setTitle(R.string.duplicate);
+            builder.setCancelable(false);
             builder.setMultiChoiceItems(items.toArray(new String[0]), null, new DialogInterface.OnMultiChoiceClickListener() {
                 /**
                  * On click
@@ -472,7 +474,7 @@ public class Agenda extends FragmentActivity {
                     if (isChecked) {
                         selectedItems.add(which);
                     } else if (selectedItems.contains(which)) {
-                        selectedItems.remove(which);
+                        selectedItems.remove((Object) which);
                     }
                 }
             }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
@@ -728,7 +730,7 @@ public class Agenda extends FragmentActivity {
                         }
                     };
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setTitle(R.string.refresh).setMessage(R.string.force_reset).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
+                    builder.setTitle(R.string.refresh).setMessage(R.string.force_reset).setCancelable(false).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
                 } else {
                     import_celcat();
                 }

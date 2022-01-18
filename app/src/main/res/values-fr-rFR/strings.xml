@@ -77,7 +77,7 @@
     <string name="update">Nouvelle mise à jour disponible</string>
     <string name="update_message">Voulez-vous faire la mise à jour ?\n\nVersion : %1$s\nJournal des modifications :\n%2$s</string>
     <string name="yes">Oui</string>
-    <string name="no">non</string>
+    <string name="no">Non</string>
     <string name="later">Plus tard</string>
     <string name="downloading">Téléchargement</string>
     <string name="source">Appui long pour voir le code source</string>
