@@ -107,7 +107,7 @@ Our app contains two widgets :
 
 ![image](https://user-images.githubusercontent.com/43754408/150019889-a1de3e16-5e82-4f35-8a2f-88c749fdfaec.png)
 
-- Your next unfinished homeworks
+- Your next unfinished homework
 
 ![image](https://user-images.githubusercontent.com/43754408/150019853-2e5c2c36-460b-4c6a-8e39-89ddfa460dc7.png)
 
