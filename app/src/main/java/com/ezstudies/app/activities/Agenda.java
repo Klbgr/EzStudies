@@ -59,13 +59,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Scanner;
 
 /**
  * Activity that displays an agenda
@@ -115,7 +112,6 @@ public class Agenda extends FragmentActivity {
      * Boolean for force reset of agenda
      */
     private boolean forceReset;
-
     /**
      * Handle when an activity finishes
      */
@@ -410,103 +406,125 @@ public class Agenda extends FragmentActivity {
         Log.d("agendaOriginal", database.toStringAgendaOriginal());
         database.close();
         manageAgenda();
-        showDuplicateDialogue(checkDuplicates());
+        showDuplicateDialog(checkDuplicates());
 
         Toast.makeText(this, getString(R.string.celcat_success), Toast.LENGTH_SHORT).show();
-        //restart();
     }
 
     /**
      * Check for course that are at the same hours
      */
-    public ArrayList<ArrayList<ArrayList<String>>> checkDuplicates(){
+    public ArrayList<ArrayList<ArrayList<String>>> checkDuplicates() {
         Database database = new Database(this);
         ArrayList<ArrayList<String>> courses = database.toTabAgenda();
         ArrayList<ArrayList<ArrayList<String>>> duplicates = new ArrayList<>();
-        for(ArrayList<String> course : courses){
-            if (!inDuplicates(course, duplicates)){
+        for (ArrayList<String> course : courses) {
+            if (!inDuplicates(course, duplicates)) {
                 ArrayList<ArrayList<String>> duplicate = new ArrayList<>();
                 duplicate.add(course);
-                for (ArrayList<String> course2 : courses){
-                    if (!equalsCourse(course, course2)){
-                        if (course.get(0).equals(course2.get(0))){
-                            if (course.get(2).equals(course2.get(2))){
-                                if (course.get(3).equals(course2.get(3))){
+                for (ArrayList<String> course2 : courses) {
+                    if (!equalsCourse(course, course2)) {
+                        if (course.get(0).equals(course2.get(0))) {
+                            if (course.get(2).equals(course2.get(2))) {
+                                if (course.get(3).equals(course2.get(3))) {
                                     duplicate.add(course2);
                                 }
                             }
                         }
                     }
                 }
-                if (duplicate.size()>1){
+                if (duplicate.size() > 1) {
                     duplicates.add(duplicate);
                 }
             }
         }
+        database.close();
         progressDialog.cancel();
         return duplicates;
     }
 
     /**
-     * show duplicate dialogue
-     * @param duplicates arraylist of duplicate
+     * Show duplicate dialog
+     *
+     * @param duplicates Arraylist of duplicate
      */
-    public void showDuplicateDialogue(ArrayList<ArrayList<ArrayList<String>>> duplicates){
-        if (duplicates.size() > 0){
+    public void showDuplicateDialog(ArrayList<ArrayList<ArrayList<String>>> duplicates) {
+        if (duplicates.size() > 0) {
             ArrayList<String> items = new ArrayList<>();
-            for (ArrayList<String> course : duplicates.get(0)){
+            for (ArrayList<String> course : duplicates.get(0)) {
                 items.add(course.get(1));
             }
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             ArrayList<Integer> selectedItems = new ArrayList();
-            builder.setTitle(R.string.duplicate).setMultiChoiceItems(items.toArray(new String[0]), null, new DialogInterface.OnMultiChoiceClickListener() {
+            builder.setTitle(R.string.duplicate);
+            builder.setMultiChoiceItems(items.toArray(new String[0]), null, new DialogInterface.OnMultiChoiceClickListener() {
+                /**
+                 * On click
+                 * @param dialog DialogInterface
+                 * @param which Selected item
+                 * @param isChecked Is checked
+                 */
                 @Override
                 public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                    if (isChecked){
+                    if (isChecked) {
                         selectedItems.add(which);
                     } else if (selectedItems.contains(which)) {
                         selectedItems.remove(which);
                     }
                 }
             }).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+                /**
+                 * On click
+                 * @param dialog DialogInterface
+                 * @param which Selected item
+                 */
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     Database database = new Database(Agenda.this);
-                    for (int i : selectedItems){
+                    for (int i : selectedItems) {
                         database.deleteAgenda(duplicates.get(0).get(i).get(0), duplicates.get(0).get(i).get(1), duplicates.get(0).get(i).get(2), duplicates.get(0).get(i).get(3));
                     }
                     database.close();
                     duplicates.remove(0);
-                    showDuplicateDialogue(duplicates);
-
+                    showDuplicateDialog(duplicates);
                 }
             }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+                /**
+                 * On click
+                 * @param dialog DialogInterface
+                 * @param which Selected item
+                 */
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    restart();
+                    dialog.cancel();
                 }
             }).setOnCancelListener(new DialogInterface.OnCancelListener() {
+                /**
+                 * On cancel
+                 * @param dialog DialogInterface
+                 */
                 @Override
                 public void onCancel(DialogInterface dialog) {
                     restart();
                 }
             }).show();
-        }else {
+        } else {
             restart();
         }
     }
 
     /**
-     * check if course is in duplicate
-     * @param course
-     * @param duplicates
-     * @return true or false
+     * Check if course is in duplicate
+     *
+     * @param course     Course
+     * @param duplicates Duplicate courses
+     * @return True or false
      */
-    public boolean inDuplicates(ArrayList<String> course, ArrayList<ArrayList<ArrayList<String>>> duplicates){
-        if (duplicates.size()>0){
-            for (ArrayList<ArrayList<String>> duplicate : duplicates){
-                for (ArrayList<String> course2 : duplicate){
-                    if (equalsCourse(course, course2)){
+    public boolean inDuplicates(ArrayList<String> course, ArrayList<ArrayList<ArrayList<String>>> duplicates) {
+        if (duplicates.size() > 0) {
+            for (ArrayList<ArrayList<String>> duplicate : duplicates) {
+                for (ArrayList<String> course2 : duplicate) {
+                    if (equalsCourse(course, course2)) {
                         return true;
                     }
                 }
@@ -516,20 +534,20 @@ public class Agenda extends FragmentActivity {
     }
 
     /**
-     * test if course are equals
-     * @param course1
-     * @param course2
-     * @return true or false
+     * Test if courses are equals
+     *
+     * @param course1 Course
+     * @param course2 Course
+     * @return True or false
      */
-    public boolean equalsCourse(ArrayList<String> course1, ArrayList<String> course2){
-        for (int i = 0; i<course1.size(); i++){
-            if (course1.get(i) == null){
-                if (course2.get(i) != null){
+    public boolean equalsCourse(ArrayList<String> course1, ArrayList<String> course2) {
+        for (int i = 0; i < course1.size(); i++) {
+            if (course1.get(i) == null) {
+                if (course2.get(i) != null) {
                     return false;
                 }
-            }
-            else {
-                if (!course1.get(i).equals(course2.get(i))){
+            } else {
+                if (!course1.get(i).equals(course2.get(i))) {
                     return false;
                 }
             }
@@ -544,7 +562,7 @@ public class Agenda extends FragmentActivity {
         Database database = new Database(this);
         ArrayList<ArrayList<String>> temp = database.toTabAgendaTemp();
         ArrayList<ArrayList<String>> original = database.toTabAgendaOriginal();
-        if (forceReset){
+        if (forceReset) {
             database.copyTempToOriginal();
             database.copyOriginalToAgenda();
             forceReset = false;
@@ -577,6 +595,7 @@ public class Agenda extends FragmentActivity {
                 }
             }
         }
+        database.close();
     }
 
     /**
@@ -682,12 +701,17 @@ public class Agenda extends FragmentActivity {
         switch (import_mode) {
             case 0: //celcat
                 Database database = new Database(this);
-                if (!database.equalsOriginalAgenda()){
+                if (!database.equalsOriginalAgenda()) {
                     Log.d("different", "yes");
                     DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                        /**
+                         * On click
+                         * @param dialog DialogInterface
+                         * @param which Selected item
+                         */
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
-                            switch (which){
+                            switch (which) {
                                 case DialogInterface.BUTTON_POSITIVE:
                                     forceReset = true;
                                     import_celcat();
@@ -701,10 +725,11 @@ public class Agenda extends FragmentActivity {
                         }
                     };
                     AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                    builder.setMessage(R.string.force_reset).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
-                }else {
+                    builder.setTitle(R.string.refresh).setMessage(R.string.force_reset).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
+                } else {
                     import_celcat();
                 }
+                database.close();
                 break;
             case 1: //ics
                 importICS();

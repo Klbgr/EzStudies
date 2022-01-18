@@ -790,8 +790,13 @@ public class Settings extends AppCompatActivity {
             }
         });
         findViewById(R.id.settings_click11).setOnLongClickListener(new View.OnLongClickListener() {
+            /**
+             * On long click
+             * @param view View
+             * @return
+             */
             @Override
-            public boolean onLongClick(View v) {
+            public boolean onLongClick(View view) {
                 Uri uri = Uri.parse("https://github.com/Klbgr/EzStudies");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
