@@ -1,11 +1,10 @@
-# EzStudies
+# EzStudies [![Github All Releases](https://img.shields.io/github/downloads/Klbgr/EzStudies/total.svg)](https://github.com/Klbgr/EzStudies/releases/latest)
 
 ![logo](./app/src/main/res/drawable/logo.png)
 ------
 ## Description
 
 `EzStudies` is an application **made by students for students**. As a student at CYU, using that application can optimize your lifestyle and your workflow. Connect to Celcat, set your travel time and preparation time and the application does the rest.
-
 
 ## Guide
 
