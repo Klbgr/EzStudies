@@ -62,6 +62,9 @@ public class AgendaWidget extends AppWidgetProvider {
                 }
             } else {
                 views.setTextViewText(R.id.agenda_course, context.getString(R.string.no_coming_course));
+                views.setTextViewText(R.id.agenda_hour, "");
+                views.setTextViewText(R.id.agenda_place, "");
+                views.setTextViewText(R.id.agenda_info, "");
             }
 
             appWidgetManager.updateAppWidget(appWidgetId, views);

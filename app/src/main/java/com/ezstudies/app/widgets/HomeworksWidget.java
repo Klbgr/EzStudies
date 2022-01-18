@@ -57,6 +57,8 @@ public class HomeworksWidget extends AppWidgetProvider {
                 views.setTextViewText(R.id.homeworks_description, next.get(2));
             } else {
                 views.setTextViewText(R.id.homeworks_title, context.getString(R.string.no_coming_homework));
+                views.setTextViewText(R.id.homeworks_date, "");
+                views.setTextViewText(R.id.homeworks_description, "");
             }
 
             appWidgetManager.updateAppWidget(appWidgetId, views);

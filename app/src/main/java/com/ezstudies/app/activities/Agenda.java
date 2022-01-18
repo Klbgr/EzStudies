@@ -7,7 +7,9 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
+import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,6 +47,7 @@ import com.ezstudies.app.R;
 import com.ezstudies.app.services.AlarmSetter;
 import com.ezstudies.app.services.Login;
 import com.ezstudies.app.services.RouteCalculator;
+import com.ezstudies.app.widgets.AgendaWidget;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -746,10 +749,22 @@ public class Agenda extends FragmentActivity {
         finish();
         startActivity(getIntent());
         setNotificationsAgenda(this);
+        updateWidget();
         Boolean alarm = sharedPreferences.getBoolean("alarm", false);
         if (alarm) {
             setAlarms();
         }
+    }
+
+    /**
+     * Update widget
+     */
+    public void updateWidget() {
+        Intent intent = new Intent(this, AgendaWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), AgendaWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
     }
 
     /**

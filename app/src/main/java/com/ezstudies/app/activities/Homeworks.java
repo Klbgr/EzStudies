@@ -5,7 +5,9 @@ import android.app.AlertDialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,6 +33,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ezstudies.app.Database;
 import com.ezstudies.app.R;
+import com.ezstudies.app.widgets.HomeworksWidget;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -199,10 +202,22 @@ public class Homeworks extends AppCompatActivity {
         database.close();
 
         setNotificationsHomeworks(this);
+        updateWidget();
 
         RecyclerAdapterHomeworks recyclerAdapterHomeworks = new RecyclerAdapterHomeworks(data);
         list.setLayoutManager(new LinearLayoutManager(Homeworks.this));
         list.setAdapter(recyclerAdapterHomeworks);
+    }
+
+    /**
+     * Update widget
+     */
+    public void updateWidget() {
+        Intent intent = new Intent(this, HomeworksWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        int[] ids = AppWidgetManager.getInstance(getApplication()).getAppWidgetIds(new ComponentName(getApplication(), HomeworksWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        sendBroadcast(intent);
     }
 
     /**
