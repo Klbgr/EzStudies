@@ -44,7 +44,7 @@ On this screen, you can manage your homeworks. A green card means it's finished,
 
 ![image](https://user-images.githubusercontent.com/43754408/150017086-f190257f-594f-4660-938e-76ca1f964709.png)
 
-You can click on the button at the botton right to add a homeworks, you can specify a title, a description and a due date.
+You can click on the button at the bottom right to add a homework, you can specify a title, a description and a due date.
 You can click on each cards to delete it or set it to (un)finished.
 
 ### Course Editor
@@ -82,6 +82,7 @@ You can select an address by three ways :
 - Using the search bar
 - Clicking somewhere on the map
 - Using your phone's GPS sensor (bottom-right button)
+
 Once you placed your marker, you'll need to press "OK" to validate your choice.
 
 ## Notifications
