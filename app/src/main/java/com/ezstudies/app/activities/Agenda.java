@@ -447,6 +447,10 @@ public class Agenda extends FragmentActivity {
         return duplicates;
     }
 
+    /**
+     * show duplicate dialogue
+     * @param duplicates arraylist of duplicate
+     */
     public void showDuplicateDialogue(ArrayList<ArrayList<ArrayList<String>>> duplicates){
         if (duplicates.size() > 0){
             ArrayList<String> items = new ArrayList<>();
