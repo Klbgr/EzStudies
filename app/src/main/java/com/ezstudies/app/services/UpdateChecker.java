@@ -16,7 +16,12 @@ import org.json.JSONObject;
 /**
  * Check for updates from GitHub
  */
-public class UpdateChecker extends Service {
+public class UpdateChecker extends Service implements Runnable {
+    /**
+     * Intent
+     */
+    private Intent intent;
+
     /**
      * On bind
      *
@@ -39,6 +44,17 @@ public class UpdateChecker extends Service {
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        this.intent = intent;
+        Thread thread = new Thread(this);
+        thread.start();
+        return super.onStartCommand(intent, flags, startId);
+    }
+
+    /**
+     * Start
+     */
+    @Override
+    public void run() {
         try {
             JSONFromURL jsonFromURL = new JSONFromURL("https://api.github.com/repos/Klbgr/EzStudies/releases/latest");
             jsonFromURL.start();
@@ -72,7 +88,6 @@ public class UpdateChecker extends Service {
         } catch (NullPointerException e) {
             e.printStackTrace();
         }
-        return super.onStartCommand(intent, flags, startId);
     }
 
     /**

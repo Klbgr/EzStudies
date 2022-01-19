@@ -752,7 +752,7 @@ public class Agenda extends FragmentActivity {
                             builder = new AlertDialog.Builder(this, R.style.alertDialog_Dark);
                             break;
                     }
-                    builder.setTitle(R.string.refresh).setMessage(R.string.force_reset).setCancelable(false).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
+                    builder.setTitle(R.string.refresh).setMessage(R.string.force_reset).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
                 } else {
                     import_celcat();
                 }
