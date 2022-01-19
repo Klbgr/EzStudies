@@ -58,4 +58,16 @@
     <style name="widgetText">
         <item name="android:textColor">@android:color/secondary_text_light</item>
     </style>
+
+    <style name="alertDialog.Light" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="android:textColorPrimary">@android:color/secondary_text_light</item>
+        <item name="android:textColorSecondary">@android:color/secondary_text_light</item>
+        <item name="android:textColorAlertDialogListItem">@android:color/secondary_text_light</item>
+    </style>
+
+    <style name="alertDialog.Dark" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+        <item name="android:textColorPrimary">@android:color/secondary_text_dark</item>
+        <item name="android:textColorSecondary">@android:color/secondary_text_dark</item>
+        <item name="android:textColorAlertDialogListItem">@android:color/secondary_text_dark</item>
+    </style>
 </resources>

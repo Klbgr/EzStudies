@@ -458,8 +458,19 @@ public class Agenda extends FragmentActivity {
             for (ArrayList<String> course : duplicates.get(0)) {
                 items.add(course.get(1));
             }
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
             ArrayList<Integer> selectedItems = new ArrayList();
+            AlertDialog.Builder builder = null;
+            switch (sharedPreferences.getInt("theme", 0)) {
+                case 0:
+                    builder = new AlertDialog.Builder(this);
+                    break;
+                case 1:
+                    builder = new AlertDialog.Builder(this, R.style.alertDialog_Light);
+                    break;
+                case 2:
+                    builder = new AlertDialog.Builder(this, R.style.alertDialog_Dark);
+                    break;
+            }
             builder.setTitle(R.string.duplicate);
             builder.setCancelable(false);
             builder.setMultiChoiceItems(items.toArray(new String[0]), null, new DialogInterface.OnMultiChoiceClickListener() {
@@ -729,7 +740,18 @@ public class Agenda extends FragmentActivity {
                             }
                         }
                     };
-                    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                    AlertDialog.Builder builder = null;
+                    switch (sharedPreferences.getInt("theme", 0)) {
+                        case 0:
+                            builder = new AlertDialog.Builder(this);
+                            break;
+                        case 1:
+                            builder = new AlertDialog.Builder(this, R.style.alertDialog_Light);
+                            break;
+                        case 2:
+                            builder = new AlertDialog.Builder(this, R.style.alertDialog_Dark);
+                            break;
+                    }
                     builder.setTitle(R.string.refresh).setMessage(R.string.force_reset).setCancelable(false).setPositiveButton(R.string.yes, dialogClickListener).setNegativeButton(R.string.no, dialogClickListener).show();
                 } else {
                     import_celcat();
