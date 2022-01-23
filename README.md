@@ -90,7 +90,7 @@ Once you placed your marker, you'll need to press "OK" to validate your choice.
 Our app can send you three types of notifications :
 - 15 minutes before each courses, a reminder for this course
 
-![image](https://user-images.githubusercontent.com/43754408/150019973-3c59a98e-26f4-476d-98df-edc719ed31ad.png)
+![image](https://user-images.githubusercontent.com/43754408/150020125-9c275d2c-ff25-4de2-8e97-de5ed91f7ede.png)
 
 - The day before the due date of a homework at 19:00, a reminder for this homework
 
@@ -98,7 +98,7 @@ Our app can send you three types of notifications :
 
 - Every sundays at 19:00, a reminder to refresh your agenda
 
-![image](https://user-images.githubusercontent.com/43754408/150020125-9c275d2c-ff25-4de2-8e97-de5ed91f7ede.png)
+![image](https://user-images.githubusercontent.com/43754408/150701427-6889159c-c2e7-4a17-a69e-dbeb37af2f4d.png)
 
 ## Widgets
 
