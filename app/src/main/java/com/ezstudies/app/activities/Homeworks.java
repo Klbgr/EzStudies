@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -152,6 +153,8 @@ public class Homeworks extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.add_homework));
 
+        ScrollView scrollView = new ScrollView(this);
+
         LinearLayout linearLayout = new LinearLayout(this);
         linearLayout.setOrientation(LinearLayout.VERTICAL);
 
@@ -168,7 +171,9 @@ public class Homeworks extends AppCompatActivity {
         linearLayout.addView(title);
         linearLayout.addView(description);
 
-        builder.setView(linearLayout);
+        scrollView.addView(linearLayout);
+
+        builder.setView(scrollView);
 
         builder.setPositiveButton(getString(R.string.ok), new DialogInterface.OnClickListener() {
             @Override
