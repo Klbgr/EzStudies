@@ -1,3 +1,5 @@
+# [Updated version](https://github.com/Klbgr/EzStudies-Flutter)
+
 # EzStudies [![Github All Releases](https://img.shields.io/github/downloads/Klbgr/EzStudies/latest/total.svg)](https://github.com/Klbgr/EzStudies/releases/latest)
 
 ![logo](./app/src/main/res/drawable/logo.png)
